@@ -1,0 +1,6 @@
+version: 1
+rules:
+  - id: customer.example
+    check: customer.required-text
+    options:
+      text: minimal documentation example

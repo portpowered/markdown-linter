@@ -1,0 +1,2 @@
+testdata/golden/link-invalid.md:3: markdown.link: local link target does not exist: missing.md
+testdata/golden/link-invalid.md:5: markdown.link: local link anchor does not exist: #missing-heading

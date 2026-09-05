@@ -1,0 +1,2 @@
+testdata/golden/ordered-list-invalid.md:3: markdown.ordered-list: ordered list item should be numbered 1, got 2
+testdata/golden/ordered-list-invalid.md:6: markdown.ordered-list: ordered list item should be numbered 2, got 3

@@ -1,0 +1,7 @@
+version: 1
+rules:
+  - id: customer.purpose
+    check: markdown.required-heading
+    options:
+      heading: Purpose
+      level: 2

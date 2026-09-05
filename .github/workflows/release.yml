@@ -1,0 +1,37 @@
+name: Release
+on:
+  push:
+    tags: ['v*']
+permissions:
+  contents: read
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GOWORK: 'off'
+      GOPRIVATE: ''
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version-file: go.mod
+      - run: go test -race ./... -timeout 120s
+      - run: go vet ./...
+      - name: Build archives and verify public command
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+          python3 scripts/package.py "$VERSION"
+          tar -xzf "dist/marklint_${VERSION}_linux_amd64.tar.gz" -C "$RUNNER_TEMP"
+          "$RUNNER_TEMP/marklint" --version
+          "$RUNNER_TEMP/marklint" --rules examples/rules.yaml examples/docs
+          cd "$(mktemp -d)"
+          GOPROXY=https://proxy.golang.org,direct GOBIN="$PWD/bin" go install "github.com/portpowered/markdown-linter/cmd/marklint@$VERSION"
+          ./bin/marklint --version
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ github.ref_name }}
+        run: gh release create "$VERSION" dist/* --verify-tag --generate-notes

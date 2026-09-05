@@ -1,0 +1,8 @@
+/bin/
+/coverage.*
+.env
+.DS_Store
+
+/dist/
+/marklint
+/marklint.exe
