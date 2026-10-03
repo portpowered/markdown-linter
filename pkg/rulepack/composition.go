@@ -242,7 +242,7 @@ func Manage(args []string, conventional string, r *Registry, out, errOut io.Writ
 	if cmd != "rules" && cmd != "presets" && cmd != "init" && cmd != "config" {
 		return false, 0
 	}
-	fail := func(e error) (bool, int) { fmt.Fprintln(errOut, e); return true, 2 }
+	fail := func(e error) (bool, int) { _, _ = fmt.Fprintln(errOut, e); return true, 2 }
 	f := flag.NewFlagSet(cmd, flag.ContinueOnError)
 	f.SetOutput(errOut)
 	root := f.String("root", ".", "root for config imports and scopes")
@@ -299,7 +299,9 @@ func Manage(args []string, conventional string, r *Registry, out, errOut io.Writ
 			return emit(list)
 		}
 		for _, d := range list {
-			fmt.Fprintf(out, "%s [%s] %s\n", d.ID, d.Kind, d.Title)
+			if _, err := fmt.Fprintf(out, "%s [%s] %s\n", d.ID, d.Kind, d.Title); err != nil {
+				return fail(err)
+			}
 		}
 		return true, 0
 	case "presets":
@@ -360,7 +362,9 @@ func Manage(args []string, conventional string, r *Registry, out, errOut io.Writ
 		if closeErr != nil {
 			return fail(closeErr)
 		}
-		fmt.Fprintf(out, "Created %s. Run %s --rules \"%s\" --root \"%s\" <inputs>\n", *output, CommandName(), *output, *root)
+		if _, err := fmt.Fprintf(out, "Created %s. Run %s --rules \"%s\" --root \"%s\" <inputs>\n", *output, CommandName(), *output, *root); err != nil {
+			return fail(err)
+		}
 		return true, 0
 	case "config":
 		if action == "schema" {
@@ -380,7 +384,9 @@ func Manage(args []string, conventional string, r *Registry, out, errOut io.Writ
 			return fail(e)
 		}
 		if action == "validate" {
-			fmt.Fprintln(out, "Configuration valid")
+			if _, err := fmt.Fprintln(out, "Configuration valid"); err != nil {
+				return fail(err)
+			}
 			return true, 0
 		}
 		type effective struct {

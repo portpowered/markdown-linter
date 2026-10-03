@@ -58,35 +58,3 @@ func (p *Pass) Diagnostics() []Diagnostic {
 func NewPass(documents []*Document) *Pass {
 	return newPass(documents)
 }
-
-type diagnosticRuleAnalyzer struct {
-	rule DiagnosticRule
-}
-
-func (a diagnosticRuleAnalyzer) ID() string {
-	return a.rule.ID()
-}
-
-func (a diagnosticRuleAnalyzer) Analyze(ctx context.Context, pass *Pass) {
-	for _, doc := range pass.Documents {
-		for _, diagnostic := range a.rule.CheckDiagnostics(ctx, doc) {
-			pass.Report(diagnostic)
-		}
-	}
-}
-
-type ruleAnalyzer struct {
-	rule Rule
-}
-
-func (a ruleAnalyzer) ID() string {
-	return a.rule.ID()
-}
-
-func (a ruleAnalyzer) Analyze(ctx context.Context, pass *Pass) {
-	for _, doc := range pass.Documents {
-		for _, violation := range a.rule.Check(ctx, doc) {
-			pass.Report(diagnosticFromViolation(violation))
-		}
-	}
-}

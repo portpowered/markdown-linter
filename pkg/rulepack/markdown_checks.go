@@ -98,7 +98,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 				}
 			}
 		}
-		ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
+		_ = ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
 			if !enter {
 				return ast.WalkContinue, nil
 			}
@@ -114,7 +114,11 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 			case *ast.CodeBlock, *ast.FencedCodeBlock:
 				for i := 0; i < n.Lines().Len(); i++ {
 					seg := n.Lines().At(i)
-					for j := seg.Start; j < seg.Stop && j < len(code); j++ {
+					lineStart := seg.Start
+					for lineStart > 0 && doc.Source[lineStart-1] != '\n' {
+						lineStart--
+					}
+					for j := lineStart; j < seg.Stop && j < len(code); j++ {
 						code[j] = true
 					}
 				}
@@ -223,7 +227,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 						trim := strings.TrimRight(line, " \t")
 						hard := strings.HasSuffix(line, "  ") && !strings.HasSuffix(line, "   ")
 						permit := c.options.AllowHardBreaks == nil || *c.options.AllowHardBreaks
-						if len(trim) != len(line) && !(hard && permit) {
+						if len(trim) != len(line) && (!hard || !permit) {
 							d := interfaces.NewDiagnostic(doc.Path, doc.LineForOffset(start), start+len(trim), start+len(line), c.id, "remove trailing whitespace", interfaces.SeverityError)
 							d.SuggestedFixes = []interfaces.SuggestedFix{{Title: "Remove trailing whitespace", Confidence: interfaces.FixConfidenceSafe, Edits: []interfaces.TextEdit{{StartOffset: d.StartOffset, EndOffset: d.EndOffset, Replacement: ""}}}}
 							pass.Report(d)
@@ -233,7 +237,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 				start += len(raw)
 			}
 		}
-		ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
+		_ = ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
 			if !enter {
 				return ast.WalkContinue, nil
 			}
@@ -251,7 +255,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 			}
 			switch v := n.(type) {
 			case *ast.Heading:
-				text := string(v.Text(doc.Source))
+				text := string(interfaces.NodeText(v, doc.Source))
 				if v.Level == 1 {
 					h1++
 				}
@@ -278,7 +282,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 						m := re.FindStringSubmatch(doc.SourceLine(doc.LineForOffset(offset)))
 						number := position
 						if m != nil {
-							fmt.Sscan(m[1], &number)
+							_, _ = fmt.Sscan(m[1], &number)
 						}
 						allOne = allOne && number == 1
 						ordered = ordered && number == position
@@ -340,7 +344,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 				}
 			case *ast.RawHTML:
 				if c.id == "markdown.html-policy" {
-					for _, tag := range regexp.MustCompile(`</?([A-Za-z][A-Za-z0-9]*)`).FindAllStringSubmatch(string(v.Text(doc.Source)), -1) {
+					for _, tag := range regexp.MustCompile(`</?([A-Za-z][A-Za-z0-9]*)`).FindAllStringSubmatch(string(interfaces.NodeText(v, doc.Source)), -1) {
 						if !allowed(c.options.Allow, tag[1]) {
 							report(offsetForNode(v.Parent()), offsetForNode(v.Parent()), "HTML tag not allowed: "+tag[1], "")
 						}
@@ -348,14 +352,14 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 				}
 			case *ast.HTMLBlock:
 				if c.id == "markdown.html-policy" {
-					for _, tag := range regexp.MustCompile(`</?([A-Za-z][A-Za-z0-9]*)`).FindAllStringSubmatch(string(v.Text(doc.Source)), -1) {
+					for _, tag := range regexp.MustCompile(`</?([A-Za-z][A-Za-z0-9]*)`).FindAllStringSubmatch(string(interfaces.NodeText(v, doc.Source)), -1) {
 						if !allowed(c.options.Allow, tag[1]) {
 							report(offsetForNode(v), offsetForNode(v), "HTML tag not allowed: "+tag[1], "")
 						}
 					}
 				}
 			case *ast.FencedCodeBlock:
-				if c.id == "markdown.fence-language" && (v.Info == nil || strings.TrimSpace(string(v.Info.Text(doc.Source))) == "") {
+				if c.id == "markdown.fence-language" && (v.Info == nil || strings.TrimSpace(string(v.Info.Value(doc.Source))) == "") {
 					offset := 0
 					if v.Lines().Len() > 0 {
 						offset = v.Lines().At(0).Start
@@ -366,7 +370,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 			case *ast.CodeBlock:
 				return ast.WalkSkipChildren, nil
 			case *ast.Image:
-				if c.id == "markdown.image-alt" && strings.TrimSpace(string(v.Text(doc.Source))) == "" && !allowed(c.options.Allow, string(v.Destination)) {
+				if c.id == "markdown.image-alt" && strings.TrimSpace(string(interfaces.NodeText(v, doc.Source))) == "" && !allowed(c.options.Allow, string(v.Destination)) {
 					offset := 0
 					if v.Parent() != nil {
 						offset = offsetForNode(v.Parent())
@@ -375,7 +379,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 				}
 			case *ast.Link:
 				if c.id == "markdown.link-text" {
-					label := strings.TrimSpace(string(v.Text(doc.Source)))
+					label := strings.TrimSpace(string(interfaces.NodeText(v, doc.Source)))
 					if label == "" || strings.EqualFold(label, "click here") {
 						report(offsetForNode(v.Parent()), offsetForNode(v.Parent()), "use descriptive link text", "")
 					}
@@ -451,7 +455,7 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 			return ast.WalkContinue, nil
 		})
 		if c.id == "markdown.blank-lines" {
-			ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
+			_ = ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
 				if !enter || n.Parent() != doc.Root {
 					return ast.WalkContinue, nil
 				}

@@ -19,7 +19,7 @@ func inlineSuppressed(doc *interfaces.Document, d interfaces.Diagnostic) bool {
 		return false
 	}
 	code := false
-	ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
+	_ = ast.Walk(doc.Root, func(n ast.Node, enter bool) (ast.WalkStatus, error) {
 		if !enter {
 			return ast.WalkContinue, nil
 		}

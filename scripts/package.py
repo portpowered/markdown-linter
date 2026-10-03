@@ -26,7 +26,7 @@ for target_os in ("linux", "darwin", "windows"):
             subprocess.run(["go", "build", "-trimpath", "-ldflags", f"-s -w -X github.com/portpowered/markdown-linter/pkg/cli.Version={version}", "-o", str(binary), "./cmd/marklint"], cwd=root, env=env, check=True)
             files = [(binary, filename), (root / "LICENSE", "LICENSE"), (root / "NOTICE", "NOTICE")]
             files += [(path, path.relative_to(root).as_posix()) for path in sorted((root / "pkg/rulepack" / "packs").iterdir()) if path.is_file()]
-            files += [(root / "docs" / "rule-packs.md", "docs/rule-packs.md"), (root / "docs" / "rule-catalog.json", "docs/rule-catalog.json"), (root / "docs" / "rule-pack.schema.json", "docs/rule-pack.schema.json")]
+            files += [(root / "docs" / "rule-packs.md", "docs/rule-packs.md"), (root / "docs" / "rule-catalog.json", "docs/rule-catalog.json"), (root / "docs" / "rule-pack.schema.json", "docs/rule-pack.schema.json"), (root / "docs" / "strunk-white.md", "docs/strunk-white.md")]
             if target_os == "windows":
                 archive = output / (name + ".zip")
                 with zipfile.ZipFile(archive, "w", zipfile.ZIP_DEFLATED) as bundle:

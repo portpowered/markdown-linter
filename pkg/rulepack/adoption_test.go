@@ -26,13 +26,17 @@ func TestBaselineCountsNewDebtAndSurvivesMovedLines(t *testing.T) {
 	if e != nil || known != 1 || len(remaining) != 1 {
 		t.Fatalf("%#v %d %v", remaining, known, e)
 	}
-	os.WriteFile(file, []byte("New preface\nBad evidence\n"), 0600)
+	if err := os.WriteFile(file, []byte("New preface\nBad evidence\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
 	finding.Line = 2
 	remaining, known, e = ApplyBaseline(path, root, []interfaces.Diagnostic{finding})
 	if e != nil || known != 1 || len(remaining) != 0 {
 		t.Fatalf("moved finding became new debt: %#v %d %v", remaining, known, e)
 	}
-	os.WriteFile(file, []byte("New preface\nDifferent evidence\n"), 0600)
+	if err := os.WriteFile(file, []byte("New preface\nDifferent evidence\n"), 0600); err != nil {
+		t.Fatal(err)
+	}
 	remaining, known, e = ApplyBaseline(path, root, []interfaces.Diagnostic{finding})
 	if e != nil || known != 0 || len(remaining) != 1 {
 		t.Fatalf("changed evidence was hidden: %#v %d %v", remaining, known, e)

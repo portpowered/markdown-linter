@@ -6,3 +6,5 @@
 /dist/
 /marklint
 /marklint.exe
+
+__pycache__/

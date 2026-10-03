@@ -440,6 +440,206 @@
   {
     "defaults": {
       "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.correlative-pairs",
+    "title": "Strunk and White: correlative pairs",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.exclamations",
+    "title": "Strunk and White: exclamations",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.existential-openings",
+    "title": "Strunk and White: existential openings",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.fancy-words",
+    "title": "Strunk and White: fancy words",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.needless-words",
+    "title": "Strunk and White: needless words",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.negative-phrases",
+    "title": "Strunk and White: negative phrases",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.passive-voice",
+    "title": "Strunk and White: passive voice",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.qualifiers",
+    "title": "Strunk and White: qualifiers",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.redundant-pairs",
+    "title": "Strunk and White: redundant pairs",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:strunk-white"
+    ],
+    "id": "text.strunk-white.usage",
+    "title": "Strunk and White: usage",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
+  },
+  {
+    "defaults": {
+      "allow": [],
       "scope": "",
       "terms": {}
     },

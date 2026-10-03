@@ -10,7 +10,7 @@ import (
 
 //go:embed packs/*
 var embeddedPacks embed.FS
-var packFiles = map[string]string{"markdown:core": "markdown-core.yaml", "markdown:documentation": "markdown-documentation.yaml", "markdown:maintenance": "markdown-maintenance.yaml", "markdown:recommended": "markdown-recommended.yaml", "markdown:style": "markdown-style.yaml", "portos-defaults": "portos-defaults.yaml", "portos:internal": "portos-internal.yaml", "text:prose": "text-prose.yaml"}
+var packFiles = map[string]string{"markdown:core": "markdown-core.yaml", "markdown:documentation": "markdown-documentation.yaml", "markdown:maintenance": "markdown-maintenance.yaml", "markdown:recommended": "markdown-recommended.yaml", "markdown:style": "markdown-style.yaml", "portos-defaults": "portos-defaults.yaml", "portos:internal": "portos-internal.yaml", "text:prose": "text-prose.yaml", "text:strunk-white": "text-strunk-white.yaml"}
 
 func DefaultKind() string       { return "markdown" }
 func DefaultPresetName() string { return "markdown:recommended" }
@@ -69,10 +69,23 @@ func Preset(name string) (Pack, bool) {
 	return p, true
 }
 func cloneNode(n yaml.Node) yaml.Node {
-	n.Content = append([]*yaml.Node(nil), n.Content...)
-	for i, child := range n.Content {
-		copy := cloneNode(*child)
-		n.Content[i] = &copy
+	memo := map[*yaml.Node]*yaml.Node{}
+	var clone func(*yaml.Node) *yaml.Node
+	clone = func(source *yaml.Node) *yaml.Node {
+		if source == nil {
+			return nil
+		}
+		if copied, ok := memo[source]; ok {
+			return copied
+		}
+		copied := *source
+		memo[source] = &copied
+		copied.Content = nil
+		for _, child := range source.Content {
+			copied.Content = append(copied.Content, clone(child))
+		}
+		copied.Alias = clone(source.Alias)
+		return &copied
 	}
-	return n
+	return *clone(&n)
 }

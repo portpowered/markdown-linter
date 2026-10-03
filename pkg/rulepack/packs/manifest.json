@@ -38,5 +38,10 @@
     "name": "text:prose",
     "file": "text-prose.yaml",
     "sha256": "8d53cf469b0d7e054c13755b753acadf38ad20c9cd66d9c3b6ee38fef405f235"
+  },
+  {
+    "name": "text:strunk-white",
+    "file": "text-strunk-white.yaml",
+    "sha256": "5cb4bc3d7a4db91bbeabbecfc44cb74b3d853563278d1c3b71059e9e169743d0"
   }
 ]

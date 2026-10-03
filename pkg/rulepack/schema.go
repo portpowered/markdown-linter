@@ -36,8 +36,6 @@ func (r *Registry) ConfigurationSchema() map[string]any {
 			requiredOptions = []string{"terms"}
 		case "text.spelling":
 			requiredOptions = []string{"language", "dictionary"}
-		case "openapi.pagination":
-			requiredOptions = []string{"collection-operations"}
 		case "markdown.required-heading":
 			requiredOptions = []string{"heading", "level"}
 		}
@@ -51,7 +49,11 @@ func (r *Registry) ConfigurationSchema() map[string]any {
 		}
 		rules = append(rules, rule)
 	}
+	var ruleItems any = false
+	if len(rules) > 0 {
+		ruleItems = map[string]any{"oneOf": rules}
+	}
 	overrides := map[string]any{"type": "object", "additionalProperties": false, "required": []string{"id"}, "properties": map[string]any{"id": text, "enabled": map[string]string{"type": "boolean"}, "severity": map[string]any{"enum": []string{"error", "warning", "info"}}, "include": texts, "exclude": texts, "options": map[string]string{"type": "object"}}}
 	suppressions := map[string]any{"type": "object", "additionalProperties": false, "required": []string{"rule", "path", "reason"}, "properties": map[string]any{"rule": text, "path": text, "reason": map[string]any{"type": "string", "pattern": `\S`}, "line": map[string]any{"type": "integer", "minimum": 0}}}
-	return map[string]any{"$schema": "https://json-schema.org/draft/2020-12/schema", "title": CommandName() + " configuration", "type": "object", "additionalProperties": false, "required": []string{"version"}, "properties": map[string]any{"version": map[string]any{"const": 1}, "extends": texts, "rules": map[string]any{"type": "array", "items": map[string]any{"oneOf": rules}}, "overrides": map[string]any{"type": "array", "items": overrides}, "suppressions": map[string]any{"type": "array", "items": suppressions}}}
+	return map[string]any{"$schema": "https://json-schema.org/draft/2020-12/schema", "title": CommandName() + " configuration", "type": "object", "additionalProperties": false, "required": []string{"version"}, "properties": map[string]any{"version": map[string]any{"const": 1}, "extends": texts, "rules": map[string]any{"type": "array", "items": ruleItems}, "overrides": map[string]any{"type": "array", "items": overrides}, "suppressions": map[string]any{"type": "array", "items": suppressions}}}
 }

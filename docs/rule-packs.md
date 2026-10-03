@@ -2,6 +2,8 @@
 
 Use `version: 1` for every pack. This is the only supported configuration schema. Named sets have no version suffix; pin the executable release in CI and review `packs/manifest.json` hashes when upgrading. There is no compatibility branch for previous default behavior.
 
+For opt-in English editorial review, compose `text:strunk-white` with a Markdown pack. Its ten checks, exact patterns, paired constructions, source analysis, and exceptions are documented in the [Strunk and White guide](strunk-white.md).
+
 ## Discover and activate
 
 Commands below use COMMAND as the executable name and CONFIG as its conventional root configuration. Replace these placeholders as shown in the tool section below.

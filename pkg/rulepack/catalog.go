@@ -7,6 +7,9 @@ import (
 )
 
 func registerAdditional(registry *Registry) error {
+	if err := registerStrunkWhite(registry); err != nil {
+		return err
+	}
 	for _, id := range []string{"markdown.formatting",
 		"markdown.ordered-list",
 		"markdown.trailing-whitespace",
@@ -36,16 +39,18 @@ func registerAdditional(registry *Registry) error {
 		if !strings.Contains(d.ID, ".") {
 			continue
 		}
-		if !(strings.HasPrefix(d.ID, "markdown.") || strings.HasPrefix(d.ID, "text.") || strings.HasPrefix(d.ID, "openapi.") || strings.HasPrefix(d.ID, "schema.") || strings.HasPrefix(d.ID, "portos.")) {
+		switch strings.SplitN(d.ID, ".", 2)[0] {
+		case "markdown", "text":
+		default:
 			continue
 		}
 		d.Kind = "markdown"
-		if strings.HasPrefix(d.ID, "schema.") {
-			d.Kind = "schema"
-		}
 		d.Title = strings.ReplaceAll(strings.SplitN(d.ID, ".", 2)[1], "-", " ")
 		d.Guidance = "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
 		d.Options = map[string]string{}
+		if strings.HasPrefix(d.ID, "text.strunk-white.") {
+			d.Options = map[string]string{"allow": "[]string", "scope": "string"}
+		}
 		defaults := defaultOptions()
 		encoded, _ := yaml.Marshal(defaults)
 		allDefaults := map[string]any{}
@@ -54,8 +59,10 @@ func registerAdditional(registry *Registry) error {
 		for _, key := range optionNames(d.ID) {
 			d.Defaults[key] = allDefaults[key]
 		}
-		if d.ID == "openapi.operation-id" {
-			d.Defaults = map[string]any{"required": true}
+		if strings.HasPrefix(d.ID, "text.strunk-white.") {
+			d.Defaults = map[string]any{"allow": []string{}, "scope": "prose"}
+			d.Title = "Strunk and White: " + strings.ReplaceAll(strings.TrimPrefix(d.ID, "text.strunk-white."), "-", " ")
+			d.Guidance = "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
 		}
 		if d.ID == "markdown.trailing-whitespace" || d.ID == "markdown.formatting" {
 			d.Defaults["allow-hard-breaks"] = true
@@ -85,9 +92,6 @@ func registerAdditional(registry *Registry) error {
 		}
 		d.Category = strings.SplitN(d.ID, ".", 2)[0]
 		d.Severity = "warning"
-		if d.Category == "portos" || d.Kind == "schema" {
-			d.Severity = "error"
-		}
 		defaultPack, _ := Preset(DefaultPresetName())
 		for _, rule := range defaultPack.Rules {
 			if rule.Check == d.ID {

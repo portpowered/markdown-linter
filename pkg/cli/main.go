@@ -42,7 +42,7 @@ func RenderFixReport(out io.Writer, report engine.FixReviewReport, apply, verbos
 func Run(ctx context.Context, args []string, out, errOut io.Writer) int {
 	registry := rulepack.NewRegistry()
 	if err := rulepack.RegisterStock(registry); err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	return RunWithRegistry(ctx, args, out, errOut, registry)
@@ -102,7 +102,7 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 	var baselineErr error
 	args, baselineErr = rulepack.BaselineArgs(args)
 	if baselineErr != nil {
-		fmt.Fprintln(errOut, baselineErr)
+		_, _ = fmt.Fprintln(errOut, baselineErr)
 		return exitOperational
 	}
 	if handled, code := rulepack.Manage(args, ".marklint.yaml", registry, out, errOut); handled {
@@ -110,75 +110,82 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 	}
 	opts, err := parseOptions(args, errOut)
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	if opts.version {
-		fmt.Fprintln(out, "marklint", Version)
+		if _, err := fmt.Fprintln(out, "marklint", Version); err != nil {
+			return 2
+		}
 		return exitOK
 	}
 	if len(opts.paths) == 0 {
-		fmt.Fprintln(errOut, "at least one input file or directory is required")
+		_, _ = fmt.Fprintln(errOut, "at least one input file or directory is required")
 		return exitOperational
 	}
 	pack, err := loadPack(opts)
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	if err = registry.ValidateKind(pack, "markdown"); err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	if _, err = registry.Compile(pack); err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	pack, err = selectRules(pack, opts.only)
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	program, err := registry.Compile(pack)
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	docs, err := parseInputs(opts)
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	diagnostics, err := program.Run(ctx, opts.root, docs)
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	if opts.baselineWrite != "" {
 		if err = rulepack.WriteBaseline(opts.baselineWrite, opts.root, diagnostics, opts.baselineOverwrite); err != nil {
-			fmt.Fprintln(errOut, err)
+			_, _ = fmt.Fprintln(errOut, err)
 			return exitOperational
 		}
-		fmt.Fprintf(out, "Baseline written to %s\n", opts.baselineWrite)
+		if _, err := fmt.Fprintf(out, "Baseline written to %s\n", opts.baselineWrite); err != nil {
+			return 2
+		}
 		return exitOK
 	}
 	if opts.baseline != "" {
 		var known int
 		diagnostics, known, err = rulepack.ApplyBaseline(opts.baseline, opts.root, diagnostics)
 		if err != nil {
-			fmt.Fprintln(errOut, err)
+			_, _ = fmt.Fprintln(errOut, err)
 			return exitOperational
 		}
-		fmt.Fprintf(errOut, "%d known findings in baseline\n", known)
+		if _, err := fmt.Fprintf(errOut, "%d known findings in baseline\n", known); err != nil {
+			return 2
+		}
 	}
 	if opts.fix || opts.preview {
 		return renderFixes(ctx, opts, diagnostics, out, errOut)
 	}
-	if opts.format == "json" {
+	switch opts.format {
+	case "json":
 		err = json.NewEncoder(out).Encode(diagnostics)
-	} else if opts.format == "sarif" {
+	case "sarif":
 		err = json.NewEncoder(out).Encode(rulepack.SARIF(diagnostics))
-	} else {
+	default:
 		for _, d := range diagnostics {
 			if _, err = fmt.Fprintln(out, diagnosticString(d)); err != nil {
 				break
@@ -186,7 +193,7 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 		}
 	}
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	for _, d := range diagnostics {
@@ -324,7 +331,7 @@ func parseInputs(opts commandOptions) ([]*interfaces.Document, error) {
 func renderFixes(ctx context.Context, opts commandOptions, diagnostics []interfaces.Diagnostic, out, errOut io.Writer) int {
 	for _, diagnostic := range diagnostics {
 		if err := interfaces.CheckPathRoot(opts.root, diagnostic.Path); err != nil {
-			fmt.Fprintf(errOut, "fix target %q: %v\n", diagnostic.Path, err)
+			_, _ = fmt.Fprintf(errOut, "fix target %q: %v\n", diagnostic.Path, err)
 			return exitOperational
 		}
 	}
@@ -336,17 +343,19 @@ func renderFixes(ctx context.Context, opts commandOptions, diagnostics []interfa
 		plan, err = engine.DryRunFixes(ctx, diagnostics)
 	}
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	report := engine.NewFixReviewReport(plan, diagnostics)
 	if opts.format == "json" {
 		err = json.NewEncoder(out).Encode(report)
 	} else {
-		renderFixReport(out, report, opts.fix, opts.verbose)
+		tracked := &reportWriter{Writer: out}
+		renderFixReport(tracked, report, opts.fix, opts.verbose)
+		err = tracked.err
 	}
 	if err != nil {
-		fmt.Fprintln(errOut, err)
+		_, _ = fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
 	if opts.fix && plan.HasAcceptedEdits() {
@@ -515,31 +524,31 @@ func normalizeMappingPath(path string) string {
 
 func renderFixReport(stdout io.Writer, report engine.FixReviewReport, apply bool, verboseReport bool) {
 	if apply {
-		fmt.Fprintln(stdout, "Markdown linter apply report")
+		_, _ = fmt.Fprintln(stdout, "Markdown linter apply report")
 	} else {
-		fmt.Fprintln(stdout, "Markdown linter dry-run report")
+		_, _ = fmt.Fprintln(stdout, "Markdown linter dry-run report")
 	}
 
 	if len(report.Accepted) == 0 {
-		fmt.Fprintln(stdout, "Accepted edits: none")
+		_, _ = fmt.Fprintln(stdout, "Accepted edits: none")
 	} else {
-		fmt.Fprintf(stdout, "Accepted edits: %d\n", len(report.Accepted))
+		_, _ = fmt.Fprintf(stdout, "Accepted edits: %d\n", len(report.Accepted))
 		for _, edit := range report.Accepted {
 			action := "would rewrite"
 			if apply {
 				action = "rewrote"
 			}
-			fmt.Fprintf(stdout, "- %s:%d: %s %s -> %q\n", edit.Path, edit.Diagnostic.Line, edit.RuleID, action, edit.TextEdit.Replacement)
+			_, _ = fmt.Fprintf(stdout, "- %s:%d: %s %s -> %q\n", edit.Path, edit.Diagnostic.Line, edit.RuleID, action, edit.TextEdit.Replacement)
 		}
 	}
 
 	renderManualReviewSummary(stdout, report, verboseReport)
 
 	if apply {
-		fmt.Fprintln(stdout, "Verification: rerun lint with the same rule pack and inputs")
+		_, _ = fmt.Fprintln(stdout, "Verification: rerun lint with the same rule pack and inputs")
 		return
 	}
-	fmt.Fprintln(stdout, "Apply safe fixes: rerun with --fix and the same rule pack and inputs")
+	_, _ = fmt.Fprintln(stdout, "Apply safe fixes: rerun with --fix and the same rule pack and inputs")
 }
 
 func renderManualReviewSummary(stdout io.Writer, report engine.FixReviewReport, verboseReport bool) {
@@ -548,40 +557,58 @@ func renderManualReviewSummary(stdout io.Writer, report engine.FixReviewReport, 
 	renderDiagnosticSummary(stdout, "Other non-fixable diagnostics", report.OtherNonFixable, verboseReport)
 
 	if !verboseReport && hasManualReviewDiagnostics(report) {
-		fmt.Fprintln(stdout, "Full manual-review details: rerun with --fix-report-verbose")
+		_, _ = fmt.Fprintln(stdout, "Full manual-review details: rerun with --fix-report-verbose")
 	}
 }
 
 func renderRejectedSummary(stdout io.Writer, rejected []engine.RejectedFix, verboseReport bool) {
 	if len(rejected) == 0 {
-		fmt.Fprintln(stdout, "Rejected edits: none")
+		_, _ = fmt.Fprintln(stdout, "Rejected edits: none")
 		return
 	}
 
-	fmt.Fprintf(stdout, "Rejected edits: %d\n", len(rejected))
+	_, _ = fmt.Fprintf(stdout, "Rejected edits: %d\n", len(rejected))
 	if !verboseReport {
 		return
 	}
 	for _, fix := range rejected {
-		fmt.Fprintf(stdout, "- %s:%d: %s (%s): %s [rejected: %s - %s]\n", fix.Path, fix.Diagnostic.Line, fix.RuleID, fix.Diagnostic.Category, fix.Diagnostic.Message, fix.Reason, fix.Message)
+		_, _ = fmt.Fprintf(stdout, "- %s:%d: %s (%s): %s [rejected: %s - %s]\n", fix.Path, fix.Diagnostic.Line, fix.RuleID, fix.Diagnostic.Category, fix.Diagnostic.Message, fix.Reason, fix.Message)
 	}
 }
 
 func renderDiagnosticSummary(stdout io.Writer, title string, diagnostics []interfaces.Diagnostic, verboseReport bool) {
 	if len(diagnostics) == 0 {
-		fmt.Fprintf(stdout, "%s: none\n", title)
+		_, _ = fmt.Fprintf(stdout, "%s: none\n", title)
 		return
 	}
 
-	fmt.Fprintf(stdout, "%s: %d\n", title, len(diagnostics))
+	_, _ = fmt.Fprintf(stdout, "%s: %d\n", title, len(diagnostics))
 	if !verboseReport {
 		return
 	}
 	for _, diagnostic := range diagnostics {
-		fmt.Fprintf(stdout, "- %s:%d: %s (%s): %s\n", diagnostic.Path, diagnostic.Line, diagnostic.RuleID, diagnostic.Category, diagnostic.Message)
+		_, _ = fmt.Fprintf(stdout, "- %s:%d: %s (%s): %s\n", diagnostic.Path, diagnostic.Line, diagnostic.RuleID, diagnostic.Category, diagnostic.Message)
 	}
 }
 
 func hasManualReviewDiagnostics(report engine.FixReviewReport) bool {
 	return len(report.Rejected) > 0 || len(report.Ambiguous) > 0 || len(report.OtherNonFixable) > 0
+}
+
+// reportWriter preserves failures from the legacy void report-rendering API.
+type reportWriter struct {
+	io.Writer
+	err error
+}
+
+func (w *reportWriter) Write(p []byte) (int, error) {
+	if w.err != nil {
+		return 0, w.err
+	}
+	n, err := w.Writer.Write(p)
+	if err == nil && n < len(p) {
+		err = io.ErrShortWrite
+	}
+	w.err = err
+	return n, err
 }

@@ -1,0 +1,32 @@
+version: 1
+rules:
+  - id: text.strunk-white.needless-words
+    check: text.strunk-white.needless-words
+    severity: warning
+  - id: text.strunk-white.fancy-words
+    check: text.strunk-white.fancy-words
+    severity: warning
+  - id: text.strunk-white.qualifiers
+    check: text.strunk-white.qualifiers
+    severity: warning
+  - id: text.strunk-white.negative-phrases
+    check: text.strunk-white.negative-phrases
+    severity: warning
+  - id: text.strunk-white.passive-voice
+    check: text.strunk-white.passive-voice
+    severity: warning
+  - id: text.strunk-white.usage
+    check: text.strunk-white.usage
+    severity: warning
+  - id: text.strunk-white.exclamations
+    check: text.strunk-white.exclamations
+    severity: warning
+  - id: text.strunk-white.existential-openings
+    check: text.strunk-white.existential-openings
+    severity: warning
+  - id: text.strunk-white.redundant-pairs
+    check: text.strunk-white.redundant-pairs
+    severity: warning
+  - id: text.strunk-white.correlative-pairs
+    check: text.strunk-white.correlative-pairs
+    severity: warning

@@ -211,7 +211,7 @@ func collectHeadingAnchors(root ast.Node, source []byte) map[string]struct{} {
 			return ast.WalkContinue, nil
 		}
 
-		headingText := string(node.Text(source))
+		headingText := string(interfaces.NodeText(node, source))
 		baseAnchor := normalizeAnchor(headingText)
 		if baseAnchor == "" {
 			return ast.WalkContinue, nil

@@ -434,7 +434,7 @@ func collectIndexedHeadings(doc *interfaces.Document) ([]IndexedHeading, map[str
 		}
 
 		heading := node.(*ast.Heading)
-		text := string(node.Text(doc.Source))
+		text := string(interfaces.NodeText(node, doc.Source))
 		baseAnchor := normalizeAnchor(text)
 		if baseAnchor == "" {
 			return ast.WalkContinue, nil
@@ -459,10 +459,6 @@ func collectIndexedHeadings(doc *interfaces.Document) ([]IndexedHeading, map[str
 	})
 
 	return headings, anchors
-}
-
-func parseFrontmatter(source []byte) map[string]string {
-	return frontmatterValues(parseFrontmatterFields(source))
 }
 
 func frontmatterValues(fields map[string]IndexedFrontmatterField) map[string]string {

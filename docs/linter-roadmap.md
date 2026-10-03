@@ -155,3 +155,10 @@ Structural checking uses dated official OpenAPI 3.0/3.1 schemas, offline. The 3.
 Standalone schema mode remains YAML-structure checking rather than an advertised JSON Schema conformance engine. The Markdown parser supports CommonMark plus tables, strikethrough, and task lists. MDX/template extensions are not claimed. HTML policy is a style check, not a sanitizer; spelling requires a supplied language and offline vocabulary.
 
 Hosted settings UI and LSP are future integration projects. Exact JSON-pointer suppressions for OpenAPI and reasoned next-line directives for Markdown are implemented. A remote pack registry, external-link fetcher, runtime plugins, API breaking-change comparison, and universal grammar rules remain outside this implementation. API renames, generated alt text, and automatic prose rewriting require author judgment and are not offered as safe fixes.
+
+## Additional editorial and API standards
+
+- [x] Markdown `text:strunk-white`: 10 independent review checks (8 atomic signals and 2 paired constructions), analyzed against 43 numbered principles, with contextual guidance kept as human review. See the Markdown repository's `docs/strunk-white.md` for the rule IDs, four documented interactions, options and exclusions.
+- [x] OpenAPI `openapi:google` and `google-defaults`: 16 independently selectable REST/JSON projections and five paired contract groups. See the OpenAPI repository's `docs/google-api.md` for AIP sources, rule IDs and explicit intent markers.
+- [x] Both new sets have valid, invalid, false-positive and composed-set behavior fixtures.
+- [x] Default Make and CI run the standard golangci-lint suite and enforce 95% aggregate module statement coverage, with all Go package paths included and no profile exclusions.

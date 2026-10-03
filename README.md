@@ -66,8 +66,18 @@ See [development](docs/development.md). Run `GOWORK=off go test ./...` and `GOWO
 
 See the [OpenAPI and Markdown linter plan](docs/linter-roadmap.md) for the existing-system comparison, proposed rule additions, customer activation UX, rule-set composition, testing, and rollout. It records implemented rules and UX, Portos requirements with rule IDs, and the remaining customer pilot work.
 
+The opt-in [Strunk and White ruleset](docs/strunk-white.md) adds ten editorial checks, including two paired-construction checks. Compose `text:strunk-white` with `markdown:recommended`; the guide documents the source analysis, finite patterns, legitimate exceptions, and tests.
+
 ## Compose Portos policy
 
 Use `init --preset portos-defaults` to activate general recommendations plus internal Portos policy in one version 1 configuration. `rules list`, `presets list`, and `config explain` make rule activation and overrides inspectable. See the rule-pack reference for baselines, SARIF, the warning failure threshold, and breaking default/configuration changes.
 
 The expanded rules and composition UX are available in this source checkout; pin the next release containing these changes when deploying them to CI. Existing v0.1.0 installation examples refer to the earlier released baseline.
+
+## Development checks
+
+Run `make` (or `make verify`) for formatting validation, build, vet, all standard Go linters, race-enabled tests and a 95% statement coverage gate, plus quality-tool tests. Install Python 3, Go and golangci-lint v2.14.0 first. Windows users can set `PYTHON=python`; Unix installations may prefer `PYTHON=python3`. `GOLANGCI_LINT` can point to the pinned executable.
+
+Individual targets are `make test`, `make lint`, `make coverage`, `make coverage-check`, `make fmt-check`, and `make vet`. `make fmt` applies formatting. Coverage is statement-weighted across both library and command/example packages, using `-coverpkg=./...` so integration tests count library execution; no files or packages are removed from the report. The gate compares the unrounded value to 95%. `coverage.out` is local output and CI uploads each platform/toolchain profile.
+
+CI runs the same coverage/lint policy on Linux, macOS and Windows for each supported Go version. The explicit `linters.default: standard` configuration enables errcheck, govet, ineffassign, staticcheck and unused, with no preset issue exclusions. See the [official standard linter list](https://golangci-lint.run/docs/welcome/quick-start/) and [pinned release](https://github.com/golangci/golangci-lint/releases/tag/v2.14.0). Lint failures are fixed rather than baselined.

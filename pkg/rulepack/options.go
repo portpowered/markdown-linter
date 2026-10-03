@@ -3,9 +3,13 @@ package rulepack
 import (
 	"fmt"
 	"gopkg.in/yaml.v3"
+	"strings"
 )
 
 func optionNames(id string) []string {
+	if strings.HasPrefix(id, "text.strunk-white.") {
+		return []string{"allow", "scope"}
+	}
 	switch id {
 	case "markdown.formatting":
 		return []string{"allow-hard-breaks"}

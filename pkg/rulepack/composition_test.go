@@ -100,7 +100,9 @@ func TestCompositionRejectsUnsafeAndAmbiguousImports(t *testing.T) {
 	parent := t.TempDir()
 	outside := putPack(t, parent, "outside.yaml", "version: 1\nrules: []\n")
 	root := filepath.Join(parent, "inside")
-	os.Mkdir(root, 0700)
+	if err := os.Mkdir(root, 0700); err != nil {
+		t.Fatal(err)
+	}
 	p := putPack(t, root, "root.yaml", "version: 1\nextends: [../outside.yaml]\nrules: []\n")
 	if _, e := Load(p, root); e == nil {
 		t.Fatalf("accepted outside import %s", outside)
