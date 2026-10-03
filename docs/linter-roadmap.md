@@ -2,7 +2,7 @@
 
 The approved design uses one configuration version, `version: 1`, with breaking changes allowed. Rule set names have no version suffix. Pin the executable release and review the shipped SHA-256 manifests to reproduce policy. Both commands now default to their recommended set; Portos policy is opt-in through `portos-defaults`.
 
-Implementation updated October 2, 2026. Checked items are implemented; rule behavior, options, and boundaries are documented in `docs/rule-packs.md`. This joint document is mirrored in both repositories. Unperformed customer pilot work is listed separately and is not claimed as completed.
+Implementation updated October 3, 2026. Checked items are implemented; rule behavior, options, and boundaries are documented in `docs/rule-packs.md`. This joint document is mirrored in both repositories. Unperformed customer pilot work is listed separately and is not claimed as completed.
 
 ## Existing systems and lessons
 
@@ -30,12 +30,22 @@ The internal requirements are independent rules. In OpenAPI, `portos-defaults` c
 - [x] `portos.pagination-response`: the response pagination context declares string `nextToken` and integer `maxResults`.
 - [x] `portos.path-description`: each request Path Item has a nonblank description, independently of operation descriptions.
 - [x] `portos.pagination-request`: List declares nextToken/maxResults query parameters; Query includes these in its object body, directly or under paginationContext.
-- [x] `portos.open-enums`: open values use `x-extensible-enum` and corresponding unique `x-enum-varnames`. A normal `enum` is closed and is rejected by this policy.
+- [x] `portos.open-enums`: open values use `x-extensible-enum` and corresponding unique `x-enum-varnames`. A normal `enum` is closed and is rejected, except exact sort-direction and error-family protocol enums with varnames.
 - [x] `portos.date-fields`: date/time properties use string `format: date-time`, representing RFC 3339. Additional field names are configurable. The requested rfc3999 is interpreted as RFC 3339.
 - [x] `portos.batch-contract`: Batch has an items array of objects with IDs and a synchronous results array of objects with IDs; Async Batch uses the async success contract. Field names are configurable. Runtime ID uniqueness/correlation requires service tests.
 - [x] `portos.query-graph`: Query request query references the canonical recursive Query model rather than an unrelated filter schema; comparator and boolean graph shapes are checked.
 - [x] `portos.name-schema`: data properties named name reference the configurable NameValue object.
 - [x] `portos.description-schema`: data properties named description reference the configurable DescriptionValue object; OpenAPI metadata descriptions are unaffected.
+
+- [x] `portos.success-status`: exact 200 or 202 success responses only, with at least one declared success.
+- [x] `portos.etag-conflict`: conditional ETag request headers require 409 and reject 412.
+- [x] `portos.error-contract`: declared client/server/default errors reference the configurable ErrorResponse object with required string code, message and type, and integer family restricted to 400/500.
+- [x] `portos.path-kebab-case`: literal request path segments use lowercase kebab-case; parameter names are independent.
+- [x] `portos.delete-idempotent`: explicit x-portos-idempotent declaration and no absent-resource 404/410; runtime repeats require service tests.
+- [x] `portos.version-prefix`: positive major version prefixes such as /v2/groups and /v3/groups.
+- [x] `portos.query-sorts`: optional sorting is a list of closed objects containing required direction ASCENDING/DESCENDING and key:string.
+- [x] `portos.batch-outcomes`: synchronous required results/errors lists, request-compatible IDs, and a shared ErrorResponse for each failure; actual ID correlation requires service tests.
+
 - [x] `text.no-dashes`: no hyphens or Unicode dashes in prose, excluding code and URL targets. Markdown bullet/fence syntax is not prose.
 - [x] `text.no-load-bearing`: prohibit that phrase in prose, including its spelling with a hyphen; exclude code and URL targets.
 
