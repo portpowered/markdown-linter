@@ -439,6 +439,48 @@
   },
   {
     "defaults": {
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "presets": [
+      "text:ste100"
+    ],
+    "id": "text.ste100.dictionary",
+    "title": "STE100: dictionary",
+    "kind": "markdown",
+    "options": {
+      "dictionary": "[]string",
+      "dictionary-file": "string",
+      "scope": "string",
+      "technical-terms": "[]string"
+    },
+    "guidance": "See docs/ste100.md for supplied vocabulary, explicit forms, alternatives and grammar limitations."
+  },
+  {
+    "defaults": {
+      "max-sentence-words": 25,
+      "scope": "prose"
+    },
+    "category": "text",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "presets": [
+      "text:ste100"
+    ],
+    "id": "text.ste100.grammar",
+    "title": "STE100: grammar",
+    "kind": "markdown",
+    "options": {
+      "forbidden-patterns": "map[string]string",
+      "max-sentence-words": "int",
+      "scope": "string"
+    },
+    "guidance": "See docs/ste100.md for supplied vocabulary, explicit forms, alternatives and grammar limitations."
+  },
+  {
+    "defaults": {
       "allow": [],
       "scope": "prose"
     },

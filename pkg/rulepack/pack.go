@@ -252,6 +252,9 @@ func (p *Program) Run(ctx context.Context, root string, documents []*interfaces.
 		pass := interfaces.NewPass(selected)
 		pass.Root = root
 		rule.analyzer.Analyze(ctx, pass)
+		if err := pass.Err(); err != nil {
+			return nil, fmt.Errorf("rule %s: %w", rule.spec.ID, err)
+		}
 		for _, diagnostic := range pass.Diagnostics() {
 			diagnostic.RuleID = rule.spec.ID
 			diagnostic.CheckID = rule.spec.Check

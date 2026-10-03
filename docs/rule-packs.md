@@ -144,3 +144,5 @@ rules:
 Fixes use the same selected pack as linting. `--fix-check` previews; `--fix` applies accepted safe nonoverlapping edits. Baselines and SARIF cannot be combined with fix modes. Applying edits can return success while manual findings remain; rerun ordinary lint afterward. File changes during application remain outside the concurrency contract.
 
 For relocation, select markdown:maintenance in a pack and pass repeated `--move old=new` or `--move-map FILE`. Targets use the working-directory spelling and remain root bounded. Ambiguous targets/anchors need manual review. The parser supports CommonMark plus tables, strikethrough, and task lists; scope MDX/template files out unless their syntax is supported by your customer analyzer.
+
+See [STE100 checks](ste100.md) for strict customer vocabulary, explicit forms, technical phrases, alternative suggestions, grammar patterns and activation of `text:ste100`.

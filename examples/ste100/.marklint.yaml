@@ -1,0 +1,6 @@
+version: 1
+extends: [text:ste100]
+overrides:
+  - id: text.ste100.dictionary
+    options:
+      dictionary-file: dictionary.yaml

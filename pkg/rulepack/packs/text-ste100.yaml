@@ -1,0 +1,14 @@
+version: 1
+rules:
+  - id: text.ste100.dictionary
+    check: text.ste100.dictionary
+    severity: error
+    options:
+      dictionary-file: ste100-dictionary.yaml
+  - id: text.ste100.grammar
+    check: text.ste100.grammar
+    severity: error
+    options:
+      max-sentence-words: 25
+      forbidden-patterns:
+        contractions: "(?i)\\b(?:[a-z]+n['’]t|(?:i|you|we|they|he|she|it)['’](?:m|re|ve|ll|d|s))\\b"

@@ -43,8 +43,14 @@ func (r *Registry) ConfigurationSchema() map[string]any {
 		if len(requiredOptions) > 0 {
 			options["required"] = requiredOptions
 		}
+		if d.ID == "text.ste100.dictionary" {
+			options["anyOf"] = []any{
+				map[string]any{"required": []string{"dictionary"}, "properties": map[string]any{"dictionary": map[string]any{"minItems": 1}}},
+				map[string]any{"required": []string{"dictionary-file"}, "properties": map[string]any{"dictionary-file": map[string]any{"minLength": 1}}},
+			}
+		}
 		rule := map[string]any{"type": "object", "additionalProperties": false, "required": []string{"id", "check"}, "properties": map[string]any{"id": text, "check": map[string]any{"const": d.ID}, "description": map[string]string{"type": "string"}, "enabled": map[string]string{"type": "boolean"}, "severity": map[string]any{"enum": []string{"error", "warning", "info"}}, "include": texts, "exclude": texts, "options": options}}
-		if len(requiredOptions) > 0 {
+		if len(requiredOptions) > 0 || d.ID == "text.ste100.dictionary" {
 			rule["required"] = []string{"id", "check", "options"}
 		}
 		rules = append(rules, rule)

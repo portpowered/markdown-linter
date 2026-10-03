@@ -11,6 +11,10 @@ func optionNames(id string) []string {
 		return []string{"allow", "scope"}
 	}
 	switch id {
+	case "text.ste100.dictionary":
+		return []string{"dictionary", "dictionary-file", "technical-terms", "scope"}
+	case "text.ste100.grammar":
+		return []string{"max-sentence-words", "forbidden-patterns", "scope"}
 	case "markdown.formatting":
 		return []string{"allow-hard-breaks"}
 	case "markdown.trailing-whitespace":

@@ -7,6 +7,9 @@ import (
 )
 
 func registerAdditional(registry *Registry) error {
+	if err := registerSTE(registry); err != nil {
+		return err
+	}
 	if err := registerStrunkWhite(registry); err != nil {
 		return err
 	}
@@ -80,6 +83,21 @@ func registerAdditional(registry *Registry) error {
 				d.Options[key] = "See rule-pack reference"
 			}
 		}
+		if strings.HasPrefix(d.ID, "text.ste100.") {
+			d.Title = "STE100: " + strings.TrimPrefix(d.ID, "text.ste100.")
+			d.Guidance = "See docs/ste100.md for supplied vocabulary, explicit forms, alternatives and grammar limitations."
+			d.Options = map[string]string{"scope": "string"}
+			d.Defaults = map[string]any{"scope": "prose"}
+			if d.ID == "text.ste100.dictionary" {
+				d.Options["dictionary"] = "[]string"
+				d.Options["dictionary-file"] = "string"
+				d.Options["technical-terms"] = "[]string"
+			} else {
+				d.Options["max-sentence-words"] = "int"
+				d.Options["forbidden-patterns"] = "map[string]string"
+				d.Defaults["max-sentence-words"] = 25
+			}
+		}
 		d.Presets = []string{}
 		for _, name := range PresetNames() {
 			p, _ := Preset(name)
@@ -99,6 +117,9 @@ func registerAdditional(registry *Registry) error {
 			}
 		}
 		d.Fixable = d.ID == "markdown.final-newline" || d.ID == "markdown.trailing-whitespace" || d.ID == "markdown.link-relocation" || d.ID == "markdown.doc-id-unique"
+		if strings.HasPrefix(d.ID, "text.ste100.") {
+			d.Severity = "error"
+		}
 
 		if e := registry.SetDescriptor(d); e != nil {
 			return e

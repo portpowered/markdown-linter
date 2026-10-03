@@ -1,6 +1,9 @@
 package interfaces
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
 // Analyzer is the repository-aware extension point for diagnostic-producing rules.
 type Analyzer interface {
@@ -24,7 +27,14 @@ type Pass struct {
 
 	diagnostics []Diagnostic
 	data        map[PassDataKey]any
+	errors      []error
 }
+
+// ReportError records an operational failure that cannot be suppressed as prose.
+func (p *Pass) ReportError(err error) { p.errors = append(p.errors, err) }
+
+// Err returns operational failures recorded by analyzers.
+func (p *Pass) Err() error { return errors.Join(p.errors...) }
 
 func newPass(documents []*Document) *Pass {
 	return &Pass{

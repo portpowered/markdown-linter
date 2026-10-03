@@ -172,3 +172,5 @@ Hosted settings UI and LSP are future integration projects. Exact JSON-pointer s
 - [x] OpenAPI `openapi:google` and `google-defaults`: 16 independently selectable REST/JSON projections and five paired contract groups. See the OpenAPI repository's `docs/google-api.md` for AIP sources, rule IDs and explicit intent markers.
 - [x] Both new sets have valid, invalid, false-positive and composed-set behavior fixtures.
 - [x] Default Make and CI run the standard golangci-lint suite and enforce 95% aggregate module statement coverage, with all Go package paths included and no profile exclusions.
+
+- [x] Markdown `text:ste100`: `text.ste100.dictionary` enforces supplied vocabulary with explicit forms, technical phrases and alternative suggestions; `text.ste100.grammar` adds a configurable sentence limit and named forbidden patterns. See `docs/ste100.md` for activation and semantic limitations.
