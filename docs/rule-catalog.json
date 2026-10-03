@@ -1,0 +1,460 @@
+[
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:style"
+    ],
+    "id": "markdown.blank-lines",
+    "title": "blank lines",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": true,
+    "presets": [
+      "markdown:maintenance"
+    ],
+    "id": "markdown.doc-id-unique",
+    "title": "doc id unique",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "identifiers": null
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "markdown.document-identifier",
+    "title": "document identifier",
+    "kind": "markdown",
+    "options": {
+      "identifiers": "See rule-pack reference"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "types": null
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "markdown.document-structure",
+    "title": "document structure",
+    "kind": "markdown",
+    "options": {
+      "types": "See rule-pack reference"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "presets": [
+      "markdown:core",
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.fence-closed",
+    "title": "fence closed",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.fence-language",
+    "title": "fence language",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": true,
+    "presets": [
+      "markdown:style"
+    ],
+    "id": "markdown.final-newline",
+    "title": "final newline",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow-hard-breaks": true
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "markdown.formatting",
+    "title": "formatting",
+    "kind": "markdown",
+    "options": {
+      "allow-hard-breaks": "*bool"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:documentation"
+    ],
+    "id": "markdown.frontmatter-valid",
+    "title": "frontmatter valid",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "markdown.heading-duplicates",
+    "title": "heading duplicates",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "presets": [
+      "markdown:core",
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.heading-order",
+    "title": "heading order",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow": []
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "markdown.html-policy",
+    "title": "html policy",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow": []
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.image-alt",
+    "title": "image alt",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "max": 120
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:style"
+    ],
+    "id": "markdown.line-length",
+    "title": "line length",
+    "kind": "markdown",
+    "options": {
+      "max": "int"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "moves": null
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": true,
+    "presets": [
+      "markdown:maintenance"
+    ],
+    "id": "markdown.link-relocation",
+    "title": "link relocation",
+    "kind": "markdown",
+    "options": {
+      "moves": "See rule-pack reference"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.link-text",
+    "title": "link text",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "indent": 2
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:style"
+    ],
+    "id": "markdown.list-style",
+    "title": "list style",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "indent": "int"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow-directories": null
+    },
+    "category": "markdown",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "presets": [
+      "markdown:core",
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.local-links",
+    "title": "local links",
+    "kind": "markdown",
+    "options": {
+      "allow-directories": "See rule-pack reference"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "style": "one-or-ordered"
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:style"
+    ],
+    "id": "markdown.ordered-list",
+    "title": "ordered list",
+    "kind": "markdown",
+    "options": {
+      "style": "string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "category": "markdown",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "presets": [
+      "markdown:core",
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.reference-definitions",
+    "title": "reference definitions",
+    "kind": "markdown",
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "heading": null,
+      "level": null
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "markdown.required-heading",
+    "title": "required heading",
+    "kind": "markdown",
+    "options": {
+      "heading": "See rule-pack reference",
+      "level": "See rule-pack reference"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "frontmatter-title": false
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "markdown:documentation"
+    ],
+    "id": "markdown.single-title",
+    "title": "single title",
+    "kind": "markdown",
+    "options": {
+      "frontmatter-title": "bool"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow-hard-breaks": true
+    },
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": true,
+    "presets": [
+      "markdown:recommended",
+      "portos-defaults"
+    ],
+    "id": "markdown.trailing-whitespace",
+    "title": "trailing whitespace",
+    "kind": "markdown",
+    "options": {
+      "allow-hard-breaks": "*bool"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "scope": ""
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "portos-defaults",
+      "portos:internal"
+    ],
+    "id": "text.no-dashes",
+    "title": "no dashes",
+    "kind": "markdown",
+    "options": {
+      "scope": "string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "scope": ""
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "portos-defaults",
+      "portos:internal"
+    ],
+    "id": "text.no-load-bearing",
+    "title": "no load bearing",
+    "kind": "markdown",
+    "options": {
+      "scope": "string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": ""
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [
+      "text:prose"
+    ],
+    "id": "text.repeated-word",
+    "title": "repeated word",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "dictionary": [],
+      "language": "",
+      "scope": ""
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "text.spelling",
+    "title": "spelling",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "dictionary": "[]string",
+      "language": "string",
+      "scope": "string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  },
+  {
+    "defaults": {
+      "allow": [],
+      "scope": "",
+      "terms": {}
+    },
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "presets": [],
+    "id": "text.terminology",
+    "title": "terminology",
+    "kind": "markdown",
+    "options": {
+      "allow": "[]string",
+      "scope": "string",
+      "terms": "map[string]string"
+    },
+    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+  }
+]

@@ -38,7 +38,7 @@ func RenderFixReport(out io.Writer, report engine.FixReviewReport, apply, verbos
 	renderFixReport(out, report, apply, verbose)
 }
 
-// Run executes the stock registry. No service-specific conventions are registered.
+// Run executes the stock registry, with Portos conventions available as an opt-in set.
 func Run(ctx context.Context, args []string, out, errOut io.Writer) int {
 	registry := rulepack.NewRegistry()
 	if err := rulepack.RegisterStock(registry); err != nil {
@@ -50,6 +50,8 @@ func Run(ctx context.Context, args []string, out, errOut io.Writer) int {
 
 type commandOptions struct {
 	pack, only, root, format, moveMap string
+	baseline, baselineWrite, failOn   string
+	baselineOverwrite                 bool
 	fix, preview, verbose, version    bool
 	moves                             moveMappingFlags
 	paths                             []string
@@ -59,6 +61,10 @@ func parseOptions(args []string, stderr io.Writer) (commandOptions, error) {
 	var opts commandOptions
 	flags := flag.NewFlagSet("marklint", flag.ContinueOnError)
 	flags.SetOutput(stderr)
+	flags.StringVar(&opts.baseline, "baseline", "", "known findings file")
+	flags.StringVar(&opts.baselineWrite, "baseline-write", "", "explicit baseline destination")
+	flags.BoolVar(&opts.baselineOverwrite, "baseline-overwrite", false, "explicitly replace baseline")
+	flags.StringVar(&opts.failOn, "fail-on", "error", "failure threshold: error or warning")
 	flags.StringVar(&opts.pack, "rules", "", "YAML rule-pack path")
 	flags.StringVar(&opts.only, "only", "", "comma-separated rule IDs from the selected pack")
 	flags.StringVar(&opts.root, "root", ".", "document root; inputs must remain within it")
@@ -73,10 +79,19 @@ func parseOptions(args []string, stderr io.Writer) (commandOptions, error) {
 		return opts, err
 	}
 	opts.paths = flags.Args()
+	if opts.failOn != "error" && opts.failOn != "warning" {
+		return opts, fmt.Errorf("fail-on must be error or warning")
+	}
+	if (opts.fix || opts.preview) && (opts.baseline != "" || opts.baselineWrite != "" || opts.format == "sarif") {
+		return opts, fmt.Errorf("fix modes cannot be combined with baselines or SARIF")
+	}
+	if opts.baseline != "" && opts.baselineWrite != "" {
+		return opts, fmt.Errorf("baseline read and write cannot be combined")
+	}
 	if opts.fix && opts.preview {
 		return opts, fmt.Errorf("--fix and --fix-check cannot be combined")
 	}
-	if opts.format != "text" && opts.format != "json" {
+	if opts.format != "text" && opts.format != "json" && opts.format != "sarif" {
 		return opts, fmt.Errorf("unknown format %q", opts.format)
 	}
 	return opts, nil
@@ -84,6 +99,15 @@ func parseOptions(args []string, stderr io.Writer) (commandOptions, error) {
 
 // RunWithRegistry allows customers to build a command with their own check factories.
 func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, registry *rulepack.Registry) int {
+	var baselineErr error
+	args, baselineErr = rulepack.BaselineArgs(args)
+	if baselineErr != nil {
+		fmt.Fprintln(errOut, baselineErr)
+		return exitOperational
+	}
+	if handled, code := rulepack.Manage(args, ".marklint.yaml", registry, out, errOut); handled {
+		return code
+	}
 	opts, err := parseOptions(args, errOut)
 	if err != nil {
 		fmt.Fprintln(errOut, err)
@@ -99,6 +123,10 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 	}
 	pack, err := loadPack(opts)
 	if err != nil {
+		fmt.Fprintln(errOut, err)
+		return exitOperational
+	}
+	if err = registry.ValidateKind(pack, "markdown"); err != nil {
 		fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
@@ -126,11 +154,30 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 		fmt.Fprintln(errOut, err)
 		return exitOperational
 	}
+	if opts.baselineWrite != "" {
+		if err = rulepack.WriteBaseline(opts.baselineWrite, opts.root, diagnostics, opts.baselineOverwrite); err != nil {
+			fmt.Fprintln(errOut, err)
+			return exitOperational
+		}
+		fmt.Fprintf(out, "Baseline written to %s\n", opts.baselineWrite)
+		return exitOK
+	}
+	if opts.baseline != "" {
+		var known int
+		diagnostics, known, err = rulepack.ApplyBaseline(opts.baseline, opts.root, diagnostics)
+		if err != nil {
+			fmt.Fprintln(errOut, err)
+			return exitOperational
+		}
+		fmt.Fprintf(errOut, "%d known findings in baseline\n", known)
+	}
 	if opts.fix || opts.preview {
 		return renderFixes(ctx, opts, diagnostics, out, errOut)
 	}
 	if opts.format == "json" {
 		err = json.NewEncoder(out).Encode(diagnostics)
+	} else if opts.format == "sarif" {
+		err = json.NewEncoder(out).Encode(rulepack.SARIF(diagnostics))
 	} else {
 		for _, d := range diagnostics {
 			if _, err = fmt.Fprintln(out, diagnosticString(d)); err != nil {
@@ -143,7 +190,7 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 		return exitOperational
 	}
 	for _, d := range diagnostics {
-		if d.Severity == interfaces.SeverityError {
+		if d.Severity == interfaces.SeverityError || (opts.failOn == "warning" && d.Severity == interfaces.SeverityWarning) {
 			return exitViolation
 		}
 	}
@@ -152,18 +199,20 @@ func RunWithRegistry(ctx context.Context, args []string, out, errOut io.Writer, 
 
 func loadPack(opts commandOptions) (rulepack.Pack, error) {
 	pack := rulepack.DefaultPack()
+	if opts.pack == "" {
+		candidate := filepath.Join(opts.root, ".marklint.yaml")
+		if _, err := os.Stat(candidate); err == nil {
+			opts.pack = candidate
+		} else if !os.IsNotExist(err) {
+			return pack, err
+		}
+	}
 	if opts.pack != "" {
-		file, err := os.Open(opts.pack)
+		var err error
+		pack, err = rulepack.Load(opts.pack, opts.root)
 		if err != nil {
 			return pack, err
 		}
-		defer file.Close()
-		pack, err = rulepack.Decode(file)
-		if err != nil {
-			return pack, err
-		}
-	} else if opts.fix || opts.preview {
-		pack = rulepack.Pack{Version: 1, Rules: []rulepack.Rule{{ID: "markdown.link-relocation", Check: "markdown.link-relocation"}, {ID: "markdown.doc-id-unique", Check: "markdown.doc-id-unique"}}}
 	}
 	if len(opts.moves) > 0 || opts.moveMap != "" {
 		moves, err := loadMoveMappings(opts.moves, opts.moveMap)
@@ -209,7 +258,7 @@ func selectRules(pack rulepack.Pack, only string) (rulepack.Pack, error) {
 	selected := []rulepack.Rule{}
 	ids := map[string]bool{}
 	for _, rule := range pack.Rules {
-		if wanted[rule.ID] {
+		if wanted[rule.ID] && (rule.Enabled == nil || *rule.Enabled) {
 			selected = append(selected, rule)
 			ids[rule.ID] = true
 			delete(wanted, rule.ID)
@@ -304,7 +353,7 @@ func renderFixes(ctx context.Context, opts commandOptions, diagnostics []interfa
 		return exitOK
 	}
 	for _, d := range diagnostics {
-		if d.Severity == interfaces.SeverityError {
+		if d.Severity == interfaces.SeverityError || (opts.failOn == "warning" && d.Severity == interfaces.SeverityWarning) {
 			return exitViolation
 		}
 	}
@@ -368,13 +417,8 @@ func isMarkdownFile(path string) bool {
 	return strings.EqualFold(filepath.Ext(path), ".md")
 }
 
-func diagnosticString(diagnostic interfaces.Diagnostic) string {
-	return interfaces.NewViolation(
-		diagnostic.Path,
-		diagnostic.Line,
-		diagnostic.RuleID,
-		diagnostic.Message,
-	).String()
+func diagnosticString(d interfaces.Diagnostic) string {
+	return fmt.Sprintf("%s:%d: %s: %s: %s", d.Path, d.Line, d.Severity, d.RuleID, d.Message)
 }
 
 type moveMappingFlags map[string]string

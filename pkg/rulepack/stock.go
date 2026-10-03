@@ -29,9 +29,8 @@ func (a ruleAdapter) Analyze(ctx context.Context, pass *interfaces.Pass) {
 // RegisterStock uses exactly the same factory registry available to customer checks.
 func RegisterStock(registry *Registry) error {
 	simple := map[string]func() interfaces.Rule{
-		"markdown.formatting":    func() interfaces.Rule { return rules.NewDocsCheckFormattingRule() },
+
 		"markdown.heading-order": func() interfaces.Rule { return rules.NewHeadingOrderRule() },
-		"markdown.ordered-list":  func() interfaces.Rule { return rules.NewOrderedListRule() },
 	}
 	for name, constructor := range simple {
 		factory := constructor
@@ -72,7 +71,7 @@ func RegisterStock(registry *Registry) error {
 			return err
 		}
 	}
-	return nil
+	return registerAdditional(registry)
 }
 
 type requiredHeading struct {
@@ -110,13 +109,7 @@ func (r requiredHeading) Analyze(_ context.Context, pass *interfaces.Pass) {
 }
 
 // DefaultPack provides general checks without application-specific conventions.
-func DefaultPack() Pack {
-	return Pack{Version: 1, Rules: []Rule{
-		{ID: "markdown.formatting", Check: "markdown.formatting"},
-		{ID: "markdown.heading-order", Check: "markdown.heading-order"},
-		{ID: "markdown.local-links", Check: "markdown.local-links"},
-	}}
-}
+func DefaultPack() Pack { p, _ := Preset("markdown:recommended"); return p }
 
 // AnalysisGroup composes public analyzers sharing one pass (for example index and relocation).
 type AnalysisGroup struct {

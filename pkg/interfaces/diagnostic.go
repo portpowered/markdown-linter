@@ -62,6 +62,8 @@ type Diagnostic struct {
 	Line           int
 	StartOffset    int
 	EndOffset      int
+	CheckID        string
+	Origin         string
 	RuleID         string
 	Message        string
 	Severity       Severity

@@ -1,0 +1,26 @@
+version: 1
+rules:
+    - id: markdown.heading-order
+      check: markdown.heading-order
+      severity: error
+    - id: markdown.local-links
+      check: markdown.local-links
+      severity: error
+    - id: markdown.fence-closed
+      check: markdown.fence-closed
+      severity: error
+    - id: markdown.reference-definitions
+      check: markdown.reference-definitions
+      severity: error
+    - id: markdown.trailing-whitespace
+      check: markdown.trailing-whitespace
+      severity: warning
+    - id: markdown.image-alt
+      check: markdown.image-alt
+      severity: warning
+    - id: markdown.link-text
+      check: markdown.link-text
+      severity: warning
+    - id: markdown.fence-language
+      check: markdown.fence-language
+      severity: warning

@@ -90,7 +90,7 @@ rules:
   - id: bad
     check: customer.unknown
 `)
-	code, _, stderr := command("--rules", config, "--only", "good", root)
+	code, _, stderr := command("--rules", config, "--only", "good", "--root", root, root)
 	if code != 2 || !strings.Contains(stderr, "unknown check") {
 		t.Fatalf("%d %s", code, stderr)
 	}

@@ -1,0 +1,8 @@
+version: 1
+rules:
+    - id: markdown.doc-id-unique
+      check: markdown.doc-id-unique
+      severity: error
+    - id: markdown.link-relocation
+      check: markdown.link-relocation
+      severity: error

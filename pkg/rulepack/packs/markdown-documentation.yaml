@@ -1,0 +1,8 @@
+version: 1
+rules:
+    - id: markdown.single-title
+      check: markdown.single-title
+      severity: warning
+    - id: markdown.frontmatter-valid
+      check: markdown.frontmatter-valid
+      severity: warning

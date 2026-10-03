@@ -1,0 +1,8 @@
+version: 1
+rules:
+  - id: text.no-dashes
+    check: text.no-dashes
+    severity: error
+  - id: text.no-load-bearing
+    check: text.no-load-bearing
+    severity: error

@@ -1,0 +1,42 @@
+[
+  {
+    "name": "markdown:core",
+    "file": "markdown-core.yaml",
+    "sha256": "30248ca2305d3bd0296c32ca51b50f26e9525fa96b19d99706a8242ff930506e"
+  },
+  {
+    "name": "markdown:documentation",
+    "file": "markdown-documentation.yaml",
+    "sha256": "5d29a98e6e8b44c155a3641f71c793cd8de52dd9597195738154ea042c32556e"
+  },
+  {
+    "name": "markdown:maintenance",
+    "file": "markdown-maintenance.yaml",
+    "sha256": "b95adf6d8655f5d4f8021971518c641b0ac3b02c635d39ecc663845194de271b"
+  },
+  {
+    "name": "markdown:recommended",
+    "file": "markdown-recommended.yaml",
+    "sha256": "f61cc2947d723cbc8721dc850f9d2f5deff01f7df51f13475de25aa903ef8b38"
+  },
+  {
+    "name": "markdown:style",
+    "file": "markdown-style.yaml",
+    "sha256": "1c2cabc8b872182c5257e6e1feddd3962c08895a42ecfa488bccdebf5f2a2fa0"
+  },
+  {
+    "name": "portos-defaults",
+    "file": "portos-defaults.yaml",
+    "sha256": "b9f30d20aa0d84b4eb8119d33376044302590ed34731b7c54194c3f08e378b27"
+  },
+  {
+    "name": "portos:internal",
+    "file": "portos-internal.yaml",
+    "sha256": "e2a7229519c4aa0ecc7342f62cf36086abdb85c9a59c157c6502f5d4f6326b77"
+  },
+  {
+    "name": "text:prose",
+    "file": "text-prose.yaml",
+    "sha256": "8d53cf469b0d7e054c13755b753acadf38ad20c9cd66d9c3b6ee38fef405f235"
+  }
+]

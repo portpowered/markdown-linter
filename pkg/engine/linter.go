@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/yuin/goldmark"
+	"github.com/yuin/goldmark/extension"
 	"github.com/yuin/goldmark/text"
 )
 
@@ -24,7 +25,7 @@ type Linter struct {
 // New creates a Markdown linter with the supplied options.
 func New(opts ...Option) *Linter {
 	l := &Linter{
-		markdown: goldmark.New(),
+		markdown: goldmark.New(goldmark.WithExtensions(extension.Table, extension.Strikethrough, extension.TaskList)),
 	}
 
 	for _, opt := range opts {

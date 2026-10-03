@@ -1,0 +1,17 @@
+version: 1
+rules:
+    - id: markdown.ordered-list
+      check: markdown.ordered-list
+      severity: warning
+    - id: markdown.blank-lines
+      check: markdown.blank-lines
+      severity: warning
+    - id: markdown.final-newline
+      check: markdown.final-newline
+      severity: warning
+    - id: markdown.list-style
+      check: markdown.list-style
+      severity: warning
+    - id: markdown.line-length
+      check: markdown.line-length
+      severity: warning

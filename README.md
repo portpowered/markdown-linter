@@ -14,7 +14,7 @@ go build -o marklint ./cmd/marklint
 
 The command requires files or directories. Directories are searched recursively for Markdown. `--root` defaults to the working directory and bounds inputs, local links, and relocation targets, including symlink targets. External URLs are ignored; no network checks or executable downloads occur when loading a pack.
 
-Without `--rules`, the default pack checks formatting, heading order, and local links. An explicit pack runs only its configured rules. `--only id,other-id` filters that pack after the whole configuration has been validated.
+Without `--rules`, the default is `markdown:recommended`. At the selected root, `.marklint.yaml` is discovered automatically. An explicit pack runs its resolved configured rules, including named/local sets from `extends`. `--only id,other-id` filters that pack after the whole configuration has been validated.
 
 ## Install a release
 
@@ -42,7 +42,7 @@ YAML assigns rule IDs, selects registered checks, supplies options, and controls
 
 Text output uses `file:line: rule-id: message`. `--format json` emits an array of diagnostics with source locations, configured identity/severity, and optional suggested fixes. Exit codes are 0 for success (including warnings and information), 1 for error findings, and 2 for configuration or execution failure.
 
-Linting is read-only. `--fix-check` previews rule-provided fixes; `--fix` applies accepted safe edits. The planner rejects invalid ranges and overlapping edits. With no explicit pack, fix modes use relocation and duplicate `doc-id` checks. With an explicit pack, they use that pack's checks. After applying edits, rerun ordinary lint: successful application reports exit 0 even when other findings require manual review. File changes between analysis and application are outside the command's concurrency contract; do not edit inputs concurrently.
+Linting is read-only. `--fix-check` previews rule-provided fixes; `--fix` applies accepted safe edits. The planner rejects invalid ranges and overlapping edits. Fix modes use the same selected pack as linting. Activate `markdown:maintenance` explicitly for relocation and duplicate `doc-id` repair. After applying edits, rerun ordinary lint: successful application reports exit 0 even when other findings require manual review. File changes between analysis and application are outside the command's concurrency contract; do not edit inputs concurrently.
 
 Relocation accepts repeated `--move old=new` arguments or a `--move-map` file containing a JSON mapping or `old=new` lines. A custom pack must include `markdown.link-relocation` to accept these arguments. Ambiguous destinations and missing anchors remain manual-review findings.
 
@@ -61,3 +61,13 @@ Build a pack with `rulepack.Decode`, register checks with `RegisterStock` and `R
 ## Development
 
 See [development](docs/development.md). Run `GOWORK=off go test ./...` and `GOWORK=off go vet ./...`. The fixtures and examples belong to this repository; no parent checkout or credentials are required.
+
+## Rule and usability roadmap
+
+See the [OpenAPI and Markdown linter plan](docs/linter-roadmap.md) for the existing-system comparison, proposed rule additions, customer activation UX, rule-set composition, testing, and rollout. It records implemented rules and UX, Portos requirements with rule IDs, and the remaining customer pilot work.
+
+## Compose Portos policy
+
+Use `init --preset portos-defaults` to activate general recommendations plus internal Portos policy in one version 1 configuration. `rules list`, `presets list`, and `config explain` make rule activation and overrides inspectable. See the rule-pack reference for baselines, SARIF, the warning failure threshold, and breaking default/configuration changes.
+
+The expanded rules and composition UX are available in this source checkout; pin the next release containing these changes when deploying them to CI. Existing v0.1.0 installation examples refer to the earlier released baseline.
