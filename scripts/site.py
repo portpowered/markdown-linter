@@ -102,6 +102,27 @@ def validate(catalog, references):
                     raise ValueError("API example must contain contract fields: " + rule["id"])
 
 
+def rule_navigation(catalog, config):
+    groups = {}
+    sections = config.get("rule-groups", {})
+    for rule in catalog:
+        category = rule["category"]
+        groups.setdefault(category, [])
+    for category in sorted(groups):
+        category_rules = [rule for rule in catalog if rule["category"] == category]
+        nested = [(section, []) for section in sections.get(category, [])]
+        for rule in category_rules:
+            page = {rule["id"]: "rules/" + rule["id"] + ".md"}
+            for section, pages in nested:
+                if rule["id"].startswith(section["prefix"]):
+                    pages.append(page)
+                    break
+            else:
+                groups[category].append(page)
+        groups[category] += [{section["title"]: pages} for section, pages in nested if pages]
+    return [{name.title(): pages} for name, pages in sorted(groups.items())]
+
+
 def generate(root, catalog, references, config):
     validate(catalog, references)
     output = root / ".site-docs"
@@ -121,16 +142,14 @@ def generate(root, catalog, references, config):
     for source in (root / "docs" / "stylesheets").glob("*.css"):
         write(output / "stylesheets" / source.name, source.read_text(encoding="utf-8"))
     write(output / "index.md", (root / "docs" / "home.md").read_text(encoding="utf-8"))
-    groups = {}
     index = "# Rule reference\n\nSearch by rule ID, behavior, or parameter name. Every registered rule has its own configuration reference.\n\n| Rule | Behavior |\n| --- | --- |\n"
     for rule in catalog:
         identifier = rule["id"]
         write(output / "rules" / (identifier + ".md"), rule_page(rule, references[identifier]))
         index += f"| [{identifier}]({identifier}.md) | {table(references[identifier]['summary'])} |\n"
-        groups.setdefault(rule["category"], []).append({identifier: "rules/" + identifier + ".md"})
     write(output / "rules" / "index.md", index)
     nav = [{"Overview": "index.md"}, {"Get started": "getting-started.md"}, {"Go library": "library.md"}, {"Rule packs": "rule-packs.md"}]
-    nav += [{"Rules": [{"All rules": "rules/index.md"}] + [{name.title(): pages} for name, pages in sorted(groups.items())]}]
+    nav += [{"Rules": [{"All rules": "rules/index.md"}] + rule_navigation(catalog, config)}]
     nav += [{"Guides": config["guides"]}]
     mkdocs = {
         "site_name": config["title"], "site_description": config["description"],

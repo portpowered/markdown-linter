@@ -4,6 +4,12 @@ repository: portpowered/markdown-linter
 command: marklint
 kinds:
 - markdown
+rule-groups:
+  text:
+  - title: STE100
+    prefix: text.ste100.
+  - title: Strunk and White
+    prefix: text.strunk-white.
 guides:
 - STE100: ste100.md
 - Strunk and White: strunk-white.md

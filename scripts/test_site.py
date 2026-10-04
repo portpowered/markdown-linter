@@ -53,6 +53,35 @@ class DocumentationSite(unittest.TestCase):
             self.assertTrue((root / ".site-docs/rules/text.fixture.md").exists())
             self.assertEqual(yaml.safe_load((root / "mkdocs.generated.yml").read_text())["site_url"], "https://portpowered.github.io/fixture/")
 
+    def test_named_rule_families_are_nested_without_duplicate_pages(self):
+        config = yaml.safe_load((builder.ROOT / "docs/site.yaml").read_text(encoding="utf-8"))
+        catalog = [{"id": name, "category": name.split(".")[0]} for name in [
+            "markdown.single-title", "text.matcher", "text.repeated-word",
+            "text.ste100.dictionary", "text.ste100.grammar",
+            "text.strunk-white.needless-words", "text.strunk-white.fancy-words",
+        ]]
+        navigation = builder.rule_navigation(catalog, config)
+        self.assertEqual(navigation, [
+            {"Markdown": [{"markdown.single-title": "rules/markdown.single-title.md"}]},
+            {"Text": [
+                {"text.matcher": "rules/text.matcher.md"},
+                {"text.repeated-word": "rules/text.repeated-word.md"},
+                {"STE100": [
+                    {"text.ste100.dictionary": "rules/text.ste100.dictionary.md"},
+                    {"text.ste100.grammar": "rules/text.ste100.grammar.md"},
+                ]},
+                {"Strunk and White": [
+                    {"text.strunk-white.needless-words": "rules/text.strunk-white.needless-words.md"},
+                    {"text.strunk-white.fancy-words": "rules/text.strunk-white.fancy-words.md"},
+                ]},
+            ]},
+        ])
+        self.assertEqual(builder.rule_navigation(catalog[:2], config), [
+            {"Markdown": [{"markdown.single-title": "rules/markdown.single-title.md"}]},
+            {"Text": [{"text.matcher": "rules/text.matcher.md"}]},
+        ])
+        self.assertEqual(builder.rule_navigation(catalog[:2], {}), builder.rule_navigation(catalog[:2], config))
+
     def test_all_rendered_links_and_anchors(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
