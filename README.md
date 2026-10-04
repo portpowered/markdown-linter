@@ -83,3 +83,5 @@ Individual targets are `make test`, `make lint`, `make coverage`, `make coverage
 CI runs the same coverage/lint policy on Linux, macOS and Windows for each supported Go version. The explicit `linters.default: standard` configuration enables errcheck, govet, ineffassign, staticcheck and unused, with no preset issue exclusions. See the [official standard linter list](https://golangci-lint.run/docs/welcome/quick-start/) and [pinned release](https://github.com/golangci/golangci-lint/releases/tag/v2.14.0). Lint failures are fixed rather than baselined.
 
 The opt-in [STE100 ruleset](docs/ste100.md) checks prose against a supplied approved-word dictionary and configurable grammar patterns. Dictionary entries group explicit inflections and provide alternatives as editorial suggestions.
+
+Browse the [documentation website](https://portpowered.github.io/markdown-linter/) for rule behavior, parameters, configuration examples and Go library usage. See [website maintenance](docs/website.md) for local builds and CI.

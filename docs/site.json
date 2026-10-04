@@ -1,0 +1,20 @@
+{
+  "title": "Marklint",
+  "description": "Configurable lint rules, customer configuration and Go library usage.",
+  "repository": "portpowered/markdown-linter",
+  "command": "marklint",
+  "kinds": [
+    "markdown"
+  ],
+  "guides": [
+    {
+      "STE100": "ste100.md"
+    },
+    {
+      "Strunk and White": "strunk-white.md"
+    },
+    {
+      "Maintaining this site": "website.md"
+    }
+  ]
+}

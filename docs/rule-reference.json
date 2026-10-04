@@ -1,0 +1,404 @@
+{
+  "markdown.blank-lines": {
+    "summary": "Requires blank separation before top-level headings, lists and fenced code blocks when preceding content exists.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.doc-id-unique": {
+    "summary": "Reports duplicate document IDs from the documentation index across the selected Markdown files.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.document-identifier": {
+    "summary": "Checks configured frontmatter identifier fields for presence, format, uniqueness and optional filename agreement.",
+    "parameters": {
+      "identifiers": "Nonempty list of identifier specifications. Fields: field (required), name, paths, required, pattern, format-label, unique, match-filename."
+    },
+    "example-options": {
+      "identifiers": [
+        {
+          "field": "id",
+          "required": true,
+          "pattern": "^DOC-[0-9]+$",
+          "unique": true
+        }
+      ]
+    }
+  },
+  "markdown.document-structure": {
+    "summary": "Checks required frontmatter fields and level-two headings for configured document path groups.",
+    "parameters": {
+      "types": "Nonempty list of document groups. Fields: paths, required-fields, required-headings, any-headings, alternative-message. Headings are level two."
+    },
+    "example-options": {
+      "types": [
+        {
+          "paths": [
+            "docs"
+          ],
+          "required-fields": [
+            "title"
+          ],
+          "required-headings": [
+            "Purpose"
+          ]
+        }
+      ]
+    }
+  },
+  "markdown.fence-closed": {
+    "summary": "Reports fenced code blocks with no matching closing fence.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.fence-language": {
+    "summary": "Requires a language label on fenced code blocks; use text for plain text examples.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.final-newline": {
+    "summary": "Requires exactly one final newline and provides a safe fix.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.formatting": {
+    "summary": "Combines unclosed code-fence and trailing-whitespace checks.",
+    "parameters": {
+      "allow-hard-breaks": "Permit exactly two trailing spaces as Markdown hard breaks; false rejects them."
+    },
+    "example-options": {
+      "allow-hard-breaks": true
+    }
+  },
+  "markdown.frontmatter-valid": {
+    "summary": "Reports invalid YAML in the initial frontmatter block.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.heading-duplicates": {
+    "summary": "Reports duplicate sibling headings within the same heading hierarchy.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.heading-order": {
+    "summary": "Reports skipped heading levels, such as H2 followed by H4.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.html-policy": {
+    "summary": "Reports raw HTML tags outside the configured tag allowlist.",
+    "parameters": {
+      "allow": "HTML tag names permitted in raw HTML; empty rejects all tags."
+    },
+    "example-options": {
+      "allow": []
+    }
+  },
+  "markdown.image-alt": {
+    "summary": "Requires image alt text unless the destination is explicitly allowed as decorative.",
+    "parameters": {
+      "allow": "Image destinations permitted to omit alt text as explicitly decorative."
+    },
+    "example-options": {
+      "allow": []
+    }
+  },
+  "markdown.line-length": {
+    "summary": "Reports prose lines over the character limit, excluding code, table rows and lines containing URLs.",
+    "parameters": {
+      "max": "Maximum character count for a prose line; must be positive."
+    },
+    "example-options": {
+      "max": 120
+    }
+  },
+  "markdown.link-relocation": {
+    "summary": "Finds moved local Markdown targets and suggests reviewed link repairs using a shared documentation index.",
+    "parameters": {
+      "moves": "Mapping of old local document paths to their new paths, used for explicit relocation candidates."
+    },
+    "example-options": {}
+  },
+  "markdown.link-text": {
+    "summary": "Requires descriptive link labels and rejects empty labels and click here.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.list-style": {
+    "summary": "Checks the unordered-list marker and nested indentation against the configured convention.",
+    "parameters": {
+      "allow": "The first one-character entry selects the unordered-list marker; empty uses a hyphen.",
+      "indent": "Nested unordered-list indentation in spaces; must be between 1 and 8."
+    },
+    "example-options": {
+      "allow": [],
+      "indent": 2
+    }
+  },
+  "markdown.local-links": {
+    "summary": "Checks local link destinations and anchors, with document-root boundaries and an optional directory allowance.",
+    "parameters": {
+      "allow-directories": "Allow directory destinations in local links; false by default."
+    },
+    "example-options": {
+      "allow-directories": false
+    }
+  },
+  "markdown.ordered-list": {
+    "summary": "Checks ordered-list numbering against sequential, all-one, or either convention.",
+    "parameters": {
+      "style": "Ordered numbering convention: one, ordered, or one-or-ordered."
+    },
+    "example-options": {
+      "style": "one-or-ordered"
+    }
+  },
+  "markdown.reference-definitions": {
+    "summary": "Reports duplicate reference-link definitions and missing definitions for explicit reference uses.",
+    "parameters": {},
+    "example-options": {}
+  },
+  "markdown.required-heading": {
+    "summary": "Requires a heading with exactly the configured text and level in every selected document.",
+    "parameters": {
+      "heading": "Exact text of the required heading; must be nonempty.",
+      "level": "Required heading level from 1 through 6."
+    },
+    "example-options": {
+      "heading": "Purpose",
+      "level": 2
+    }
+  },
+  "markdown.single-title": {
+    "summary": "Requires one H1 title, or accepts a frontmatter title when configured.",
+    "parameters": {
+      "frontmatter-title": "Accept frontmatter containing a title field instead of requiring an H1."
+    },
+    "example-options": {
+      "frontmatter-title": false
+    }
+  },
+  "markdown.trailing-whitespace": {
+    "summary": "Reports trailing spaces or tabs outside code and provides a safe removal fix; two-space hard breaks are permitted by default.",
+    "parameters": {
+      "allow-hard-breaks": "Permit exactly two trailing spaces as Markdown hard breaks; false rejects them."
+    },
+    "example-options": {
+      "allow-hard-breaks": true
+    }
+  },
+  "text.no-dashes": {
+    "summary": "Rejects hyphens and Unicode dashes in prose while excluding code and URLs.",
+    "parameters": {
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "scope": "prose"
+    }
+  },
+  "text.no-load-bearing": {
+    "summary": "Reports load bearing and dash-separated variants in prose.",
+    "parameters": {
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "scope": "prose"
+    }
+  },
+  "text.repeated-word": {
+    "summary": "Reports adjacent repeated words in prose, compared without case sensitivity.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    }
+  },
+  "text.spelling": {
+    "summary": "Rejects words outside the supplied offline dictionary and explicit allowlist for the declared language.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "dictionary": "Exact approved word forms as a string list; no dictionary fallback. Required for text.spelling; an alternative to dictionary-file for STE100.",
+      "language": "Nonempty language label for the supplied spelling vocabulary; does not download a dictionary.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "dictionary": [
+        "use",
+        "the",
+        "api"
+      ],
+      "language": "en-US",
+      "scope": "prose"
+    }
+  },
+  "text.ste100.dictionary": {
+    "summary": "Rejects prose words outside the supplied approved vocabulary, explicit forms and complete technical terms; rejected alternatives remain suggestions.",
+    "parameters": {
+      "dictionary": "Exact approved word forms as a string list; no dictionary fallback. Required for text.spelling; an alternative to dictionary-file for STE100.",
+      "dictionary-file": "Literal YAML dictionary path relative to the lint root. Accepts words, entries with forms/metadata, technical-terms and alternatives.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.",
+      "technical-terms": "Complete approved technical phrases; individual words are not approved outside the phrase."
+    },
+    "example-options": {
+      "scope": "prose",
+      "dictionary": [
+        "use",
+        "the",
+        "api"
+      ]
+    },
+    "notes": "See [STE100 vocabulary and grammar](../ste100.md) for explicit inflections, alternatives, technical phrases and semantic limitations."
+  },
+  "text.ste100.grammar": {
+    "summary": "Checks a configurable lexical sentence limit and named forbidden grammar patterns.",
+    "parameters": {
+      "forbidden-patterns": "Mapping of diagnostic names to Go regular expressions. Patterns must not match empty text; an empty mapping disables pattern checks.",
+      "max-sentence-words": "Positive lexical word limit per sentence; default 25. This is a configurable heuristic, not complete standard word counting.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "max-sentence-words": 25,
+      "scope": "prose"
+    },
+    "notes": "See [STE100 vocabulary and grammar](../ste100.md) for explicit inflections, alternatives, technical phrases and semantic limitations."
+  },
+  "text.strunk-white.correlative-pairs": {
+    "summary": "Flags finite mismatched pair constructions: both/or, either/and and neither/or; invites editorial review.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.exclamations": {
+    "summary": "Flags exclamation marks in prose for editorial review.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.existential-openings": {
+    "summary": "Flags sentence openings such as there is and there are for a more direct subject.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.fancy-words": {
+    "summary": "Flags a finite list of ornate words such as utilize and aforementioned.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.needless-words": {
+    "summary": "Flags a finite list of wordy phrases such as in order to and at this point in time.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.negative-phrases": {
+    "summary": "Flags selected negative constructions such as not uncommon for editorial review.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.passive-voice": {
+    "summary": "Flags selected agent-bearing passive constructions with by; it does not classify every passive sentence.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.qualifiers": {
+    "summary": "Flags very, really, rather and quite for editorial review.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.redundant-pairs": {
+    "summary": "Flags selected redundant phrases such as advance planning and final outcome.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.strunk-white.usage": {
+    "summary": "Flags irregardless and modal-of constructions such as should of.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose"
+    },
+    "notes": "This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md) for covered patterns and legitimate exceptions."
+  },
+  "text.terminology": {
+    "summary": "Reports configured disfavored words or phrases and suggests the preferred terminology without automatically rewriting.",
+    "parameters": {
+      "allow": "Explicit exceptions, compared without case sensitivity where the check operates on prose.",
+      "scope": "Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.",
+      "terms": "Nonempty mapping of disfavored words or phrases to preferred wording."
+    },
+    "example-options": {
+      "allow": [],
+      "scope": "prose",
+      "terms": {
+        "utilize": "use"
+      }
+    }
+  }
+}

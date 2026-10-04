@@ -8,3 +8,8 @@
 /marklint.exe
 
 __pycache__/
+
+/site/
+/.site-docs/
+/mkdocs.generated.yml
+/.venv-docs/

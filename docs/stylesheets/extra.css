@@ -1,0 +1,6 @@
+.md-grid { max-width: 92rem; }
+.md-typeset { font-size: .85rem; line-height: 1.65; }
+.md-typeset h1 { font-weight: 700; letter-spacing: -.025em; }
+.md-typeset code { border-radius: .2rem; }
+.md-typeset table:not([class]) { width: 100%; }
+.md-nav__link { overflow-wrap: anywhere; }
