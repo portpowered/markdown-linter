@@ -13,3 +13,5 @@ __pycache__/
 /.site-docs/
 /mkdocs.generated.yml
 /.venv-docs/
+
+/.cache-quality/

@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"regexp"
 	"strings"
 	"testing"
 
@@ -155,7 +154,7 @@ func TestStrunkWhitePackAndComposition(t *testing.T) {
 	pass := interfaces.NewPass([]*interfaces.Document{doc})
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
-	check := strunkCheck{spec: strunkSpecs[0], pattern: regexp.MustCompile(strunkSpecs[0].pattern)}
+	check := matcherCheck{options: strunkDefaults(strunkSpecs[0])}
 	check.Analyze(ctx, pass)
 	if len(pass.Diagnostics()) != 0 {
 		t.Fatal("canceled check emitted findings")

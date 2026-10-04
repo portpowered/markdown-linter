@@ -1,6 +1,6 @@
 # Rule packs
 
-Use `version: 1` for every pack. This is the only supported configuration schema. Named sets have no version suffix; pin the executable release in CI and review `packs/manifest.json` hashes when upgrading. There is no compatibility branch for previous default behavior.
+Use `version: 1` for every pack. This is the only supported configuration schema. Named sets have no version suffix; pin the executable release in CI and review `packs/manifest.json` hashes when upgrading. Previous default behavior has no compatibility branch.
 
 For opt-in English editorial review, compose `text:strunk-white` with a Markdown pack. Its ten checks, exact patterns, paired constructions, source analysis, and exceptions are documented in the [Strunk and White guide](strunk-white.md).
 
@@ -43,13 +43,13 @@ rules: []
 suppressions: []
 ```
 
-Replace the two example IDs with actual configured IDs from `config explain`; unknown IDs are errors. A local company pack uses the same schema and can extend sets, add its own instances, and override inherited instances. Imports are relative to the containing pack, bounded by the selected root including symlinks. All scope paths remain relative to the lint root. Explicit root configuration must also be within that root.
+Replace the two example IDs with actual configured IDs from `config explain`; unknown IDs are errors. A company pack uses the same schema. It can extend sets, add instances and override inherited rules. Imports are relative to the containing pack, bounded by the selected root including symlinks. All scope paths remain relative to the lint root. Explicit root configuration must also be within that root.
 
-Dependencies are resolved in declared order, with repeated identical dependencies loaded once. Cycles and duplicate configured IDs are errors; use `overrides` rather than defining the same ID in two packs. Each pack's overrides apply after its dependencies and its added rules. Root overrides run last. Independent instances of the same check use distinct IDs; choose disjoint scopes if overlapping findings would be redundant.
+Dependencies are resolved in declared order, with repeated identical dependencies loaded once. Cycles and duplicate configured IDs are errors; use `overrides` instead of defining the same ID in two packs. Each pack's overrides apply after its dependencies and its added rules. Root overrides run last. Independent instances of the same check use distinct IDs; choose disjoint scopes if overlapping findings would be redundant.
 
 Overrides can change enabled state, severity, include, exclude, and options, but not check identity. Supplied options maps and scope lists replace whole fields, while omitted fields inherit. `options: {}` resets to check defaults. The complete resolved configuration is validated, including disabled rules and rules omitted by `--only`. Each check rejects unsupported option keys. Unknown fields/checks, bad severities/options, duplicate IDs, and unsupported configuration versions fail before linting.
 
-Severity is error, warning, or info, default error. A rule requires id and check; optional fields are description, enabled, severity, include, exclude, and options. Include/exclude patterns are root-relative slash paths: `*`, `?`, and character classes match within a segment, and a trailing `/**` selects a subtree. Exclusions win. No absolute paths/backslashes or other recursive glob forms are supported.
+Severity is error, warning, or info, default error. A rule requires id and check; optional fields are description, enabled, severity, include, exclude, and options. Include and exclude patterns use root-relative slash paths. `*`, `?` and character classes match within a segment. A trailing `/**` selects a subtree. Exclusions win. No absolute paths/backslashes or other recursive glob forms are supported.
 
 `--only id,other-id` selects configured enabled instance IDs after validation. It does not activate an arbitrary installed check. An unknown/disabled selection fails. Kind mismatches fail instead of silently producing no findings; custom checks without kind metadata remain allowed.
 
@@ -63,7 +63,7 @@ suppressions:
     reason: Temporary migration exception tracked in API-123
 ```
 
-Suppressions require an existing rule ID, root-relative path pattern, and nonblank reason. Omitted/zero line covers the file. Suppressed fixes are removed as well as findings. Source parse, reference boundary, and execution failures cannot be suppressed. Markdown additionally supports `<!-- marklint-disable-next-line RULE_ID reason: explanation -->` immediately before a finding. The ID must match the configured rule instance, the reason must be nonblank, and directives inside code do not suppress findings. OpenAPI pack suppressions can add `pointer: "#/paths/~1widgets/get"` to match exactly that diagnostic pointer; omitted pointers cover all locations selected by the path and line.
+Suppressions require an existing rule ID, root-relative path pattern, and nonblank reason. Omitted/zero line covers the file. Suppressed fixes are removed as well as findings. Source parse, reference boundary, and execution failures cannot be suppressed. Markdown additionally supports `<!-- marklint-disable-next-line RULE_ID reason: explanation -->` immediately before a finding. The ID must match the configured instance. The reason must be nonblank. Directives inside code do not suppress findings. OpenAPI suppressions can specify an exact diagnostic pointer, such as `pointer: "#/paths/~1widgets/get"`. Omitted pointers cover locations selected by path and line.
 
 ```sh
 COMMAND baseline create --output baseline.json --rules CONFIG --root . INPUT_PATH
@@ -74,13 +74,13 @@ COMMAND --format sarif --rules CONFIG --root . INPUT_PATH
 
 Baseline creation is explicit and read-only with respect to inputs. Replacement requires `--overwrite` on baseline create (or `--baseline-overwrite` with `--baseline-write`). Ordinary lint never updates the baseline. Fingerprints contain root-relative file identity, instance/check identity, message, and source evidence; OpenAPI also includes the pointer. Counts matter: a newly introduced duplicate is new debt. Moving unchanged lines remains recognized when message/pointer identity is unchanged; changed evidence produces a new finding. Known counts go to stderr and new findings remain in the selected output format. This is conservative debt matching, not an AST-aware API comparison.
 
-Exit codes: 0 for success, 1 for findings at the selected failure threshold, 2 for configuration/execution failure. Default threshold is error; `--fail-on warning` includes warnings without changing their labels. JSON is an ordered diagnostics array including configured RuleID, CheckID, Origin, Severity, file/location, and message. SARIF 2.1 output uses those same findings. For editors, use the machine-readable catalog and diagnostics rather than a separate policy engine.
+Exit codes: 0 for success, 1 for findings at the selected failure threshold, 2 for configuration/execution failure. Default threshold is error; `--fail-on warning` includes warnings without changing their labels. JSON is an ordered diagnostics array including configured RuleID, CheckID, Origin, Severity, file/location, and message. SARIF 2.1 output uses those same findings. For editors, use the machine-readable catalog and diagnostics instead of a separate policy engine.
 
 ## Distribution and extensions
 
 First-party packs are readable YAML embedded in the binary; SHA-256 manifests and YAML sources are included in release archives. `presets describe` includes the source content hash and resolved membership. `presets export` prints the original YAML, including composition references. Customer packs are checked-in local YAML. No config downloads code, packs, or external URLs during a lint run.
 
-New executable checks require a customer-built Go command using `Registry.Register` and `RunWithRegistry`. Stock and customer checks have the same options/pass/diagnostic capabilities. Use `rulepack.Load(filename, root)` before `Compile` for composition; `Decode` alone parses raw YAML. Root policy is enforced by the stock loaders; custom Go code is trusted and must follow its intended filesystem/network policy itself.
+New executable checks require a customer-built Go command using `Registry.Register` and `RunWithRegistry`. Stock and customer checks have the same options/pass/diagnostic capabilities. Use `rulepack.Load(filename, root)` before `Compile` for composition; `Decode` alone parses raw YAML. Stock loaders enforce the root policy. Custom Go code is trusted and must follow the intended filesystem and network policy.
 
 ## Markdown command and sets
 
@@ -90,7 +90,7 @@ COMMAND is `marklint`, CONFIG is `.marklint.yaml`, and INPUT_PATH is a Markdown 
 marklint --rules examples/portos/rules.yaml examples/portos/docs
 ```
 
-Rules in markdown:core are errors. Recommended adds whitespace, alt text, link text, and fence-language warnings. Portos adds text.no-dashes and text.no-load-bearing as errors. Markdown bullet/fence markers and link destinations are not prose; code spans/blocks and URL text are excluded from the two Portos checks. Neither rule automatically rewrites prose.
+Rules in markdown:core are errors. Recommended adds whitespace, alt text, link text, and fence-language warnings. Portos adds `portos.prose-dashes` and `portos.banned-phrases` as configured `text.matcher` instances. The Portos checks exclude Markdown markers, link destinations, code spans, code blocks and URL text. Neither rule automatically rewrites prose.
 
 ## Markdown options and boundaries
 
@@ -117,7 +117,7 @@ Rules in markdown:core are errors. Recommended adds whitespace, alt text, link t
 | text.terminology | required terms: preferred-term mapping; optional allow and scope (prose or heading) |
 | text.repeated-word | allow: legitimate repetitions; scope: prose or heading; adjacent repeated words |
 | text.spelling | required language and dictionary word list; optional allow/scope; offline vocabulary only |
-| text.no-dashes and text.no-load-bearing | scope: prose (default) or heading |
+| text.matcher | configurable patterns, banned-words, banned-characters, message, allow and scope |
 | markdown.required-heading | required heading and level 1 through 6 |
 | markdown.document-identifier | identifiers sequence; see the entry contract below |
 | markdown.document-structure | types sequence; see the entry contract below |
@@ -143,6 +143,6 @@ rules:
 
 Fixes use the same selected pack as linting. `--fix-check` previews; `--fix` applies accepted safe nonoverlapping edits. Baselines and SARIF cannot be combined with fix modes. Applying edits can return success while manual findings remain; rerun ordinary lint afterward. File changes during application remain outside the concurrency contract.
 
-For relocation, select markdown:maintenance in a pack and pass repeated `--move old=new` or `--move-map FILE`. Targets use the working-directory spelling and remain root bounded. Ambiguous targets/anchors need manual review. The parser supports CommonMark plus tables, strikethrough, and task lists; scope MDX/template files out unless their syntax is supported by your customer analyzer.
+For relocation, select markdown:maintenance in a pack and pass repeated `--move old=new` or `--move-map FILE`. Targets use the working-directory spelling and remain root bounded. Ambiguous targets/anchors need manual review. The parser supports CommonMark, tables, strikethrough and task lists. Exclude MDX and template files unless your analyzer supports their syntax.
 
 See [STE100 checks](ste100.md) for strict customer vocabulary, explicit forms, technical phrases, alternative suggestions, grammar patterns and activation of `text:ste100`.

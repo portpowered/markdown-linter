@@ -8,7 +8,6 @@ import (
 	"gopkg.in/yaml.v3"
 	"regexp"
 	"strings"
-	"unicode"
 )
 
 type markdownOptions struct {
@@ -129,7 +128,6 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 		h1 := 0
 		lastWord := ""
 		lastWordEnd := 0
-		lastWordStart := 0
 		headings := map[string]bool{}
 		parents := make([]string, 7)
 		switch c.id {
@@ -405,28 +403,6 @@ func (c markdownCheck) Analyze(ctx context.Context, pass *interfaces.Pass) {
 					}
 				}
 				switch c.id {
-				case "text.no-dashes":
-					for i, r := range s {
-						if r == '-' || unicode.Is(unicode.Dash, r) {
-							report(seg.Start+i, seg.Start+i+len(string(r)), "hyphens and dashes are not permitted in prose", "")
-						}
-					}
-				case "text.no-load-bearing":
-					wordRanges := words.FindAllStringIndex(s, -1)
-					if len(wordRanges) > 0 {
-						first := wordRanges[0]
-						if strings.EqualFold(lastWord, "load") && strings.EqualFold(s[first[0]:first[1]], "bearing") && strings.Trim(string(doc.Source[lastWordEnd:seg.Start+first[0]]), " \t\r\n*_~") == "" {
-							report(lastWordStart, seg.Start+first[1], "avoid load bearing in prose", "")
-						}
-						last := wordRanges[len(wordRanges)-1]
-						lastWord = s[last[0]:last[1]]
-						lastWordStart = seg.Start + last[0]
-						lastWordEnd = seg.Start + last[1]
-					}
-					re := regexp.MustCompile(`(?i)\bload[\s\p{Pd}]+bearing\b`)
-					for _, m := range re.FindAllStringIndex(s, -1) {
-						report(seg.Start+m[0], seg.Start+m[1], "avoid load bearing in prose", "")
-					}
 				case "text.terminology":
 					for bad, preferred := range c.options.Terms {
 						re := regexp.MustCompile(`(?i)\b` + regexp.QuoteMeta(bad) + `\b`)

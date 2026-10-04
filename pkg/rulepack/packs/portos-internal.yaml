@@ -1,8 +1,14 @@
 version: 1
 rules:
-  - id: text.no-dashes
-    check: text.no-dashes
+  - id: portos.prose-dashes
+    check: text.matcher
     severity: error
-  - id: text.no-load-bearing
-    check: text.no-load-bearing
+    options:
+      patterns: ['[-\p{Pd}]']
+      message: Avoid hyphens and dashes in prose
+  - id: portos.banned-phrases
+    check: text.matcher
     severity: error
+    options:
+      patterns: ['\bload[\s\p{Pd}]+bearing\b']
+      message: Avoid this project-specific phrase

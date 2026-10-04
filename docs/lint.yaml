@@ -1,0 +1,35 @@
+version: 1
+extends:
+- markdown:recommended
+- text:ste100
+- text:strunk-white
+rules:
+- id: docs.single-title
+  check: markdown.single-title
+  severity: error
+- id: docs.page-shape
+  check: markdown.document-structure
+  severity: error
+  exclude:
+  - .site-docs/rules/index.md
+  options:
+    types:
+    - paths:
+      - .site-docs/rules
+      required-headings:
+      - Configuration
+      - Violation example
+      - Parameters
+      - Rule packs
+- id: docs.repeated-word
+  check: text.repeated-word
+  severity: error
+overrides:
+- id: text.ste100.dictionary
+  options:
+    dictionary-file: docs/vocabulary.yaml
+- id: text.ste100.grammar
+  options:
+    max-sentence-words: 19
+    forbidden-patterns:
+      contractions: (?i)\b(?:[a-z]+n['’]t|(?:i|you|we|they|he|she|it)['’](?:m|re|ve|ll|d|s))\b

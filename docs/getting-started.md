@@ -44,10 +44,10 @@ marklint --root . --format json docs
 marklint --root . --format sarif docs
 ```
 
-Use `text:ste100` with a supplied approved dictionary for controlled vocabulary; see [STE100](ste100.md). `portos-defaults` adds internal Portos prose conventions. Strunk and White findings invite editorial review rather than automatic rewriting.
+Use `text:ste100` with a supplied approved dictionary for controlled vocabulary; see [STE100](ste100.md). `portos-defaults` adds internal Portos prose conventions. Strunk and White findings invite editorial review instead of automatic rewriting.
 
 ## CI and results
 
-Run `marklint --root . --fail-on warning docs` to fail on warnings as well as errors. Exit 0 means the selected failure threshold passed, exit 1 means findings reached the threshold, and exit 2 means an operational or configuration failure. Keep dictionary-loading errors visible; treating them as prose exceptions would defeat vocabulary checking.
+Run `marklint --root . --fail-on warning docs` to fail on warnings as well as errors. Exit 0 means the selected failure threshold passed. Exit 1 means findings reached the threshold. Exit 2 means an operational or configuration failure. Keep dictionary-loading errors visible; treating them as prose exceptions would defeat vocabulary checking.
 
 For gradual adoption, the [rule-pack guide](rule-packs.md) covers baselines, reasoned suppressions and selecting a subset with `--only`. Review suggested fixes with the CLI's documented fix workflow before applying edits. The [Go library guide](library.md) shows how to receive the same structured findings without invoking a subprocess.

@@ -70,6 +70,6 @@ Implement `interfaces.Analyzer` with `ID()` and `Analyze(context.Context, *inter
 
 The [custom command example](../examples/custom/main.go) demonstrates registration and `cli.RunWithRegistry`. No plugin discovery or runtime Go compilation is required. Customer Go code runs with the host application's privileges.
 
-For small direct integrations, `engine.WithRules`, `engine.WithDiagnosticRules` and `engine.WithAnalyzers` register checks explicitly. To retain pack severity, scopes, baselines handled by the CLI, and reasoned suppressions, use the public pack and CLI APIs rather than recreating policy yourself. Baselines are an adoption layer; the library's raw findings remain available for your own reporting.
+For small direct integrations, `engine.WithRules`, `engine.WithDiagnosticRules` and `engine.WithAnalyzers` register checks explicitly. Use the public pack and CLI APIs to retain severity, scopes, baselines and reasoned suppressions. Baselines are an adoption layer; the library's raw findings remain available for your own reporting.
 
 The pack integration shown above is exercised in `pkg/rulepack/site_contract_test.go`; every generated rule configuration is compiled in that test as well. See the [package API reference](https://pkg.go.dev/github.com/portpowered/markdown-linter/pkg/rulepack) for exported contracts.

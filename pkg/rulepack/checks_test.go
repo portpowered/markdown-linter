@@ -12,6 +12,14 @@ import (
 
 func checkMarkdown(t *testing.T, id, source, options string) []interfaces.Diagnostic {
 	t.Helper()
+	if id == "portos.prose-dashes" {
+		id = "text.matcher"
+		options = "patterns: ['[-\\p{Pd}]']\n" + options
+	}
+	if id == "portos.banned-phrases" {
+		id = "text.matcher"
+		options = "patterns: ['\\bload[\\s\\p{Pd}]+bearing\\b']\n" + options
+	}
 	root := t.TempDir()
 	file := filepath.Join(root, "doc.md")
 	if e := os.WriteFile(file, []byte(source), 0600); e != nil {
@@ -52,8 +60,8 @@ func TestMarkdownAndProseCases(t *testing.T) {
 		id, source, options string
 		count               int
 	}{
-		{"text.no-dashes", "# Well-written\n\nText—here. [link](https://site.test/a-b) `a-b`\n\n```text\na-b\n```\n", "", 2},
-		{"text.no-load-bearing", "Load bearing prose.\n\n`load bearing` [ok](https://site.test/load-bearing)\n", "", 1},
+		{"portos.prose-dashes", "# Well-written\n\nText—here. [link](https://site.test/a-b) `a-b`\n\n```text\na-b\n```\n", "", 2},
+		{"portos.banned-phrases", "Load bearing prose.\n\n`load bearing` [ok](https://site.test/load-bearing)\n", "", 1},
 		{"text.terminology", "Utilize the CLI.\n\n`utilize`\n", "terms: {utilize: use}", 1},
 		{"text.repeated-word", "The the text.\n\nThe next paragraph.\n", "", 1},
 		{"markdown.trailing-whitespace", "Hard break  \nTrailing   \n\n```text\nCode   \n```\n", "", 1},
@@ -98,7 +106,7 @@ func FuzzProseSourceRanges(f *testing.F) {
 		f.Add(seed)
 	}
 	f.Fuzz(func(t *testing.T, source string) {
-		for _, id := range []string{"text.no-dashes", "text.no-load-bearing", "markdown.trailing-whitespace"} {
+		for _, id := range []string{"portos.prose-dashes", "portos.banned-phrases", "markdown.trailing-whitespace"} {
 			for _, d := range checkMarkdown(t, id, source, "") {
 				if d.StartOffset < 0 || d.EndOffset < d.StartOffset || d.EndOffset > len(source) {
 					t.Fatalf("invalid range %#v for %q", d, source)
@@ -114,12 +122,12 @@ func TestInlineSuppression(t *testing.T) {
 		count  int
 	}{
 		{"<!-- marklint-disable-next-line customer.check reason: quoted product name -->\nWell-known.\n", 0},
-		{"<!-- marklint-disable-next-line text.no-dashes reason: wrong instance -->\nWell-known.\n", 1},
+		{"<!-- marklint-disable-next-line portos.prose-dashes reason: wrong instance -->\nWell-known.\n", 1},
 		{"<!-- marklint-disable-next-line customer.check reason: -->\nWell-known.\n", 1},
 		{"```html\n<!-- marklint-disable-next-line customer.check reason: example -->\n```\nWell-known.\n", 1},
 	}
 	for _, c := range cases {
-		if got := len(checkMarkdown(t, "text.no-dashes", c.source, "")); got != c.count {
+		if got := len(checkMarkdown(t, "portos.prose-dashes", c.source, "")); got != c.count {
 			t.Fatalf("source %q: got %d want %d", c.source, got, c.count)
 		}
 	}

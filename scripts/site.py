@@ -1,6 +1,7 @@
 """Generate the customer site from verified catalog metadata and reviewed rule descriptions."""
 import argparse
 import json
+import yaml
 import re
 import shutil
 import subprocess
@@ -31,17 +32,25 @@ def rule_page(rule, reference):
     config = {"version": 1, "rules": [{"id": rule["id"], "check": rule["id"], "severity": rule["recommendedSeverity"]}]}
     if options:
         config["rules"][0]["options"] = options
-    page = f"# {rule['id']}\n\n{reference['summary']}\n\n"
+    page = "---\n" + yaml.safe_dump({"title": rule["id"], "check": rule["id"]}, sort_keys=False) + "---\n\n"
+    page += f"# {rule['id']}\n\n{reference['summary']}\n\n"
     page += f"Input kind: **{rule['kind']}** · Suggested severity: **{rule['recommendedSeverity']}** · Automatic fix: **{'available' if rule['fixable'] else 'none'}**.\n\n"
-    page += "## Configuration\n\nSave the following JSON (also valid YAML) in your linter configuration file. "
+    page += "## Configuration\n\nSave this YAML in your linter configuration file. "
     page += "This selects this check independently; compose a [rule pack](../rule-packs.md) to select related checks.\n\n"
-    page += "```json\n" + json.dumps(config, indent=2) + "\n```\n\n"
+    page += "```yaml\n" + yaml.safe_dump(config, sort_keys=False).rstrip() + "\n```\n\n"
+    example = reference["example"]
+    page += "## Violation example\n\n"
+    if rule["kind"] != "markdown":
+        page += "These focused YAML fragments show the relevant contract fields. The surrounding document and referenced schemas are omitted.\n\n"
+    page += "### Fails\n\n~~~~" + example["language"] + "\n" + example["bad"].rstrip("\n") + "\n~~~~\n\n"
+    page += "### Why it fails\n\n" + example["explanation"] + "\n\n"
+    page += "### Corrected example\n\n~~~~" + example["language"] + "\n" + example["good"].rstrip("\n") + "\n~~~~\n\n"
     page += "## Parameters\n\n"
     if rule.get("options"):
         page += "| Name | Type | Default | Behavior |\n| --- | --- | --- | --- |\n"
         for name, kind in sorted(rule["options"].items()):
             default = rule.get("defaults", {}).get(name)
-            display = "Unset; see behavior" if default is None else "`" + table(json.dumps(default)) + "`"
+            display = "Unset; see behavior" if default is None else "`" + table(yaml.safe_dump(default, default_flow_style=True, width=10000).strip().removesuffix("\n...")) + "`"
             page += f"| `{name}` | {option_type(name, kind)} | {display} | {table(reference['parameters'][name])} |\n"
     else:
         page += "This check has no parameters. Omit `options` or use an empty mapping.\n"
@@ -63,17 +72,43 @@ def validate(catalog, references):
         raise ValueError("Rule descriptions must cover every catalog ID exactly once")
     for rule in catalog:
         reference = references[rule["id"]]
+        if not isinstance(reference, dict) or set(reference) - {"summary", "parameters", "example-options", "example", "notes"}:
+            raise ValueError("Unknown rule reference fields: " + rule["id"])
         if not reference.get("summary", "").strip():
             raise ValueError("Missing rule summary: " + rule["id"])
         if set(reference.get("parameters", {})) != set(rule.get("options", {})):
             raise ValueError("Parameter descriptions differ from registered options: " + rule["id"])
         if not isinstance(reference.get("example-options"), dict):
             raise ValueError("Configuration example must be an options mapping: " + rule["id"])
+        if set(reference["example-options"]) - set(rule.get("options", {})):
+            raise ValueError("Configuration example uses unregistered options: " + rule["id"])
+        if any(not isinstance(value, str) or not value.strip() for value in reference["parameters"].values()):
+            raise ValueError("Parameter descriptions must be nonempty text: " + rule["id"])
+        example = reference.get("example", {})
+        if not isinstance(example, dict) or set(example) != {"language", "bad", "good", "explanation"}:
+            raise ValueError("Rule example requires language, bad, good and explanation: " + rule["id"])
+        expected_language = "markdown" if rule["kind"] == "markdown" else "yaml"
+        if example["language"] != expected_language or any(not isinstance(example[key], str) or not example[key].strip() for key in ["bad", "good", "explanation"]):
+            raise ValueError("Invalid violation example format: " + rule["id"])
+        if example["bad"] == example["good"]:
+            raise ValueError("Violation and corrected examples must differ: " + rule["id"])
+        if expected_language == "yaml":
+            for key in ["bad", "good"]:
+                try:
+                    fragment = yaml.safe_load(example[key])
+                except yaml.YAMLError as error:
+                    raise ValueError("API example must be valid YAML: " + rule["id"]) from error
+                if not isinstance(fragment, dict) or not fragment:
+                    raise ValueError("API example must contain contract fields: " + rule["id"])
 
 
 def generate(root, catalog, references, config):
     validate(catalog, references)
     output = root / ".site-docs"
+    if output.is_symlink():
+        raise ValueError("The generated documentation directory cannot be a symlink")
+    if output.exists():
+        shutil.rmtree(output)
     output.mkdir(exist_ok=True)
     repo = config["repository"]
     for source in (root / "docs").glob("*.md"):
@@ -81,7 +116,7 @@ def generate(root, catalog, references, config):
         # Repository examples and source references remain browsable on GitHub.
         content = re.sub(r"\]\(\.\./((?:examples|pkg|rulepack|scripts)/[^)]+)\)", lambda m: "](https://github.com/" + repo + "/blob/main/" + m[1] + ")", content)
         write(output / source.name, content)
-    for source in (root / "docs").glob("*.json"):
+    for source in list((root / "docs").glob("*.json")) + list((root / "docs").glob("*.yaml")):
         shutil.copyfile(source, output / source.name)
     for source in (root / "docs" / "stylesheets").glob("*.css"):
         write(output / "stylesheets" / source.name, source.read_text(encoding="utf-8"))
@@ -111,7 +146,7 @@ def generate(root, catalog, references, config):
         "extra_css": ["stylesheets/extra.css"],
         "validation": {"links": {"not_found": "warn", "anchors": "warn", "unrecognized_links": "warn"}},
     }
-    write(root / "mkdocs.generated.yml", json.dumps(mkdocs, indent=2) + "\n")
+    write(root / "mkdocs.generated.yml", yaml.safe_dump(mkdocs, sort_keys=False))
 
 
 class Links(HTMLParser):
@@ -166,10 +201,10 @@ def main():
     parser.add_argument("--check-html", action="store_true")
     args = parser.parse_args()
     if args.check_html:
-        config = json.loads((ROOT / "docs" / "site.json").read_text(encoding="utf-8"))
+        config = yaml.safe_load((ROOT / "docs" / "site.yaml").read_text(encoding="utf-8"))
         check_html(ROOT / "site", "/" + config["repository"].split("/")[1] + "/")
         return
-    config = json.loads((ROOT / "docs" / "site.json").read_text(encoding="utf-8"))
+    config = yaml.safe_load((ROOT / "docs" / "site.yaml").read_text(encoding="utf-8"))
     catalog = []
     for kind in config["kinds"]:
         command = ["go", "run", "./cmd/" + config["command"], "rules", "list", "--kind", kind, "--format", "json"]
@@ -180,7 +215,7 @@ def main():
         write(path, json.dumps(catalog, indent=2) + "\n")
     elif catalog != json.loads(path.read_text(encoding="utf-8")):
         raise ValueError("Rule catalog is stale; run make docs-update")
-    references = json.loads((ROOT / "docs" / "rule-reference.json").read_text(encoding="utf-8"))
+    references = yaml.safe_load((ROOT / "docs" / "rule-reference.yaml").read_text(encoding="utf-8"))
     generate(ROOT, catalog, references, config)
 
 

@@ -35,6 +35,22 @@ def coverage_totals(profile):
     return covered, total
 
 
+def coverage_badge(covered, total):
+    percent = Decimal(covered) * 100 / total
+    value = f"{percent:.2f}%"
+    color = "#4c1" if percent >= 95 else "#e05d44"
+    return f'<svg xmlns="http://www.w3.org/2000/svg" width="142" height="20" role="img" aria-label="Coverage: {value}"><title>Coverage: {value}</title><rect width="76" height="20" fill="#555"/><rect x="76" width="66" height="20" fill="{color}"/><g fill="#fff" text-anchor="middle" font-family="Verdana,sans-serif" font-size="11"><text x="38" y="14">coverage</text><text x="109" y="14">{value}</text></g></svg>'
+
+
+def publish_coverage(profile, go):
+    covered, total = coverage_totals((ROOT / profile).read_text(encoding="utf-8"))
+    site = ROOT / "site"
+    if not (site / "index.html").exists():
+        raise ValueError("Build the site before adding coverage reports")
+    (site / "coverage.svg").write_text(coverage_badge(covered, total), encoding="utf-8")
+    run([go, "tool", "cover", "-html=" + profile, "-o", str(site / "coverage.html")])
+
+
 def run(args):
     env = dict(os.environ, GOWORK="off")
     subprocess.run(args, cwd=ROOT, env=env, check=True)
@@ -42,7 +58,7 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("check", choices=["coverage", "coverage-check", "format", "lint", "tools-test"])
+    parser.add_argument("check", choices=["coverage", "coverage-check", "format", "lint", "tools-test", "coverage-publish"])
     parser.add_argument("--threshold", type=Decimal, default=Decimal("95"))
     parser.add_argument("--profile", default="coverage.out")
     parser.add_argument("--go", default=os.environ.get("GO", "go"))
@@ -51,6 +67,9 @@ def main():
     args = parser.parse_args()
     if not Decimal("0") <= args.threshold <= Decimal("100"):
         parser.error("threshold must be between 0 and 100")
+    if args.check == "coverage-publish":
+        publish_coverage(args.profile, args.go)
+        return 0
     if args.check == "coverage":
         run([args.go, "test", "-race", "-covermode=atomic", "-coverpkg=./...",
              "-coverprofile=" + args.profile, "-timeout", args.timeout, "./..."])

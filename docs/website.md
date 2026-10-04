@@ -1,6 +1,6 @@
 # Documentation website
 
-The GitHub Pages site uses a static documentation layout with a searchable rule reference, sidebar navigation, light and dark themes, and code-copy controls. It follows the customer-reference approach of the [Portpowered library template](https://github.com/portpowered/go-third-party-template) and [go-ring site](https://portpowered.github.io/go-ring/). The template action expects wire schemas, so this rules-and-library site uses Material for MkDocs without generating a fictitious API.
+The GitHub Pages site provides searchable rules, sidebar navigation, light and dark themes, and code-copy controls. It follows the customer-reference approach of the [Portpowered library template](https://github.com/portpowered/go-third-party-template) and [go-ring site](https://portpowered.github.io/go-ring/). The template action expects wire schemas, so this rules-and-library site uses Material for MkDocs without generating a fictitious API.
 
 ## Build and preview
 
@@ -12,20 +12,34 @@ make docs
 python -m mkdocs serve --config-file mkdocs.generated.yml
 ```
 
-Dependencies are pinned in `docs/requirements.txt`. `make docs` verifies that the catalog matches the running CLI, generates customer pages, builds with strict Markdown/link validation and checks local links and anchors throughout the rendered site. Generated `.site-docs`, `mkdocs.generated.yml` and `site` are ignored by Git.
+Dependencies are pinned in `docs/requirements.txt`. `make docs` verifies the catalog against the running CLI and generates customer pages. It builds with strict Markdown validation and checks local links and anchors. Generated `.site-docs`, `mkdocs.generated.yml` and `site` are ignored by Git.
 
 ## Update a rule
 
-The registered factories remain the source of option types, defaults, input kind and pack membership. After changing those, run `make docs-update` to refresh `docs/rule-catalog.json`. Add or update `docs/rule-reference.json` with a reviewed behavior summary, parameter descriptions and example options. Every catalog check and every parameter must have an entry. The Go tests compile every reference configuration against the stock registry, so unsupported examples fail verification.
+The registered factories remain the source of option types, defaults, input kind and pack membership. After changing those, run `make docs-update` to refresh `docs/rule-catalog.json`. Add or update `docs/rule-reference.yaml` with a reviewed behavior summary, parameter descriptions and example options. Every catalog check and every parameter must have an entry. The Go tests compile every reference configuration against the stock registry, so unsupported examples fail verification.
 
 Keep CLI onboarding in `getting-started.md` and embedding instructions in `library.md`. Existing composition, STE100, editorial and API-standard guides are published alongside individual rule pages. Source and example links point to the repository; local schema and catalog downloads ship with the site.
 
 ## CI and publication
 
-One Ubuntu quality job runs the same `make verify` used locally: pack integrity, formatting, build, vet, all standard Go linters, race tests, 95% aggregate module coverage, tooling tests, module tidiness, CLI examples and the strict site build. Three compatibility jobs build and run race tests on Linux, macOS and Windows with the minimum supported Go 1.24 series. They do not repeat the entire quality suite.
+One matrix runs `make verify` on the latest Linux, macOS and Windows runners with the current stable Go release. It checks pack integrity, formatting, builds, vet, standard Go linters, race tests and the 95% coverage gate. It also checks tooling, module tidiness, CLI examples and documentation.
 
-Pull requests build and validate the site without deploying. Main pushes upload the static site, and the deployment job publishes only after quality and all compatibility jobs pass. The repository Pages source is GitHub Actions. The workflow exposes the live URL through its github-pages environment. No release tag is required for documentation updates.
+Pull requests build and validate the site without deploying. Main pushes upload the static site, and the deployment job publishes only after every verification job passes. The repository Pages source is GitHub Actions. The workflow exposes the live URL through its github-pages environment. No release tag is required for documentation updates.
 
 ## Embedded pack hashes
 
 Embedded YAML is canonical LF text. After editing packs, run `python scripts/packs.py --write` to normalize bytes and refresh hashes. `make verify` rejects noncanonical bytes and stale hashes. This prevents a Windows working-copy hash from disagreeing with the Git checkout used in CI.
+
+## Rule page format
+
+Each rule reference uses `docs/rule-reference.yaml`. The [metadata schema](rule-reference.schema.yaml) defines the required shape. CI additionally compares rule IDs and parameter names with the live registry. Unknown fields, missing explanations and identical failing and corrected examples fail the site build.
+
+Every page has a summary, YAML configuration, violation explanation, corrected example, parameters and pack membership. API examples are focused fragments; declarations outside the illustrated contract need the normal surrounding document. Markdown examples preserve source text, including significant trailing spaces and final newlines in the metadata.
+
+The generator owns the configuration code fence and YAML serialization. Each rendered configuration is parsed in generator tests, and Go tests compile its options against the registry. These format constraints belong to the documentation template instead of a customer prose rule.
+
+## Badges and coverage
+
+The home page and README follow go-ring's badge set. They show Go version, CI, coverage, release, reference, license and documentation. Coverage comes from the statement-weighted Go profile checked by `make verify`. After a passing build, `make coverage-publish` adds `coverage.svg` and the per-file `coverage.html` report to the site. The Linux main build publishes them with Pages. Failed builds cannot replace the last passing report. The CI badge links to the current workflow, while the coverage badge represents the last successful site deployment.
+
+CI runs one verification matrix on Windows, Linux and macOS, all using the current stable Go release. Each runner executes the default Make checks. Linux supplies the Pages artifact; deployment waits for the full matrix.

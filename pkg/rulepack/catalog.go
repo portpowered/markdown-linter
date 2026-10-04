@@ -7,6 +7,9 @@ import (
 )
 
 func registerAdditional(registry *Registry) error {
+	if err := registry.Register("text.matcher", matcherFactory("text.matcher", matcherDefaults())); err != nil {
+		return err
+	}
 	if err := registerSTE(registry); err != nil {
 		return err
 	}
@@ -31,9 +34,7 @@ func registerAdditional(registry *Registry) error {
 		"text.repeated-word",
 		"text.spelling",
 		"markdown.line-length",
-		"markdown.html-policy",
-		"text.no-dashes",
-		"text.no-load-bearing"} {
+		"markdown.html-policy"} {
 		if e := registry.Register(id, markdownFactory(id)); e != nil {
 			return e
 		}
@@ -98,6 +99,23 @@ func registerAdditional(registry *Registry) error {
 				d.Defaults["max-sentence-words"] = 25
 			}
 		}
+		if d.ID == "text.matcher" || strings.HasPrefix(d.ID, "text.strunk-white.") {
+			defaults := matcherDefaults()
+			for _, spec := range strunkSpecs {
+				if d.ID == "text.strunk-white."+spec.name {
+					defaults = strunkDefaults(spec)
+				}
+			}
+			encoded, _ := yaml.Marshal(defaults)
+			_ = yaml.Unmarshal(encoded, &d.Defaults)
+			d.Options = map[string]string{}
+			typ := reflect.TypeOf(defaults)
+			for i := 0; i < typ.NumField(); i++ {
+				field := typ.Field(i)
+				d.Options[field.Tag.Get("yaml")] = field.Type.String()
+			}
+		}
+
 		d.Presets = []string{}
 		for _, name := range PresetNames() {
 			p, _ := Preset(name)

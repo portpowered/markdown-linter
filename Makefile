@@ -9,7 +9,7 @@ COVERAGE_MIN ?= 95
 .PHONY: default verify build test coverage coverage-check lint fmt fmt-check vet tools-test deps deps-tidy clean
 
 default: verify
-verify: pack-check fmt-check build vet lint coverage tools-test module-check smoke docs
+verify: pack-check fmt-check build vet lint coverage tools-test module-check smoke docs docs-lint coverage-publish
 build:
 	$(GO) build ./...
 test:
@@ -55,3 +55,11 @@ docs:
 	$(PYTHON) scripts/site.py
 	$(PYTHON) -m mkdocs build --strict --config-file mkdocs.generated.yml
 	$(PYTHON) scripts/site.py --check-html
+
+.PHONY: coverage-publish
+coverage-publish: coverage docs
+	$(PYTHON) scripts/quality.py coverage-publish --go "$(GO)"
+
+.PHONY: docs-lint
+docs-lint: docs
+	$(GO) run ./cmd/marklint --rules docs/lint.yaml --root . --fail-on warning .site-docs README.md

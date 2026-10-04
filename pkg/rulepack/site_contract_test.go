@@ -2,7 +2,6 @@ package rulepack
 
 import (
 	"context"
-	"encoding/json"
 	"os"
 	"path/filepath"
 	"testing"
@@ -13,14 +12,18 @@ import (
 )
 
 func TestSiteRuleConfigurations(t *testing.T) {
-	data, err := os.ReadFile("../../docs/rule-reference.json")
+	data, err := os.ReadFile("../../docs/rule-reference.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
 	var references map[string]struct {
-		Options json.RawMessage `json:"example-options"`
+		Options yaml.Node `yaml:"example-options"`
+		Example struct {
+			Bad  string `yaml:"bad"`
+			Good string `yaml:"good"`
+		} `yaml:"example"`
 	}
-	if err := json.Unmarshal(data, &references); err != nil {
+	if err := yaml.Unmarshal(data, &references); err != nil {
 		t.Fatal(err)
 	}
 	registry := NewRegistry()
@@ -32,12 +35,58 @@ func TestSiteRuleConfigurations(t *testing.T) {
 	}
 	for _, descriptor := range registry.Catalog() {
 		t.Run(descriptor.ID, func(t *testing.T) {
-			var options yaml.Node
-			if err := yaml.Unmarshal(references[descriptor.ID].Options, &options); err != nil {
+			program, err := registry.Compile(Pack{Version: 1, Rules: []Rule{{ID: descriptor.ID, Check: descriptor.ID, Options: references[descriptor.ID].Options}}})
+			if err != nil {
 				t.Fatal(err)
 			}
-			if _, err := registry.Compile(Pack{Version: 1, Rules: []Rule{{ID: descriptor.ID, Check: descriptor.ID, Options: *options.Content[0]}}}); err != nil {
-				t.Fatal(err)
+			for _, sample := range []struct {
+				source string
+				fails  bool
+			}{{references[descriptor.ID].Example.Bad, true}, {references[descriptor.ID].Example.Good, false}} {
+				root := t.TempDir()
+				if err := os.Mkdir(filepath.Join(root, "docs"), 0700); err != nil {
+					t.Fatal(err)
+				}
+				file := filepath.Join(root, "docs", "guide.md")
+				if err := os.WriteFile(file, []byte(sample.source), 0600); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.WriteFile(filepath.Join(root, "docs", "diagram.png"), []byte("fixture"), 0600); err != nil {
+					t.Fatal(err)
+				}
+				if err := os.WriteFile(filepath.Join(root, "docs", "new.md"), []byte("# Destination\n"), 0600); err != nil {
+					t.Fatal(err)
+				}
+				doc, err := engine.New().ParseFile(file)
+				if err != nil {
+					t.Fatal(err)
+				}
+				documents := []*interfaces.Document{doc}
+				if descriptor.ID == "markdown.link-relocation" {
+					extra, err := engine.New().ParseFile(filepath.Join(root, "docs", "new.md"))
+					if err != nil {
+						t.Fatal(err)
+					}
+					documents = append(documents, extra)
+				}
+				if descriptor.ID == "markdown.doc-id-unique" {
+					other := filepath.Join(root, "docs", "other.md")
+					if err := os.WriteFile(other, []byte("---\ndoc-id: DOC-1\n---\n# Other\n"), 0600); err != nil {
+						t.Fatal(err)
+					}
+					extra, err := engine.New().ParseFile(other)
+					if err != nil {
+						t.Fatal(err)
+					}
+					documents = append(documents, extra)
+				}
+				findings, err := program.Run(context.Background(), root, documents)
+				if err != nil {
+					t.Fatal(err)
+				}
+				if (len(findings) > 0) != sample.fails {
+					t.Fatalf("documented example expected fails=%t, got %#v", sample.fails, findings)
+				}
 			}
 		})
 	}

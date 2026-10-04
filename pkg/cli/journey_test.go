@@ -18,7 +18,7 @@ func TestPortosOnboardingBaselineAndSARIF(t *testing.T) {
 	}
 	write(t, file, "# Guide\n\nA dash - in prose. `safe-code` [link](https://site.test/a-b)\n")
 	code, out, stderr := command("--root", root, file)
-	if code != 1 || !strings.Contains(out, "text.no-dashes") {
+	if code != 1 || !strings.Contains(out, "portos.prose-dashes") {
 		t.Fatalf("discovery: %d %s %s", code, out, stderr)
 	}
 	code, _, stderr = command("baseline", "create", "--output", baseline, "--root", root, file)
@@ -36,7 +36,7 @@ func TestPortosOnboardingBaselineAndSARIF(t *testing.T) {
 		t.Fatalf("SARIF: %d %s %s", code, out, stderr)
 	}
 	code, out, stderr = command("config", "explain", "--rules", config, "--root", root, "--path", "guide.md")
-	if code != 0 || !strings.Contains(out, "text.no-dashes") || !strings.Contains(out, "preset:portos:internal") {
+	if code != 0 || !strings.Contains(out, "portos.prose-dashes") || !strings.Contains(out, "preset:portos:internal") {
 		t.Fatalf("explain: %d %s %s", code, out, stderr)
 	}
 }

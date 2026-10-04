@@ -7,8 +7,8 @@ import (
 )
 
 func optionNames(id string) []string {
-	if strings.HasPrefix(id, "text.strunk-white.") {
-		return []string{"allow", "scope"}
+	if id == "text.matcher" || strings.HasPrefix(id, "text.strunk-white.") {
+		return []string{"patterns", "banned-words", "banned-characters", "ignore-case", "allow", "scope", "message", "capture-group", "paired-conjunctions"}
 	}
 	switch id {
 	case "text.ste100.dictionary":
@@ -37,10 +37,6 @@ func optionNames(id string) []string {
 		return []string{"dictionary", "language", "allow", "scope"}
 	case "text.repeated-word":
 		return []string{"allow", "scope"}
-	case "text.no-dashes":
-		return []string{"scope"}
-	case "text.no-load-bearing":
-		return []string{"scope"}
 	case "markdown.local-links":
 		return []string{"allow-directories"}
 	case "markdown.required-heading":

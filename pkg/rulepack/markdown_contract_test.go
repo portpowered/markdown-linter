@@ -68,11 +68,11 @@ func TestMarkdownPolicyContracts(t *testing.T) {
 		{"repetition allow", "text.repeated-word", "Had had enough.\n", "allow: [had]", 0},
 		{"repetition punctuation boundary", "text.repeated-word", "Word, word.\n", "", 0},
 		{"repetition paragraph boundary", "text.repeated-word", "Word\n\nword.\n", "", 0},
-		{"load bearing emphasis", "text.no-load-bearing", "Load *bearing* prose.\n", "", 1},
-		{"load bearing unicode dash", "text.no-load-bearing", "Load—bearing prose.\n", "", 1},
-		{"load bearing unrelated", "text.no-load-bearing", "Load records bearing identifiers.\n", "", 0},
-		{"no dashes heading scope", "text.no-dashes", "# Well-known\n\nWell-known.\n", "scope: heading", 1},
-		{"bare URL exclusion", "text.no-dashes", "https://example.test/a-b\n", "", 0},
+		{"load bearing emphasis", "portos.banned-phrases", "Load *bearing* prose.\n", "", 1},
+		{"load bearing unicode dash", "portos.banned-phrases", "Load—bearing prose.\n", "", 1},
+		{"load bearing unrelated", "portos.banned-phrases", "Load records bearing identifiers.\n", "", 0},
+		{"no dashes heading scope", "portos.prose-dashes", "# Well-known\n\nWell-known.\n", "scope: heading", 1},
+		{"bare URL exclusion", "portos.prose-dashes", "https://example.test/a-b\n", "", 0},
 	}
 	for _, tt := range cases {
 		t.Run(tt.name, func(t *testing.T) {
@@ -95,14 +95,14 @@ func TestMarkdownFactoryOptionContracts(t *testing.T) {
 		{"markdown.list-style", "indent: 9"},
 		{"markdown.line-length", "max: 0"},
 		{"markdown.ordered-list", "style: random"},
-		{"text.no-dashes", "scope: code"},
+		{"text.matcher", "scope: code"},
 		{"text.terminology", "{}"},
 		{"text.spelling", "language: en"},
 		{"text.spelling", "dictionary: [known]"},
-		{"text.no-dashes", "scope: true"},
+		{"text.matcher", "scope: true"},
 		{"text.repeated-word", "allow: 1"},
-		{"text.no-dashes", "unknown: true"},
-		{"text.no-dashes", "[heading]"},
+		{"text.matcher", "unknown: true"},
+		{"text.matcher", "[heading]"},
 	}
 	for _, tt := range cases {
 		t.Run(tt.id+tt.options, func(t *testing.T) {
@@ -110,13 +110,17 @@ func TestMarkdownFactoryOptionContracts(t *testing.T) {
 			if err := yaml.Unmarshal([]byte(tt.options), &options); err != nil {
 				t.Fatal(err)
 			}
-			if _, err := markdownFactory(tt.id)(*options.Content[0]); err == nil {
+			factory := markdownFactory(tt.id)
+			if tt.id == "text.matcher" {
+				factory = matcherFactory(tt.id, matcherDefaults())
+			}
+			if _, err := factory(*options.Content[0]); err == nil {
 				t.Fatalf("invalid options accepted: %s", tt.options)
 			}
 		})
 	}
-	check, err := markdownFactory("text.no-dashes")(yaml.Node{})
-	if err != nil || check.ID() != "text.no-dashes" {
+	check, err := matcherFactory("text.matcher", matcherOptions{Scope: "prose", Message: "dashes", Patterns: []string{`[-\p{Pd}]`}})(yaml.Node{})
+	if err != nil || check.ID() != "text.matcher" {
 		t.Fatalf("wrong analyzer ID: %v", err)
 	}
 	ctx, cancel := context.WithCancel(context.Background())

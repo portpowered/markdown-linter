@@ -32,7 +32,7 @@
   {
     "name": "portos:internal",
     "file": "portos-internal.yaml",
-    "sha256": "e2a7229519c4aa0ecc7342f62cf36086abdb85c9a59c157c6502f5d4f6326b77"
+    "sha256": "b2eb93023cdc6cc68e3da3da99a6094c80c59ed144e3c50c547e6480a825671c"
   },
   {
     "name": "text:prose",

@@ -14,10 +14,10 @@ These are capability comparisons from primary documentation, not benchmark resul
 | Redocly CLI | Structural and reference checks alongside API documentation/style checks; built-in and inherited configurations. [Rule catalog](https://redocly.com/docs/cli/rules/built-in-rules), [extends](https://redocly.com/docs/cli/configuration/extends) | Separate correctness from customer conventions and document merge order |
 | markdownlint | Rule IDs, categories, options, fixes, image alt text, headings, fences, and spacing. Ordered lists support multiple numbering conventions. [Rules](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md) | Give granular controls and avoid rejecting valid Markdown conventions |
 | remark lint | Separate consistency and recommended presets; individual Markdown plugins. [Project documentation](https://github.com/remarkjs/remark-lint) | Offer a small recommended set and a separate style set |
-| Vale | Declarative prose checks with scopes, messages, guidance links, and styles distributed as packages. [Styles](https://docs.vale.sh/topics/styles), [packages](https://docs.vale.sh/topics/packages) | Start with customer terminology and scoped prose patterns rather than broad grammar judgments |
+| Vale | Declarative prose checks with scopes, messages, guidance links, and styles distributed as packages. [Styles](https://docs.vale.sh/topics/styles), [packages](https://docs.vale.sh/topics/packages) | Start with customer terminology and scoped prose patterns instead of broad grammar judgments |
 | textlint | Explicit rule/preset configuration and plugin-based text processing. [Configuration](https://raw.githubusercontent.com/textlint/textlint/master/docs/configuring.md) | Keep prose checks opt-in and distinguish activation from installing executable logic |
 
-Our opportunity is to combine existing repository-level document checks and the Go extension API with consistent rule discovery and onboarding across both commands. Do not implement Spectral selectors or JavaScript plugins merely to match another product's configuration language.
+Combine repository document checks and the Go extension API. Provide consistent rule discovery and onboarding across both commands. Do not implement Spectral selectors or JavaScript plugins merely to match another product's configuration language.
 
 ## Portos project requirements
 
@@ -32,22 +32,22 @@ The internal requirements are independent rules. In OpenAPI, `portos-defaults` c
 - [x] `portos.pagination-request`: List declares nextToken/maxResults query parameters; Query includes these in its object body, directly or under paginationContext.
 - [x] `portos.open-enums`: open values use `x-extensible-enum` and corresponding unique `x-enum-varnames`. A normal `enum` is closed and is rejected, except exact sort-direction and error-family protocol enums with varnames.
 - [x] `portos.date-fields`: date/time properties use string `format: date-time`, representing RFC 3339. Additional field names are configurable. The requested rfc3999 is interpreted as RFC 3339.
-- [x] `portos.batch-contract`: Batch has an items array of objects with IDs and a synchronous results array of objects with IDs; Async Batch uses the async success contract. Field names are configurable. Runtime ID uniqueness/correlation requires service tests.
-- [x] `portos.query-graph`: Query request query references the canonical recursive Query model rather than an unrelated filter schema; comparator and boolean graph shapes are checked.
+- [x] `portos.batch-contract`: Batch request items and synchronous results are objects with IDs. Async Batch uses the async success contract. Field names are configurable. Runtime ID uniqueness/correlation requires service tests.
+- [x] `portos.query-graph`: The Query request references the canonical recursive Query model. Checks validate comparator and boolean graph shapes.
 - [x] `portos.name-schema`: data properties named name reference the configurable NameValue object.
 - [x] `portos.description-schema`: data properties named description reference the configurable DescriptionValue object; OpenAPI metadata descriptions are unaffected.
 
 - [x] `portos.success-status`: exact 200 or 202 success responses only, with at least one declared success.
 - [x] `portos.etag-conflict`: conditional ETag request headers require 409 and reject 412.
-- [x] `portos.error-contract`: declared client/server/default errors reference the configurable ErrorResponse object with required string code, message and type, and integer family restricted to 400/500.
+- [x] `portos.error-contract`: Declared client, server and default errors reference ErrorResponse. It requires string code, message and type. Integer family permits 400/500.
 - [x] `portos.path-kebab-case`: literal request path segments use lowercase kebab-case; parameter names are independent.
 - [x] `portos.delete-idempotent`: explicit x-portos-idempotent declaration and no absent-resource 404/410; runtime repeats require service tests.
 - [x] `portos.version-prefix`: positive major version prefixes such as /v2/groups and /v3/groups.
 - [x] `portos.query-sorts`: optional sorting is a list of closed objects containing required direction ASCENDING/DESCENDING and key:string.
-- [x] `portos.batch-outcomes`: synchronous required results/errors lists, request-compatible IDs, and a shared ErrorResponse for each failure; actual ID correlation requires service tests.
+- [x] `portos.batch-outcomes`: Synchronous results and errors lists require request-compatible IDs. Each failure references ErrorResponse. ID correlation requires service tests.
 
-- [x] `text.no-dashes`: no hyphens or Unicode dashes in prose, excluding code and URL targets. Markdown bullet/fence syntax is not prose.
-- [x] `text.no-load-bearing`: prohibit that phrase in prose, including its spelling with a hyphen; exclude code and URL targets.
+- [x] `portos.prose-dashes` (`text.matcher`): no hyphens or Unicode dashes in prose, excluding code and URL targets. Markdown bullet/fence syntax is not prose.
+- [x] `portos.banned-phrases` (`text.matcher`): prohibit that phrase in prose, including its spelling with a hyphen; exclude code and URL targets.
 
 Backend evidence: `portos-backend/api/restful_interfaces/components/schemas/Query.yaml`, `QueryComparator.yaml`, `PaginationContext.yaml`, `EndpointQueryRequest.yaml`, and `EndpointQueryResponse.yaml`. The graph contains match, lessThan, greaterThan, and, or, not, patternMatch, and freeformMatch. Comparators have string key/value fields. Response collection and pagination shapes are checked independently because OpenAPI has no Go generics.
 
@@ -140,9 +140,9 @@ Each check has independent options and activation; see the rule-pack reference f
 
 ## Customer UX
 
-The rule-pack reference documents discovery, initialization, activating one rule, composing sets, overrides, scoping, suppression, baselines, and effective-policy review. Both repositories include runnable Portos fixtures. The optional future settings UI should consume this same catalog and YAML contract, with inherited values visible and sample-document previews before saving.
+The rule-pack reference documents discovery, initialization, activating one rule, composing sets, overrides, scoping, suppression, baselines, and effective-policy review. Both repositories include runnable Portos fixtures. A future settings UI should use this catalog and YAML contract. Show inherited values and sample previews before saving.
 
-Breaking changes: recommended defaults add findings; configuration must be within the selected root; wrong-kind checks fail rather than silently doing nothing; ordered lists and whitespace permit valid alternative syntax; fixes use the same selected pack as linting rather than silently selecting relocation checks. Select markdown:maintenance explicitly for relocation/ID repair. Pin the executable alongside pack hashes.
+Recommended defaults add findings. Configuration must stay within the selected root. Wrong-kind checks fail explicitly. Ordered lists and whitespace permit valid alternative syntax. Fixes use the selected pack. Select markdown:maintenance explicitly for relocation/ID repair. Pin the executable alongside pack hashes.
 
 ## Test checklist
 
@@ -162,15 +162,15 @@ The source graph cache is scoped to one run; embedded-set resolution is cached a
 
 Structural checking uses dated official OpenAPI 3.0/3.1 schemas, offline. The 3.1 structural schema explicitly excludes Schema Object validation; example checking separately compiles effective schemas. This does not claim complete semantic conformance. Example validation supports JSON-compatible values, recursive local references, 3.0 nullable/bounds conversion, and directional required readOnly/writeOnly fields. External examples are never fetched and unsupported custom dialect analysis fails explicitly.
 
-Standalone schema mode remains YAML-structure checking rather than an advertised JSON Schema conformance engine. The Markdown parser supports CommonMark plus tables, strikethrough, and task lists. MDX/template extensions are not claimed. HTML policy is a style check, not a sanitizer; spelling requires a supplied language and offline vocabulary.
+Standalone schema mode remains YAML-structure checking instead of an advertised JSON Schema conformance engine. The Markdown parser supports CommonMark plus tables, strikethrough, and task lists. MDX/template extensions are not claimed. HTML policy is a style check, not a sanitizer; spelling requires a supplied language and offline vocabulary.
 
 Hosted settings UI and LSP are future integration projects. Exact JSON-pointer suppressions for OpenAPI and reasoned next-line directives for Markdown are implemented. A remote pack registry, external-link fetcher, runtime plugins, API breaking-change comparison, and universal grammar rules remain outside this implementation. API renames, generated alt text, and automatic prose rewriting require author judgment and are not offered as safe fixes.
 
 ## Additional editorial and API standards
 
-- [x] Markdown `text:strunk-white`: 10 independent review checks (8 atomic signals and 2 paired constructions), analyzed against 43 numbered principles, with contextual guidance kept as human review. See the Markdown repository's `docs/strunk-white.md` for the rule IDs, four documented interactions, options and exclusions.
+- [x] Markdown `text:strunk-white` provides 10 review checks: 8 atomic signals and 2 paired constructions. The analysis covers 43 numbered principles. Contextual guidance remains human review. See the Markdown repository's `docs/strunk-white.md` for the rule IDs, four documented interactions, options and exclusions.
 - [x] OpenAPI `openapi:google` and `google-defaults`: 16 independently selectable REST/JSON projections and five paired contract groups. See the OpenAPI repository's `docs/google-api.md` for AIP sources, rule IDs and explicit intent markers.
 - [x] Both new sets have valid, invalid, false-positive and composed-set behavior fixtures.
-- [x] Default Make and CI run the standard golangci-lint suite and enforce 95% aggregate module statement coverage, with all Go package paths included and no profile exclusions.
+- [x] Default Make and CI run the standard golangci-lint suite and enforce 95% module coverage. The profile includes every package.
 
-- [x] Markdown `text:ste100`: `text.ste100.dictionary` enforces supplied vocabulary with explicit forms, technical phrases and alternative suggestions; `text.ste100.grammar` adds a configurable sentence limit and named forbidden patterns. See `docs/ste100.md` for activation and semantic limitations.
+- [x] Markdown `text:ste100` enforces supplied vocabulary with explicit forms, technical phrases and alternatives. Its grammar check adds a sentence limit and named forbidden patterns. See `docs/ste100.md` for activation and semantic limitations.

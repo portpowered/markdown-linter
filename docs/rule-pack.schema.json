@@ -1246,7 +1246,7 @@
             "additionalProperties": false,
             "properties": {
               "check": {
-                "const": "text.no-dashes"
+                "const": "text.matcher"
               },
               "description": {
                 "type": "string"
@@ -1274,7 +1274,75 @@
               },
               "options": {
                 "additionalProperties": false,
+                "anyOf": [
+                  {
+                    "properties": {
+                      "patterns": {
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "patterns"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "banned-words": {
+                        "minItems": 1
+                      }
+                    },
+                    "required": [
+                      "banned-words"
+                    ]
+                  },
+                  {
+                    "properties": {
+                      "banned-characters": {
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "banned-characters"
+                    ]
+                  }
+                ],
                 "properties": {
+                  "allow": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "scope": {
                     "type": "string"
                   }
@@ -1291,60 +1359,8 @@
             },
             "required": [
               "id",
-              "check"
-            ],
-            "type": "object"
-          },
-          {
-            "additionalProperties": false,
-            "properties": {
-              "check": {
-                "const": "text.no-load-bearing"
-              },
-              "description": {
-                "type": "string"
-              },
-              "enabled": {
-                "type": "boolean"
-              },
-              "exclude": {
-                "items": {
-                  "minLength": 1,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "id": {
-                "minLength": 1,
-                "type": "string"
-              },
-              "include": {
-                "items": {
-                  "minLength": 1,
-                  "type": "string"
-                },
-                "type": "array"
-              },
-              "options": {
-                "additionalProperties": false,
-                "properties": {
-                  "scope": {
-                    "type": "string"
-                  }
-                },
-                "type": "object"
-              },
-              "severity": {
-                "enum": [
-                  "error",
-                  "warning",
-                  "info"
-                ]
-              }
-            },
-            "required": [
-              "id",
-              "check"
+              "check",
+              "options"
             ],
             "type": "object"
           },
@@ -1672,6 +1688,36 @@
                     },
                     "type": "array"
                   },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "scope": {
                     "type": "string"
                   }
@@ -1726,6 +1772,36 @@
                 "additionalProperties": false,
                 "properties": {
                   "allow": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
                     "items": {
                       "type": "string"
                     },
@@ -1790,6 +1866,36 @@
                     },
                     "type": "array"
                   },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "scope": {
                     "type": "string"
                   }
@@ -1844,6 +1950,36 @@
                 "additionalProperties": false,
                 "properties": {
                   "allow": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
                     "items": {
                       "type": "string"
                     },
@@ -1908,6 +2044,36 @@
                     },
                     "type": "array"
                   },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "scope": {
                     "type": "string"
                   }
@@ -1962,6 +2128,36 @@
                 "additionalProperties": false,
                 "properties": {
                   "allow": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
                     "items": {
                       "type": "string"
                     },
@@ -2026,6 +2222,36 @@
                     },
                     "type": "array"
                   },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "scope": {
                     "type": "string"
                   }
@@ -2080,6 +2306,36 @@
                 "additionalProperties": false,
                 "properties": {
                   "allow": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
                     "items": {
                       "type": "string"
                     },
@@ -2144,6 +2400,36 @@
                     },
                     "type": "array"
                   },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
                   "scope": {
                     "type": "string"
                   }
@@ -2198,6 +2484,36 @@
                 "additionalProperties": false,
                 "properties": {
                   "allow": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "banned-characters": {
+                    "type": "string"
+                  },
+                  "banned-words": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  },
+                  "capture-group": {
+                    "type": "integer"
+                  },
+                  "ignore-case": {
+                    "type": "boolean"
+                  },
+                  "message": {
+                    "type": "string"
+                  },
+                  "paired-conjunctions": {
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "patterns": {
                     "items": {
                       "type": "string"
                     },

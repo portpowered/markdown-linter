@@ -1,5 +1,5 @@
 import unittest
-from quality import coverage_totals
+from quality import coverage_totals, coverage_badge
 
 
 class CoverageTests(unittest.TestCase):
@@ -21,3 +21,8 @@ class CoverageTests(unittest.TestCase):
     def test_inconsistent_repeated_block_rejected(self):
         with self.assertRaises(ValueError):
             coverage_totals("mode: atomic\na.go:1.1,2.1 3 0\na.go:1.1,2.1 4 1\n")
+
+    def test_badge_uses_real_statement_coverage(self):
+        self.assertIn("94.99%", coverage_badge(9499, 10000))
+        self.assertIn("#e05d44", coverage_badge(9499, 10000))
+        self.assertIn("#4c1", coverage_badge(95, 100))

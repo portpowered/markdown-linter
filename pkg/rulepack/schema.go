@@ -49,8 +49,15 @@ func (r *Registry) ConfigurationSchema() map[string]any {
 				map[string]any{"required": []string{"dictionary-file"}, "properties": map[string]any{"dictionary-file": map[string]any{"minLength": 1}}},
 			}
 		}
+		if d.ID == "text.matcher" {
+			options["anyOf"] = []any{
+				map[string]any{"required": []string{"patterns"}, "properties": map[string]any{"patterns": map[string]any{"minItems": 1}}},
+				map[string]any{"required": []string{"banned-words"}, "properties": map[string]any{"banned-words": map[string]any{"minItems": 1}}},
+				map[string]any{"required": []string{"banned-characters"}, "properties": map[string]any{"banned-characters": map[string]any{"minLength": 1}}},
+			}
+		}
 		rule := map[string]any{"type": "object", "additionalProperties": false, "required": []string{"id", "check"}, "properties": map[string]any{"id": text, "check": map[string]any{"const": d.ID}, "description": map[string]string{"type": "string"}, "enabled": map[string]string{"type": "boolean"}, "severity": map[string]any{"enum": []string{"error", "warning", "info"}}, "include": texts, "exclude": texts, "options": options}}
-		if len(requiredOptions) > 0 || d.ID == "text.ste100.dictionary" {
+		if len(requiredOptions) > 0 || d.ID == "text.ste100.dictionary" || d.ID == "text.matcher" {
 			rule["required"] = []string{"id", "check", "options"}
 		}
 		rules = append(rules, rule)

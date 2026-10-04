@@ -1,5 +1,13 @@
 # Marklint
 
+[![Go version](https://img.shields.io/github/go-mod/go-version/portpowered/markdown-linter)](https://github.com/portpowered/markdown-linter/blob/main/go.mod)
+[![CI](https://github.com/portpowered/markdown-linter/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/portpowered/markdown-linter/actions/workflows/ci.yml)
+[![Coverage](https://portpowered.github.io/markdown-linter/coverage.svg)](https://portpowered.github.io/markdown-linter/coverage.html)
+[![Release](https://img.shields.io/github/v/release/portpowered/markdown-linter?display_name=tag)](https://github.com/portpowered/markdown-linter/releases/latest)
+[![Go Reference](https://pkg.go.dev/badge/github.com/portpowered/markdown-linter.svg)](https://pkg.go.dev/github.com/portpowered/markdown-linter)
+[![License](https://img.shields.io/github/license/portpowered/markdown-linter)](https://github.com/portpowered/markdown-linter/blob/main/LICENSE)
+[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://portpowered.github.io/markdown-linter/)
+
 Check Markdown structure, links and prose with rules that match your documentation policy.
 
 Start with `markdown:recommended`, compose optional editorial or company packs, and configure individual checks without changing the linter. The same registry and rules power both the CLI and the Go library.
@@ -25,4 +33,4 @@ overrides:
     options: {max: 100}
 ```
 
-Every rule page explains what the check does, lists its parameters and defaults, and supplies a configuration example checked against the public registry. Search by rule ID, behavior or parameter name.
+Each rule page explains the check and its parameters. It supplies a configuration example checked against the public registry. Search by rule ID, behavior or parameter name.
