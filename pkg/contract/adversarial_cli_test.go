@@ -142,3 +142,34 @@ func TestAdversarialMatchingOperands(t *testing.T) {
 }
 
 func strconvQuote(s string) string { data, _ := json.Marshal(s); return string(data) }
+
+func TestDiscoverCanonicalizesRootAncestors(t *testing.T) {
+	parent := t.TempDir()
+	real := filepath.Join(parent, "real")
+	if err := os.MkdirAll(filepath.Join(real, "docs", "excluded"), 0700); err != nil {
+		t.Fatal(err)
+	}
+	for _, file := range []string{"docs/guide.md", "docs/excluded/hidden.md"} {
+		if err := os.WriteFile(filepath.Join(real, file), []byte("Text."), 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	alias := filepath.Join(parent, "alias")
+	if err := os.Symlink(real, alias); err != nil {
+		t.Skip("directory symlinks unavailable", err)
+	}
+	root := filepath.Join(alias, "docs")
+	for _, inputs := range [][]string{{filepath.Join(root, "guide.md")}, {root}} {
+		files, err := Discover(root, inputs, []string{"excluded/**"})
+		if err != nil || len(files) != 1 {
+			t.Fatal(files, err)
+		}
+		resolved, err := filepath.EvalSymlinks(filepath.Join(real, "docs", "guide.md"))
+		if err != nil || files[0] != resolved {
+			t.Fatal(files, resolved, err)
+		}
+	}
+	if _, err := Discover(filepath.Join(parent, "missing"), []string{root}, nil); err == nil {
+		t.Fatal("missing root accepted")
+	}
+}

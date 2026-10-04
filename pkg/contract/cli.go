@@ -538,6 +538,14 @@ func supported(path string) bool {
 	return has([]string{".md", ".markdown", ".mdx"}, strings.ToLower(filepath.Ext(path)))
 }
 func Discover(root string, paths, exclude []string) ([]string, error) {
+	root, err := filepath.Abs(root)
+	if err != nil {
+		return nil, err
+	}
+	root, err = filepath.EvalSymlinks(root)
+	if err != nil {
+		return nil, err
+	}
 	seen := map[string]bool{}
 	files := []string{}
 	add := func(file string) error {
@@ -586,6 +594,10 @@ func Discover(root string, paths, exclude []string) ([]string, error) {
 			return nil, err
 		} else if info.Mode()&os.ModeSymlink != 0 {
 			return nil, fmt.Errorf("directory symlinks are not followed")
+		}
+		input, err = filepath.EvalSymlinks(input)
+		if err != nil {
+			return nil, err
 		}
 		err = filepath.WalkDir(input, func(file string, entry fs.DirEntry, walkErr error) error {
 			if walkErr != nil {
