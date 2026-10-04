@@ -3,58 +3,46 @@ on:
   push:
     branches: [main]
   pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
 concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
-permissions:
-  contents: read
+env:
+  GOWORK: 'off'
+  GOPRIVATE: ''
+  GOTOOLCHAIN: local
 jobs:
-  verify:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
-        go: ['1.24.x', '1.26.x']
-    runs-on: ${{ matrix.os }}
-    env:
-      GOWORK: 'off'
-      GOPRIVATE: ''
-      GOTOOLCHAIN: local
+  quality:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
         with:
-          go-version: ${{ matrix.go }}
-      - run: go build ./...
-      - name: Test with 95 percent module coverage
-        run: python scripts/quality.py coverage
-      - run: python scripts/quality.py tools-test
-      - run: go vet ./...
-      - name: Standard Go linters
-        uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20
+          go-version: '1.26.x'
+      - uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20
         with:
           version: v2.14.0
-          args: --config .golangci.yml ./...
-      - name: Upload coverage profile
+          install-only: true
+      - name: Default Make verification
+        run: make verify
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: coverage-${{ matrix.os }}-${{ matrix.go }}
+          name: coverage
           path: coverage.out
           if-no-files-found: ignore
-      - name: Check formatting and module metadata
-        shell: bash
-        run: |
-          unformatted="$(gofmt -l .)"
-          if [ -n "$unformatted" ]; then
-            echo "$unformatted"
-            exit 1
-          fi
-          go mod tidy
-          git diff --exit-code -- go.mod go.sum
-      - name: Exercise commands
-        shell: bash
-        run: |
-          go build -o marklint${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/marklint
-          ./marklint --version
-          ./marklint --rules examples/rules.yaml examples/docs
-          go run ./examples/custom --rules examples/custom/rules.yaml examples/docs
+  compatibility:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
+        with:
+          go-version: '1.24.x'
+      - run: go build ./...
+      - run: go test -race ./... -timeout 120s

@@ -9,7 +9,7 @@ COVERAGE_MIN ?= 95
 .PHONY: default verify build test coverage coverage-check lint fmt fmt-check vet tools-test deps deps-tidy clean
 
 default: verify
-verify: fmt-check build vet lint coverage tools-test
+verify: pack-check fmt-check build vet lint coverage tools-test module-check smoke
 build:
 	$(GO) build ./...
 test:
@@ -34,3 +34,14 @@ deps-tidy:
 	$(GO) mod tidy
 clean:
 	$(GO) clean ./...
+
+.PHONY: pack-check module-check smoke
+pack-check:
+	$(PYTHON) scripts/packs.py
+module-check:
+	$(GO) mod tidy
+	git diff --exit-code -- go.mod go.sum
+smoke:
+	$(GO) run ./cmd/marklint --version
+	$(GO) run ./cmd/marklint --rules examples/rules.yaml examples/docs
+	$(GO) run ./examples/custom --rules examples/custom/rules.yaml examples/docs
