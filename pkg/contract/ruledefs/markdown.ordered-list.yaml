@@ -1,0 +1,65 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '1. First
+
+      3. Second
+
+      '
+    parameters:
+      style: one-or-ordered
+    expected: fail
+  - name: accepted
+    input: '1. First
+
+      2. Second
+
+      '
+    parameters:
+      style: one-or-ordered
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.ordered-list
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      style:
+        type: string
+    type: object
+  resultKind: assertion
+  summary: Checks ordered-list numbering against sequential, all-one, or either convention.
+  targets:
+  - document
+  version: '2'
+defaults:
+  style: one-or-ordered
+recommendedSeverity: warning
+presets:
+- markdown:style
+documentation:
+  summary: Checks ordered-list numbering against sequential, all-one, or either convention.
+  parameters:
+    style: 'Ordered numbering convention: one, ordered, or one-or-ordered.'
+  example-options:
+    style: one-or-ordered
+  example:
+    language: markdown
+    bad: '1. First
+
+      3. Second
+
+      '
+    good: '1. First
+
+      2. Second
+
+      '
+    explanation: The numbering is neither all ones nor consecutive.
+  'on': document

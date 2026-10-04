@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "bundledRules": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "check": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "id": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "options": {
+            "type": "object"
+          },
+          "presets": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "check",
+          "options",
+          "severity",
+          "presets"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "defaults": {
+      "type": "object"
+    },
+    "descriptor": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "additionalProperties": false,
+      "properties": {
+        "capabilities": {
+          "items": {
+            "enum": [
+              "structure",
+              "text",
+              "words",
+              "sentences",
+              "graphemes",
+              "syllables",
+              "morphology",
+              "syntax",
+              "provider"
+            ]
+          },
+          "type": "array"
+        },
+        "execution": {
+          "enum": [
+            "local",
+            "remote"
+          ]
+        },
+        "fix": {
+          "enum": [
+            "none",
+            "safe-edits"
+          ]
+        },
+        "fixtures": {
+          "items": {
+            "additionalProperties": false,
+            "properties": {
+              "expected": {
+                "enum": [
+                  "pass",
+                  "fail",
+                  "unknown",
+                  "invalid"
+                ]
+              },
+              "input": {
+                "type": "string"
+              },
+              "name": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "name",
+              "input",
+              "parameters",
+              "expected"
+            ],
+            "type": "object"
+          },
+          "type": "array"
+        },
+        "formats": {
+          "items": {
+            "enum": [
+              "markdown",
+              "mdx"
+            ]
+          },
+          "type": "array"
+        },
+        "id": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "languages": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "parametersSchema": {
+          "type": "object"
+        },
+        "resultKind": {
+          "enum": [
+            "assertion",
+            "metric",
+            "review"
+          ]
+        },
+        "summary": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "targets": {
+          "items": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "capabilities",
+        "execution",
+        "fixtures",
+        "formats",
+        "id",
+        "languages",
+        "parametersSchema",
+        "summary",
+        "targets",
+        "version",
+        "resultKind",
+        "fix"
+      ],
+      "type": "object"
+    },
+    "documentation": {
+      "additionalProperties": false,
+      "properties": {
+        "example": {
+          "additionalProperties": false,
+          "properties": {
+            "bad": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "explanation": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "good": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "language": {
+              "enum": [
+                "markdown",
+                "yaml"
+              ]
+            }
+          },
+          "required": [
+            "language",
+            "bad",
+            "good",
+            "explanation"
+          ],
+          "type": "object"
+        },
+        "example-options": {
+          "type": "object"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "on": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "parameters": {
+          "additionalProperties": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "type": "object"
+        },
+        "summary": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "summary",
+        "parameters",
+        "example-options",
+        "example",
+        "on"
+      ],
+      "type": "object"
+    },
+    "presets": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "recommendedSeverity": {
+      "enum": [
+        "error",
+        "warning",
+        "info"
+      ]
+    }
+  },
+  "required": [
+    "descriptor",
+    "defaults",
+    "recommendedSeverity",
+    "presets",
+    "documentation"
+  ],
+  "type": "object"
+}

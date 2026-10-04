@@ -1,0 +1,81 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Utilize the API.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+      terms:
+        utilize: use
+    expected: fail
+  - name: accepted
+    input: 'Use the API.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+      terms:
+        utilize: use
+    expected: pass
+  formats:
+  - markdown
+  id: text.terminology
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+      terms:
+        additionalProperties:
+          type: string
+        type: object
+    required:
+    - terms
+    type: object
+  resultKind: assertion
+  summary: Reports configured disfavored words or phrases and suggests the preferred terminology without
+    automatically rewriting.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  scope: ''
+  terms: {}
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Reports configured disfavored words or phrases and suggests the preferred terminology without
+    automatically rewriting.
+  parameters:
+    allow: Explicit exceptions, compared without case sensitivity where the check operates on prose.
+    scope: Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.
+    terms: Nonempty mapping of disfavored words or phrases to preferred wording.
+  example-options:
+    allow: []
+    scope: prose
+    terms:
+      utilize: use
+  example:
+    language: markdown
+    bad: 'Utilize the API.
+
+      '
+    good: 'Use the API.
+
+      '
+    explanation: The configured terminology mapping prefers use over `utilize`.
+  'on': document

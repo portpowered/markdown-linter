@@ -1,0 +1,59 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+      '
+    parameters:
+      max: 120
+    expected: fail
+  - name: accepted
+    input: 'A short line.
+
+      '
+    parameters:
+      max: 120
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.line-length
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      max:
+        type: integer
+    type: object
+  resultKind: assertion
+  summary: Reports prose lines over the character limit, excluding code, table rows and lines containing
+    URLs.
+  targets:
+  - document
+  version: '2'
+defaults:
+  max: 120
+recommendedSeverity: warning
+presets:
+- markdown:style
+documentation:
+  summary: Reports prose lines over the character limit, excluding code, table rows and lines containing
+    URLs.
+  parameters:
+    max: Maximum character count for a prose line; must be positive.
+  example-options:
+    max: 120
+  example:
+    language: markdown
+    bad: 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+
+      '
+    good: 'A short line.
+
+      '
+    explanation: The first line exceeds the configured maximum of 120 characters.
+  'on': document

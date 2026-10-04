@@ -1,7 +1,16 @@
-version: 1
+version: 2
 rules:
-  - id: customer.purpose
+  customer.purpose:
     check: markdown.required-heading
     options:
       heading: Purpose
       level: 2
+sets:
+  example:
+    use: []
+    rules:
+    - rule: customer.purpose
+      'on': document
+apply:
+- use:
+  - example

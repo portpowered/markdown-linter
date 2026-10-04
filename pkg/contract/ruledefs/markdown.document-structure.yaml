@@ -1,0 +1,92 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '# Guide
+
+      '
+    parameters:
+      types:
+      - paths:
+        - docs
+        required-fields:
+        - title
+        required-headings:
+        - Purpose
+    expected: fail
+  - name: accepted
+    input: '---
+
+      title: Guide
+
+      ---
+
+      # Guide
+
+
+      ## Purpose
+
+      '
+    parameters:
+      types:
+      - paths:
+        - docs
+        required-fields:
+        - title
+        required-headings:
+        - Purpose
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.document-structure
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      types: {}
+    type: object
+  resultKind: assertion
+  summary: Checks required frontmatter fields and level-two headings for configured document path groups.
+  targets:
+  - document
+  version: '2'
+defaults:
+  types: null
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Checks required frontmatter fields and level-two headings for configured document path groups.
+  parameters:
+    types: 'Nonempty list of document groups. Fields: paths, required-fields, required-headings, any-headings,
+      alternative-message. Headings are level two.'
+  example-options:
+    types:
+    - paths:
+      - docs
+      required-fields:
+      - title
+      required-headings:
+      - Purpose
+  example:
+    language: markdown
+    bad: '# Guide
+
+      '
+    good: '---
+
+      title: Guide
+
+      ---
+
+      # Guide
+
+
+      ## Purpose
+
+      '
+    explanation: A document under docs must contain the configured title field and Purpose heading.
+  'on': document

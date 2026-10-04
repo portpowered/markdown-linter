@@ -1,0 +1,112 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Use both red or blue.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+    expected: fail
+  - name: accepted
+    input: 'Use both red and blue.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+    expected: pass
+  formats:
+  - markdown
+  id: text.strunk-white.correlative-pairs
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      banned-characters:
+        type: string
+      banned-words:
+        items:
+          type: string
+        type: array
+      capture-group:
+        type: integer
+      ignore-case:
+        type: boolean
+      message:
+        type: string
+      paired-conjunctions:
+        additionalProperties:
+          type: string
+        type: object
+      patterns:
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+    type: object
+  resultKind: assertion
+  summary: 'Flags finite mismatched pair constructions: ``both/or``, `either/and`, or `neither/or`; invites
+    editorial review.'
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  banned-characters: ''
+  banned-words: []
+  capture-group: 0
+  ignore-case: true
+  message: 'review the paired construction: both/and, either/or, or neither/nor'
+  paired-conjunctions:
+    both: and
+    either: or
+    neither: nor
+  patterns:
+  - (?i)\b(?:both\b[^.!?;]*?\bor|either\b[^.!?;]*?\band|neither\b[^.!?;]*?\bor)\b
+  scope: prose
+recommendedSeverity: warning
+presets:
+- text:strunk-white
+documentation:
+  summary: 'Flags finite mismatched pair constructions: ``both/or``, `either/and`, or `neither/or`; invites
+    editorial review.'
+  parameters:
+    patterns: List of Go RE2 patterns to report; patterns cannot match empty text.
+    banned-words: Literal whole words or phrases to report. Spaces match soft line breaks and emphasis.
+    banned-characters: Literal characters to report individually. Use patterns for Unicode character classes.
+    ignore-case: Case-insensitive matching by default; false preserves case.
+    allow: Exact matched phrases to accept, compared without case sensitivity.
+    scope: prose covers headings and paragraphs; heading checks headings only. Code and URLs are excluded.
+    message: Explanation to show with the matched text.
+    capture-group: Report this capture group instead of the whole match; zero reports the whole match.
+      The group must exist in every pattern.
+    paired-conjunctions: Skip a match beginning with a key when its paired word occurs inside that match;
+      used for both/and, either/or, neither/nor.
+  example-options:
+    allow: []
+    scope: prose
+  notes: This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md)
+    for covered patterns and legitimate exceptions. This check is a default configuration of text.matcher.
+    Override patterns, banned-words or the message to customize the policy.
+  example:
+    language: markdown
+    bad: 'Use both red or blue.
+
+      '
+    good: 'Use both red and blue.
+
+      '
+    explanation: Both pairs with and. The matcher flags ``both/or`` when no balancing and occurs inside
+      the match.
+  'on': document

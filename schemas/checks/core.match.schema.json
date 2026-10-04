@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "oneOf": [
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "pattern"
+            ]
+          },
+          {
+            "required": [
+              "regex"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "mode": {
+          "const": "equals"
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "pattern"
+            ]
+          },
+          {
+            "required": [
+              "regex"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "mode": {
+          "const": "contains"
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "pattern"
+            ]
+          },
+          {
+            "required": [
+              "regex"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "mode": {
+          "const": "word"
+        }
+      },
+      "required": [
+        "values"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "values"
+            ]
+          },
+          {
+            "required": [
+              "regex"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "mode": {
+          "const": "pattern"
+        }
+      },
+      "required": [
+        "pattern"
+      ]
+    },
+    {
+      "not": {
+        "anyOf": [
+          {
+            "required": [
+              "values"
+            ]
+          },
+          {
+            "required": [
+              "pattern"
+            ]
+          }
+        ]
+      },
+      "properties": {
+        "mode": {
+          "const": "regex"
+        }
+      },
+      "required": [
+        "regex"
+      ]
+    }
+  ],
+  "properties": {
+    "anchor": {
+      "enum": [
+        "full",
+        "search"
+      ]
+    },
+    "case": {
+      "enum": [
+        "sensitive",
+        "fold"
+      ]
+    },
+    "expect": {
+      "enum": [
+        "present",
+        "absent"
+      ]
+    },
+    "mode": {
+      "enum": [
+        "equals",
+        "contains",
+        "word",
+        "pattern",
+        "regex"
+      ]
+    },
+    "pattern": {
+      "maxLength": 65536,
+      "type": "string"
+    },
+    "regex": {
+      "maxLength": 4096,
+      "type": "string"
+    },
+    "values": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "minItems": 1,
+      "type": "array"
+    },
+    "view": {
+      "enum": [
+        "auto",
+        "prose",
+        "visible",
+        "source",
+        "code",
+        "language",
+        "cell"
+      ]
+    }
+  },
+  "required": [
+    "mode"
+  ],
+  "type": "object"
+}

@@ -1,6 +1,15 @@
-version: 1
+version: 2
 rules:
-  - id: customer.example
+  customer.example:
     check: customer.required-text
     options:
       text: minimal documentation example
+sets:
+  example:
+    use: []
+    rules:
+    - rule: customer.example
+      'on': document
+apply:
+- use:
+  - example

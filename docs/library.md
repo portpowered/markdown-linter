@@ -1,6 +1,6 @@
 # Use Marklint as a Go library
 
-Use the public `pkg/rulepack` API when you want the same configuration, scopes and exceptions as the CLI. Use `pkg/engine` to parse Markdown, and `pkg/interfaces` for documents, analyzers and structured diagnostics. The module name is `github.com/portpowered/markdown-linter`; `marklint` is the command name.
+Use `pkg/contract` for the version 2 configuration and report contract. The older `pkg/rulepack` API supplies internal document analyzers. Use `pkg/engine` to parse Markdown, and `pkg/interfaces` for documents, analyzers and structured diagnostics. The module name is `github.com/portpowered/markdown-linter`; `marklint` is the command name.
 
 ```sh
 go get github.com/portpowered/markdown-linter@latest
@@ -70,6 +70,6 @@ Implement `interfaces.Analyzer` with `ID()` and `Analyze(context.Context, *inter
 
 The [custom command example](../examples/custom/main.go) demonstrates registration and `cli.RunWithRegistry`. No plugin discovery or runtime Go compilation is required. Customer Go code runs with the host application's privileges.
 
-For small direct integrations, `engine.WithRules`, `engine.WithDiagnosticRules` and `engine.WithAnalyzers` register checks explicitly. Use the public pack and CLI APIs to retain severity, scopes, baselines and reasoned suppressions. Baselines are an adoption layer; the library's raw findings remain available for your own reporting.
+For small direct integrations, `engine.WithRules`, `engine.WithDiagnosticRules` and `engine.WithAnalyzers` register checks explicitly. Use the contract and CLI APIs for version 2 severity, scopes, and reasoned suppressions. Internal pack types keep their earlier shape for analyzer registration.
 
 The pack integration shown above is exercised in `pkg/rulepack/site_contract_test.go`; every generated rule configuration is compiled in that test as well. See the [package API reference](https://pkg.go.dev/github.com/portpowered/markdown-linter/pkg/rulepack) for exported contracts.

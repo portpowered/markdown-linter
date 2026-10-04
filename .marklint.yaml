@@ -1,0 +1,41 @@
+version: 2
+language: en
+profile: unicode-v1
+rules:
+  source-file-budget:
+    check: core.limit
+    options:
+      measure: words
+      max: 12000
+  source-sentence-budget:
+    check: core.limit
+    options:
+      measure: words
+      max: 60
+  source-code-language:
+    check: core.limit
+    options:
+      measure: graphemes
+      view: language
+      min: 1
+sets:
+  repository:
+    use:
+    - markdown:recommended
+    rules:
+    - rule: source-file-budget
+      on: document
+    - rule: source-sentence-budget
+      on: each sentence
+    - rule: source-code-language
+      on: each codeblock
+apply:
+- use:
+  - repository
+exclude:
+- testdata/**
+- site/**
+- .site-docs/**
+- runtime/node_modules/**
+- .cache-quality/**
+- .venv-docs/**

@@ -1,0 +1,106 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'A very large result.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+    expected: fail
+  - name: accepted
+    input: 'A result of 20 MB.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+    expected: pass
+  formats:
+  - markdown
+  id: text.strunk-white.qualifiers
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      banned-characters:
+        type: string
+      banned-words:
+        items:
+          type: string
+        type: array
+      capture-group:
+        type: integer
+      ignore-case:
+        type: boolean
+      message:
+        type: string
+      paired-conjunctions:
+        additionalProperties:
+          type: string
+        type: object
+      patterns:
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+    type: object
+  resultKind: assertion
+  summary: Flags ``very``, `really`, `rather` and `quite` for editorial review.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  banned-characters: ''
+  banned-words: []
+  capture-group: 0
+  ignore-case: true
+  message: review this qualifier; a precise description may be stronger
+  paired-conjunctions: {}
+  patterns:
+  - (?i)\b(?:very|really|rather|quite)\b
+  scope: prose
+recommendedSeverity: warning
+presets:
+- text:strunk-white
+documentation:
+  summary: Flags ``very``, `really`, `rather` and `quite` for editorial review.
+  parameters:
+    patterns: List of Go RE2 patterns to report; patterns cannot match empty text.
+    banned-words: Literal whole words or phrases to report. Spaces match soft line breaks and emphasis.
+    banned-characters: Literal characters to report individually. Use patterns for Unicode character classes.
+    ignore-case: Case-insensitive matching by default; false preserves case.
+    allow: Exact matched phrases to accept, compared without case sensitivity.
+    scope: prose covers headings and paragraphs; heading checks headings only. Code and URLs are excluded.
+    message: Explanation to show with the matched text.
+    capture-group: Report this capture group instead of the whole match; zero reports the whole match.
+      The group must exist in every pattern.
+    paired-conjunctions: Skip a match beginning with a key when its paired word occurs inside that match;
+      used for both/and, either/or, neither/nor.
+  example-options:
+    allow: []
+    scope: prose
+  notes: This is a finite editorial signal, not a general grammar parser. See [Strunk and White](../strunk-white.md)
+    for covered patterns and legitimate exceptions. This check is a default configuration of text.matcher.
+    Override patterns, banned-words or the message to customize the policy.
+  example:
+    language: markdown
+    bad: 'A very large result.
+
+      '
+    good: 'A result of 20 MB.
+
+      '
+    explanation: The default matcher flags ``very`` as a qualifier for editorial review.
+  'on': document

@@ -1,0 +1,62 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Text
+
+      ## Details
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: 'Text
+
+
+      ## Details
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.blank-lines
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Requires blank separation before top-level headings, lists and fenced code blocks when preceding
+    content exists.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets:
+- markdown:style
+documentation:
+  summary: Requires blank separation before top-level headings, lists and fenced code blocks when preceding
+    content exists.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: 'Text
+
+      ## Details
+
+      '
+    good: 'Text
+
+
+      ## Details
+
+      '
+    explanation: The heading needs a blank line before it.
+  'on': document

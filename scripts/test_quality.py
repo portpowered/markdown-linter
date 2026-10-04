@@ -1,4 +1,8 @@
 import unittest
+from pathlib import Path
+import tempfile
+from unittest.mock import patch
+import quality
 from quality import coverage_totals, coverage_badge
 
 
@@ -26,3 +30,27 @@ class CoverageTests(unittest.TestCase):
         self.assertIn("94.99%", coverage_badge(9499, 10000))
         self.assertIn("#e05d44", coverage_badge(9499, 10000))
         self.assertIn("#4c1", coverage_badge(95, 100))
+
+
+class ModuleTests(unittest.TestCase):
+    def test_module_check_accepts_existing_uncommitted_contents(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in ("go.mod", "go.sum"):
+                (root / name).write_text("current edited contents")
+            with patch.object(quality, "ROOT", root), patch.object(quality, "run") as run, \
+                    patch("sys.argv", ["quality.py", "module-check"]):
+                self.assertEqual(quality.main(), 0)
+                run.assert_called_once_with(["go", "mod", "tidy"])
+
+    def test_module_check_rejects_tidy_drift(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            for name in ("go.mod", "go.sum"):
+                (root / name).write_text("before")
+            def tidy(_):
+                (root / "go.sum").write_text("after")
+            with patch.object(quality, "ROOT", root), patch.object(quality, "run", side_effect=tidy), \
+                    patch("sys.argv", ["quality.py", "module-check"]):
+                with self.assertRaisesRegex(ValueError, "tidy changed"):
+                    quality.main()

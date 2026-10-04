@@ -1,0 +1,64 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '# Guide
+
+
+      ### Details
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '# Guide
+
+
+      ## Details
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.heading-order
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Reports skipped heading levels, such as H2 followed by H4.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: error
+presets:
+- markdown:core
+- markdown:recommended
+- portos
+documentation:
+  summary: Reports skipped heading levels, such as H2 followed by H4.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '# Guide
+
+
+      ### Details
+
+      '
+    good: '# Guide
+
+
+      ## Details
+
+      '
+    explanation: The heading jumps from level one to level three.
+  'on': document

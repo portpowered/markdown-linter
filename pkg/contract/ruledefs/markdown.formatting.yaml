@@ -1,0 +1,52 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: "Text   \n"
+    parameters:
+      allow-hard-breaks: true
+    expected: fail
+  - name: accepted
+    input: 'Text
+
+      '
+    parameters:
+      allow-hard-breaks: true
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.formatting
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow-hard-breaks:
+        type: boolean
+    type: object
+  resultKind: assertion
+  summary: Combines unclosed code-fence and trailing-whitespace checks.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow-hard-breaks: true
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Combines unclosed code-fence and trailing-whitespace checks.
+  parameters:
+    allow-hard-breaks: Permit exactly two trailing spaces as Markdown hard breaks; false rejects them.
+  example-options:
+    allow-hard-breaks: true
+  example:
+    language: markdown
+    bad: "Text   \n"
+    good: 'Text
+
+      '
+    explanation: Three trailing spaces are not an allowed two-space hard break.
+  'on': document

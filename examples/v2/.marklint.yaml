@@ -1,0 +1,125 @@
+# Proposed Marklint configuration v2. Requires a contract-capable build.
+# This file contains all customer policy. No template or matcher files are read.
+version: 2
+language: en
+profile: unicode-v1
+
+rules:
+  word-budget:
+    check: core.limit
+    options:
+      measure: words
+      max: 25
+
+  file-budget:
+    extends: word-budget
+    options:
+      max: 1500
+
+  section-budget:
+    extends: word-budget
+    options:
+      max: 300
+
+  no-hype:
+    check: core.match
+    options:
+      mode: word
+      expect: absent
+      values: [utilize, seamless]
+      case: fold
+
+  contrast:
+    check: core.match
+    options:
+      mode: pattern
+      pattern: |-
+        {X}, but {Y}.
+        {X}; however, {Y}.
+
+  typed-code:
+    check: core.limit
+    options:
+      measure: graphemes
+      view: language
+      min: 1
+
+  table-cell-required:
+    check: core.limit
+    options:
+      measure: graphemes
+      view: cell
+      min: 1
+
+  parameter-type:
+    check: core.match
+    options:
+      mode: equals
+      view: cell
+      values: [string, integer, boolean]
+
+  parameter-table:
+    check: markdown.table-schema
+    options:
+      header: [Name, Type, Description]
+      columns:
+        Name:
+          unique: true
+          rules: [table-cell-required]
+        Type:
+          rules: [parameter-type]
+        Description:
+          rules: [table-cell-required]
+
+  data-order:
+    check: core.sequence
+    options:
+      sequence: [paragraph, table, codeblock]
+
+  flowchart:
+    check: mermaid.flowchart
+    options:
+      direction: LR
+      accessible-title: required
+      accessible-description: required
+      source-indent: 2
+
+templates:
+  guide: |-
+    {{ document sections=3 max-heading-level<=2 }}
+
+    # {{ heading words=1..10 }}
+
+    ## Problem statement
+
+    {{ section paragraphs=1..2 words<=100 }}
+    {{ paragraph[1].sentence[1] rule="contrast" }}
+
+    ## Data
+
+    {{ section rule="data-order" }}
+    {{ table[1] rows=1..12 rule="parameter-table" }}
+    {{ codeblock[1] language="mermaid" rule="flowchart" }}
+
+    ## Limitations
+
+    {{ section paragraphs=1..3 }}
+
+sets:
+  house:
+    use: [portos]
+    rules:
+      - {rule: word-budget, on: each sentence}
+      - {rule: file-budget, on: document}
+      - {rule: section-budget, on: each section}
+      - {rule: no-hype, on: document}
+      - {rule: typed-code, on: each codeblock}
+
+  guides:
+    use: [house]
+    templates: [guide]
+
+apply:
+  - use: ["markdown:recommended"]
+  - files: [docs/**]
+    use: [guides]

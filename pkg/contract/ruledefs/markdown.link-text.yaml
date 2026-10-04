@@ -1,0 +1,51 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '[click here](https://example.test)
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '[API guide](https://example.test)
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.link-text
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Requires descriptive link labels and rejects empty labels and click here.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets:
+- markdown:recommended
+- portos
+documentation:
+  summary: Requires descriptive link labels and rejects empty labels and click here.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '[click here](https://example.test)
+
+      '
+    good: '[API guide](https://example.test)
+
+      '
+    explanation: The link label is a generic action `rather` than a useful description.
+  'on': document

@@ -1,0 +1,67 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '```
+
+      Example
+
+      ```
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '```text
+
+      Example
+
+      ```
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.fence-language
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Requires a language label on fenced code blocks; use text for plain text examples.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets:
+- markdown:recommended
+- portos
+documentation:
+  summary: Requires a language label on fenced code blocks; use text for plain text examples.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '```
+
+      Example
+
+      ```
+
+      '
+    good: '```text
+
+      Example
+
+      ```
+
+      '
+    explanation: The code fence needs an explicit language label.
+  'on': document

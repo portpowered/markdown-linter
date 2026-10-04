@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "accessible-description": {
+      "enum": [
+        "optional",
+        "required",
+        "forbidden"
+      ]
+    },
+    "accessible-title": {
+      "enum": [
+        "optional",
+        "required",
+        "forbidden"
+      ]
+    },
+    "direction": {
+      "enum": [
+        "TB",
+        "TD",
+        "BT",
+        "LR",
+        "RL"
+      ]
+    },
+    "source-indent": {
+      "maximum": 8,
+      "minimum": 0,
+      "type": "integer"
+    }
+  },
+  "type": "object"
+}

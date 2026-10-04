@@ -1,0 +1,67 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'The the API.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+    expected: fail
+  - name: accepted
+    input: 'The API.
+
+      '
+    parameters:
+      allow: []
+      scope: prose
+    expected: pass
+  formats:
+  - markdown
+  id: text.repeated-word
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+    type: object
+  resultKind: assertion
+  summary: Reports adjacent repeated words in prose, compared without case sensitivity.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  scope: ''
+recommendedSeverity: warning
+presets:
+- text:prose
+documentation:
+  summary: Reports adjacent repeated words in prose, compared without case sensitivity.
+  parameters:
+    allow: Explicit exceptions, compared without case sensitivity where the check operates on prose.
+    scope: Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.
+  example-options:
+    allow: []
+    scope: prose
+  example:
+    language: markdown
+    bad: 'The the API.
+
+      '
+    good: 'The API.
+
+      '
+    explanation: The same word occurs twice in sequence, compared without case sensitivity. The second
+      the is reported; punctuation or a paragraph boundary breaks the sequence.
+  'on': document

@@ -58,7 +58,7 @@ def run(args):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("check", choices=["coverage", "coverage-check", "format", "lint", "tools-test", "coverage-publish"])
+    parser.add_argument("check", choices=["coverage", "coverage-check", "format", "lint", "tools-test", "coverage-publish", "module-check"])
     parser.add_argument("--threshold", type=Decimal, default=Decimal("95"))
     parser.add_argument("--profile", default="coverage.out")
     parser.add_argument("--go", default=os.environ.get("GO", "go"))
@@ -67,6 +67,13 @@ def main():
     args = parser.parse_args()
     if not Decimal("0") <= args.threshold <= Decimal("100"):
         parser.error("threshold must be between 0 and 100")
+    if args.check == "module-check":
+        paths = [ROOT / "go.mod", ROOT / "go.sum"]
+        before = [p.read_bytes() for p in paths]
+        run([args.go, "mod", "tidy"])
+        if before != [p.read_bytes() for p in paths]:
+            raise ValueError("go mod tidy changed go.mod or go.sum; commit the updated files")
+        return 0
     if args.check == "coverage-publish":
         publish_coverage(args.profile, args.go)
         return 0
@@ -79,7 +86,9 @@ def main():
         print(f"Coverage: {percent:.2f}% ({covered}/{total} statements); required {args.threshold}%")
         return 0 if percent >= args.threshold else 1
     if args.check == "format":
-        files = [str(p.relative_to(ROOT)) for p in ROOT.rglob("*.go") if ".git" not in p.parts]
+        ignored = {".git", ".cache-quality", "node_modules", "dist", "site", ".site-docs"}
+        files = [str(p.relative_to(ROOT)) for p in ROOT.rglob("*.go")
+                 if not ignored.intersection(p.relative_to(ROOT).parts)]
         unformatted = subprocess.check_output(["gofmt", "-l"] + files, cwd=ROOT, text=True)
         if unformatted:
             print(unformatted, end="")

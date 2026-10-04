@@ -1,0 +1,75 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: safe-edits
+  fixtures:
+  - name: violation
+    input: '---
+
+      doc-id: DOC-1
+
+      ---
+
+      # First
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '---
+
+      doc-id: DOC-2
+
+      ---
+
+      # Second
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.doc-id-unique
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Reports duplicate document IDs from the documentation index across the selected Markdown files.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets:
+- markdown:maintenance
+documentation:
+  summary: Reports duplicate document IDs from the documentation index across the selected Markdown files.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '---
+
+      doc-id: DOC-1
+
+      ---
+
+      # First
+
+      '
+    good: '---
+
+      doc-id: DOC-2
+
+      ---
+
+      # Second
+
+      '
+    explanation: If another selected document already uses DOC-1, the duplicate ID fails. Each document
+      needs a distinct ID.
+  'on': document

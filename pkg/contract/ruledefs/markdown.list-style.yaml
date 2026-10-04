@@ -1,0 +1,58 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: "- Parent\n    - Child\n"
+    parameters:
+      allow: []
+      indent: 2
+    expected: fail
+  - name: accepted
+    input: "- Parent\n  - Child\n"
+    parameters:
+      allow: []
+      indent: 2
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.list-style
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      indent:
+        type: integer
+    type: object
+  resultKind: assertion
+  summary: Checks the unordered-list marker and nested indentation against the configured convention.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  indent: 2
+recommendedSeverity: warning
+presets:
+- markdown:style
+documentation:
+  summary: Checks the unordered-list marker and nested indentation against the configured convention.
+  parameters:
+    allow: The first one-character entry selects the unordered-list marker; empty uses a hyphen.
+    indent: Nested unordered-list indentation in spaces; must be between 1 and 8.
+  example-options:
+    allow: []
+    indent: 2
+  example:
+    language: markdown
+    bad: "- Parent\n    - Child\n"
+    good: "- Parent\n  - Child\n"
+    explanation: The child uses four spaces of indentation instead of the configured two spaces.
+  'on': document

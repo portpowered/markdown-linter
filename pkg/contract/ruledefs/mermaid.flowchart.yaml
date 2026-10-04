@@ -1,0 +1,83 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: "```mermaid\nflowchart TB\n  accTitle: Cache\n  accDescr: The request reaches the cache.\n\
+      \  A --> B\n```\n"
+    parameters:
+      direction: LR
+      accessible-title: required
+      accessible-description: required
+      source-indent: 2
+    expected: fail
+  - name: accepted
+    input: "```mermaid\nflowchart LR\n  accTitle: Cache\n  accDescr: The request reaches the cache.\n\
+      \  A --> B\n```\n"
+    parameters:
+      direction: LR
+      accessible-title: required
+      accessible-description: required
+      source-indent: 2
+    expected: pass
+  formats:
+  - markdown
+  - mdx
+  id: mermaid.flowchart
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      accessible-description:
+        enum:
+        - optional
+        - required
+        - forbidden
+      accessible-title:
+        enum:
+        - optional
+        - required
+        - forbidden
+      direction:
+        enum:
+        - TB
+        - TD
+        - BT
+        - LR
+        - RL
+      source-indent:
+        maximum: 8
+        minimum: 0
+        type: integer
+    type: object
+  resultKind: assertion
+  summary: Checks flowchart syntax, direction, accessibility, and source indentation.
+  targets:
+  - codeblock
+  version: '2'
+defaults: {}
+recommendedSeverity: error
+presets: []
+documentation:
+  summary: Checks flowchart syntax, direction, accessibility, and source indentation.
+  parameters:
+    direction: 'Required flowchart direction: TB, TD, BT, LR, or RL.'
+    accessible-title: Require, permit, or forbid one accessible title.
+    accessible-description: Require, permit, or forbid one accessible description.
+    source-indent: Required top-level source indentation from zero to eight spaces.
+  example-options:
+    direction: LR
+    accessible-title: required
+    accessible-description: required
+    source-indent: 2
+  'on': each codeblock
+  example:
+    language: markdown
+    bad: "```mermaid\nflowchart TB\n  accTitle: Cache\n  accDescr: The request reaches the cache.\n  A\
+      \ --> B\n```\n"
+    good: "```mermaid\nflowchart LR\n  accTitle: Cache\n  accDescr: The request reaches the cache.\n \
+      \ A --> B\n```\n"
+    explanation: The flowchart has the wrong direction.

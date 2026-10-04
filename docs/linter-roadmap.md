@@ -1,6 +1,6 @@
 # OpenAPI and Markdown linter implementation checklist
 
-The approved design uses one configuration version, `version: 1`, with breaking changes allowed. Rule set names have no version suffix. Pin the executable release and review the shipped SHA-256 manifests to reproduce policy. Both commands now default to their recommended set; Portos policy is opt-in through `portos-defaults`.
+The approved design uses one configuration version, `version: 2`, with breaking changes allowed. Rule set names have no version suffix. Pin the executable release and review the shipped SHA-256 manifests to reproduce policy. Both commands now default to their recommended set; Portos policy is opt-in through `portos`.
 
 Implementation updated October 3, 2026. Checked items are implemented; rule behavior, options, and boundaries are documented in `docs/rule-packs.md`. This joint document is mirrored in both repositories. Unperformed customer pilot work is listed separately and is not claimed as completed.
 
@@ -21,7 +21,7 @@ Combine repository document checks and the Go extension API. Provide consistent 
 
 ## Portos project requirements
 
-The internal requirements are independent rules. In OpenAPI, `portos-defaults` composes `openapi:recommended` and `portos:internal`. In Markdown it composes `markdown:recommended` and `portos:internal`. Each requirement can be configured, scoped, overridden, or suppressed independently.
+The internal requirements are independent rules. In OpenAPI, `portos` composes `openapi:recommended` and `portos:internal`. In Markdown it composes `markdown:recommended` and `portos:internal`. Each requirement can be configured, scoped, overridden, or suppressed independently.
 
 - [x] `portos.operation-vocabulary`: request Path operation IDs use List, Send, Delete, Query, Get, or Modify; Batch and Async are modifiers. Vocabulary and modifiers are configurable. Create, Update, Search, and Enumerate receive findings.
 - [x] `portos.query-request`: Query uses POST and an object body.
@@ -119,58 +119,25 @@ Each check has independent options and activation; see the rule-pack reference f
 - [x] `text.terminology`: terminology.
 
 Each check has independent options and activation; see the rule-pack reference for exact behavior and exclusions.
-## Activation and composition checklist
+## Version 2 contract
 
-- [x] A single version 1 schema with extends, rules, overrides, enabled state, severity, scope, options, and reasoned suppressions.
-- [x] Recommended defaults with no compatibility branch or versioned preset names.
-- [x] Readable YAML sets and SHA-256 manifests embedded for offline use and included in release archives.
-- [x] Rule catalog with options, defaults, kinds, severity, preset membership, guidance, and fix support; public customer metadata registration.
-- [x] rules list/describe and presets list/describe/export.
-- [x] init creates compact config and refuses implicit overwrite.
-- [x] config validate checks the full configuration; config explain includes defaults, enabled state, scope decisions, origins, and hashes.
-- [x] Explicit config wins; otherwise discover only the conventional config at the selected root.
-- [x] Root-bounded local imports, including symlinks, with cycle, duplicate-ID, wrong-kind, and unknown-override errors.
-- [x] Overrides replace whole supplied options maps/scope lists; omitted fields inherit. Disabled/unselected options are validated.
-- [x] Reasoned suppressions remove fixes too; complete duplicate suppressions are deduplicated. OpenAPI supports exact pointers; Markdown supports next-line directives outside code.
-- [x] --only filters configured enabled instance IDs after validation.
-- [x] Text severity and deterministic JSON diagnostics with check identity and provenance.
-- [x] Explicit baseline creation/replacement, counted debt, moved-line resilience, and changed-evidence detection.
-- [x] --fail-on warning and SARIF output using the same diagnostics; operational failures always exit 2.
-- [x] Customer Go factories/analyzers remain available; YAML never downloads executable logic.
+Version 2 replaces the earlier customer configuration format.
+The single configuration contains named rules, sets, templates, routing, vocabulary, and reasoned suppressions.
+Rules inherit through shallow option patches.
+No customer template or dictionary file is read.
 
-## Customer UX
+The five core checks provide numeric limits, text matching, block sequences, table schemas, and Mermaid flowchart checks.
+Unicode segmentation supplies word, sentence, and grapheme counts.
+MDX uses a syntax parser and keeps dynamic content opaque.
+Installed measure adapters declare their supported inputs and native scales.
+Remote adapters require explicit operator permission.
 
-The rule-pack reference documents discovery, initialization, activating one rule, composing sets, overrides, scoping, suppression, baselines, and effective-policy review. Both repositories include runnable Portos fixtures. A future settings UI should use this catalog and YAML contract. Show inherited values and sample previews before saving.
+The [single-file guide](single-file-policy.md) documents the active contract and operational limits.
+CI checks source Markdown, generated reference pages, and the supplied guide example.
+Race tests and the existing 95% coverage gate apply to the module.
 
-Recommended defaults add findings. Configuration must stay within the selected root. Wrong-kind checks fail explicitly. Ordered lists and whitespace permit valid alternative syntax. Fixes use the selected pack. Select markdown:maintenance explicitly for relocation/ID repair. Pin the executable alongside pack hashes.
+## Further work
 
-## Test checklist
-
-- [x] Rule cases verify identity, severity, source locations, valid shapes, failures, and false-positive exclusions.
-- [x] Configuration tests cover replacement, disabled-state overrides, cycles, diamond imports, escapes, provenance, init overwrite protection, and kinds.
-- [x] Baseline tests cover duplicate debt, moved lines, changed evidence, and overwrite protection.
-- [x] Embedded sets compile against the stock registry.
-- [x] Existing library, CLI, filesystem, fix, and customer-extension tests continue to run.
-- [x] The Portos fixtures run through their composed sets.
-- [x] Decoder fuzz seeds and an executable fuzz target are included.
-- [ ] Run an onboarding pilot with real customers: initialization, one override, one exception, and an explanation without help. Do not substitute fabricated pilot results.
-- [ ] Establish runtime/memory budgets on representative pinned corpora and named CI hardware; compare selected fixtures with pinned competing linters and record intentional disagreements.
-
-The source graph cache is scoped to one run; embedded-set resolution is cached and returned as independent copies. These choices avoid repeated reference-file parsing without retaining customer inputs across invocations.
-
-## Validation boundaries and future integrations
-
-Structural checking uses dated official OpenAPI 3.0/3.1 schemas, offline. The 3.1 structural schema explicitly excludes Schema Object validation; example checking separately compiles effective schemas. This does not claim complete semantic conformance. Example validation supports JSON-compatible values, recursive local references, 3.0 nullable/bounds conversion, and directional required readOnly/writeOnly fields. External examples are never fetched and unsupported custom dialect analysis fails explicitly.
-
-Standalone schema mode remains YAML-structure checking instead of an advertised JSON Schema conformance engine. The Markdown parser supports CommonMark plus tables, strikethrough, and task lists. MDX/template extensions are not claimed. HTML policy is a style check, not a sanitizer; spelling requires a supplied language and offline vocabulary.
-
-Hosted settings UI and LSP are future integration projects. Exact JSON-pointer suppressions for OpenAPI and reasoned next-line directives for Markdown are implemented. A remote pack registry, external-link fetcher, runtime plugins, API breaking-change comparison, and universal grammar rules remain outside this implementation. API renames, generated alt text, and automatic prose rewriting require author judgment and are not offered as safe fixes.
-
-## Additional editorial and API standards
-
-- [x] Markdown `text:strunk-white` provides 10 review checks: 8 atomic signals and 2 paired constructions. The analysis covers 43 numbered principles. Contextual guidance remains human review. See the Markdown repository's `docs/strunk-white.md` for the rule IDs, four documented interactions, options and exclusions.
-- [x] OpenAPI `openapi:google` and `google-defaults`: 16 independently selectable REST/JSON projections and five paired contract groups. See the OpenAPI repository's `docs/google-api.md` for AIP sources, rule IDs and explicit intent markers.
-- [x] Both new sets have valid, invalid, false-positive and composed-set behavior fixtures.
-- [x] Default Make and CI run the standard golangci-lint suite and enforce 95% module coverage. The profile includes every package.
-
-- [x] Markdown `text:ste100` enforces supplied vocabulary with explicit forms, technical phrases and alternatives. Its grammar check adds a sentence limit and named forbidden patterns. See `docs/ste100.md` for activation and semantic limitations.
+Run an onboarding pilot with real customers before claiming usability results.
+Keep editorial judgment separate from lexical checks.
+Review every vocabulary update and provider capability declaration.

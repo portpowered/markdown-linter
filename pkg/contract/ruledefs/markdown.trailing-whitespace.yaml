@@ -1,0 +1,56 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: safe-edits
+  fixtures:
+  - name: violation
+    input: "Text   \n"
+    parameters:
+      allow-hard-breaks: true
+    expected: fail
+  - name: accepted
+    input: 'Text
+
+      '
+    parameters:
+      allow-hard-breaks: true
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.trailing-whitespace
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow-hard-breaks:
+        type: boolean
+    type: object
+  resultKind: assertion
+  summary: Reports trailing spaces or tabs outside code and provides a safe removal fix. Two-space hard
+    breaks are permitted by default.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow-hard-breaks: true
+recommendedSeverity: warning
+presets:
+- markdown:recommended
+- portos
+documentation:
+  summary: Reports trailing spaces or tabs outside code and provides a safe removal fix. Two-space hard
+    breaks are permitted by default.
+  parameters:
+    allow-hard-breaks: Permit exactly two trailing spaces as Markdown hard breaks; false rejects them.
+  example-options:
+    allow-hard-breaks: true
+  example:
+    language: markdown
+    bad: "Text   \n"
+    good: 'Text
+
+      '
+    explanation: Trailing spaces are prohibited except for an allowed two-space hard break.
+  'on': document

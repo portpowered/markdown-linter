@@ -1,0 +1,77 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'word word word word word word word word word word word word word word word word word word
+      word word word word word word word word.
+
+      '
+    parameters:
+      max-sentence-words: 25
+      scope: prose
+    expected: fail
+  - name: accepted
+    input: 'Use the API.
+
+      '
+    parameters:
+      max-sentence-words: 25
+      scope: prose
+    expected: pass
+  formats:
+  - markdown
+  id: text.ste100.grammar
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      forbidden-patterns:
+        additionalProperties:
+          type: string
+        type: object
+      max-sentence-words:
+        type: integer
+      scope:
+        type: string
+    type: object
+  resultKind: assertion
+  summary: Checks a configurable lexical sentence limit and named forbidden grammar patterns.
+  targets:
+  - document
+  version: '2'
+defaults:
+  max-sentence-words: 25
+  scope: prose
+  forbidden-patterns:
+    contractions: "(?i)\\b(?:[a-z]+n['’]t|(?:i|you|we|they|he|she|it)['’](?:m|re|ve|ll|d|s))\\b"
+recommendedSeverity: error
+presets:
+- text:ste100
+documentation:
+  summary: Checks a configurable lexical sentence limit and named forbidden grammar patterns.
+  parameters:
+    forbidden-patterns: Mapping of diagnostic names to Go regular expressions. Patterns must not match
+      empty text; an empty mapping disables pattern checks.
+    max-sentence-words: Positive lexical word limit per sentence; default 25. This is a configurable heuristic,
+      not complete standard word counting.
+    scope: Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.
+  example-options:
+    max-sentence-words: 25
+    scope: prose
+  notes: See [STE100 vocabulary and grammar](../ste100.md) for explicit inflections, alternatives, technical
+    phrases and semantic limitations.
+  example:
+    language: markdown
+    bad: 'word word word word word word word word word word word word word word word word word word word
+      word word word word word word word.
+
+      '
+    good: 'Use the API.
+
+      '
+    explanation: The first sentence contains 26 words, above the configured limit of 25.
+  'on': document

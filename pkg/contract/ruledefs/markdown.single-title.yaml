@@ -1,0 +1,69 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '# First
+
+
+      # Second
+
+      '
+    parameters:
+      frontmatter-title: false
+    expected: fail
+  - name: accepted
+    input: '# Guide
+
+
+      ## Second
+
+      '
+    parameters:
+      frontmatter-title: false
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.single-title
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      frontmatter-title:
+        type: boolean
+    type: object
+  resultKind: assertion
+  summary: Requires one H1 title, or accepts a frontmatter title when configured.
+  targets:
+  - document
+  version: '2'
+defaults:
+  frontmatter-title: false
+recommendedSeverity: warning
+presets:
+- markdown:documentation
+documentation:
+  summary: Requires one H1 title, or accepts a frontmatter title when configured.
+  parameters:
+    frontmatter-title: Accept frontmatter containing a title field instead of requiring an H1.
+  example-options:
+    frontmatter-title: false
+  example:
+    language: markdown
+    bad: '# First
+
+
+      # Second
+
+      '
+    good: '# Guide
+
+
+      ## Second
+
+      '
+    explanation: The document has two level-one titles instead of exactly one.
+  'on': document

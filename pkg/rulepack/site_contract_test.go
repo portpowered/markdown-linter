@@ -12,29 +12,43 @@ import (
 )
 
 func TestSiteRuleConfigurations(t *testing.T) {
-	data, err := os.ReadFile("../../docs/rule-reference.yaml")
+	names, err := filepath.Glob("../contract/ruledefs/*.yaml")
 	if err != nil {
 		t.Fatal(err)
 	}
-	var references map[string]struct {
+	type reference struct {
 		Options yaml.Node `yaml:"example-options"`
 		Example struct {
 			Bad  string `yaml:"bad"`
 			Good string `yaml:"good"`
 		} `yaml:"example"`
 	}
-	if err := yaml.Unmarshal(data, &references); err != nil {
-		t.Fatal(err)
+	references := map[string]reference{}
+	for _, name := range names {
+		data, err := os.ReadFile(name)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var definition struct {
+			Descriptor struct {
+				ID string `yaml:"id"`
+			} `yaml:"descriptor"`
+			Documentation reference `yaml:"documentation"`
+		}
+		if err := yaml.Unmarshal(data, &definition); err != nil {
+			t.Fatal(err)
+		}
+		references[definition.Descriptor.ID] = definition.Documentation
 	}
 	registry := NewRegistry()
 	if err := RegisterStock(registry); err != nil {
 		t.Fatal(err)
 	}
-	if len(references) != len(registry.Catalog()) {
-		t.Fatal("rule reference must cover the entire registry")
-	}
 	for _, descriptor := range registry.Catalog() {
 		t.Run(descriptor.ID, func(t *testing.T) {
+			if _, exists := references[descriptor.ID]; !exists {
+				t.Fatal("canonical rule definition missing")
+			}
 			program, err := registry.Compile(Pack{Version: 1, Rules: []Rule{{ID: descriptor.ID, Check: descriptor.ID, Options: references[descriptor.ID].Options}}})
 			if err != nil {
 				t.Fatal(err)

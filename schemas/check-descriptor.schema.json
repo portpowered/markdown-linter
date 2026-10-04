@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capabilities": {
+      "items": {
+        "enum": [
+          "structure",
+          "text",
+          "words",
+          "sentences",
+          "graphemes",
+          "syllables",
+          "morphology",
+          "syntax",
+          "provider"
+        ]
+      },
+      "type": "array"
+    },
+    "execution": {
+      "enum": [
+        "local",
+        "remote"
+      ]
+    },
+    "fix": {
+      "enum": [
+        "none",
+        "safe-edits"
+      ]
+    },
+    "fixtures": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "expected": {
+            "enum": [
+              "pass",
+              "fail",
+              "unknown",
+              "invalid"
+            ]
+          },
+          "input": {
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "input",
+          "parameters",
+          "expected"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "formats": {
+      "items": {
+        "enum": [
+          "markdown",
+          "mdx"
+        ]
+      },
+      "type": "array"
+    },
+    "id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "languages": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "parametersSchema": {
+      "type": "object"
+    },
+    "resultKind": {
+      "enum": [
+        "assertion",
+        "metric",
+        "review"
+      ]
+    },
+    "summary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "targets": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "version": {
+      "minLength": 1,
+      "type": "string"
+    }
+  },
+  "required": [
+    "capabilities",
+    "execution",
+    "fixtures",
+    "formats",
+    "id",
+    "languages",
+    "parametersSchema",
+    "summary",
+    "targets",
+    "version",
+    "resultKind",
+    "fix"
+  ],
+  "type": "object"
+}

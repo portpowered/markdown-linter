@@ -1,0 +1,64 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '```text
+
+      Example
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '```text
+
+      Example
+
+      ```
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.fence-closed
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Reports fenced code blocks with no matching closing fence.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: error
+presets:
+- markdown:core
+- markdown:recommended
+- portos
+documentation:
+  summary: Reports fenced code blocks with no matching closing fence.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '```text
+
+      Example
+
+      '
+    good: '```text
+
+      Example
+
+      ```
+
+      '
+    explanation: The opening code fence has no closing fence.
+  'on': document

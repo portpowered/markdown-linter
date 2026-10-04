@@ -1,0 +1,78 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '---
+
+      title: First
+
+      title: Second
+
+      ---
+
+      # Guide
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '---
+
+      title: Guide
+
+      ---
+
+      # Guide
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.frontmatter-valid
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Reports invalid YAML in the initial frontmatter block.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets:
+- markdown:documentation
+documentation:
+  summary: Reports invalid YAML in the initial frontmatter block.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '---
+
+      title: First
+
+      title: Second
+
+      ---
+
+      # Guide
+
+      '
+    good: '---
+
+      title: Guide
+
+      ---
+
+      # Guide
+
+      '
+    explanation: Duplicate frontmatter keys fail strict YAML validation.
+  'on': document

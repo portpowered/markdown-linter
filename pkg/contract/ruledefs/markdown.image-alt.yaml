@@ -1,0 +1,60 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '![](diagram.png)
+
+      '
+    parameters:
+      allow: []
+    expected: fail
+  - name: accepted
+    input: '![Request flow](diagram.png)
+
+      '
+    parameters:
+      allow: []
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.image-alt
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+    type: object
+  resultKind: assertion
+  summary: Requires image alt text unless the destination is explicitly allowed as decorative.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+recommendedSeverity: warning
+presets:
+- markdown:recommended
+- portos
+documentation:
+  summary: Requires image alt text unless the destination is explicitly allowed as decorative.
+  parameters:
+    allow: Image destinations permitted to omit alt text as explicitly decorative.
+  example-options:
+    allow: []
+  example:
+    language: markdown
+    bad: '![](diagram.png)
+
+      '
+    good: '![Request flow](diagram.png)
+
+      '
+    explanation: The image has no descriptive alternative text.
+  'on': document

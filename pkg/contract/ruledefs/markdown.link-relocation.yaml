@@ -1,0 +1,62 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: safe-edits
+  fixtures:
+  - name: violation
+    input: '[Guide](old.md)
+
+      '
+    parameters:
+      moves:
+        docs/old.md: docs/new.md
+    expected: fail
+  - name: accepted
+    input: '[Guide](new.md)
+
+      '
+    parameters:
+      moves:
+        docs/old.md: docs/new.md
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.link-relocation
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      moves: {}
+    type: object
+  resultKind: assertion
+  summary: Finds moved local Markdown targets and suggests reviewed link repairs using a shared documentation
+    index.
+  targets:
+  - document
+  version: '2'
+defaults:
+  moves: null
+recommendedSeverity: warning
+presets:
+- markdown:maintenance
+documentation:
+  summary: Finds moved local Markdown targets and suggests reviewed link repairs using a shared documentation
+    index.
+  parameters:
+    moves: Mapping of old local document paths to their new paths, used for explicit relocation candidates.
+  example-options:
+    moves:
+      docs/old.md: docs/new.md
+  example:
+    language: markdown
+    bad: '[Guide](old.md)
+
+      '
+    good: '[Guide](new.md)
+
+      '
+    explanation: When the documentation index or configured moves maps old.md to new.md, the stale link
+      needs the new destination.
+  'on': document

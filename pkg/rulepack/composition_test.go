@@ -1,7 +1,6 @@
 package rulepack
 
 import (
-	"bytes"
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
@@ -117,32 +116,5 @@ func TestDiamondDependencyLoadedOnce(t *testing.T) {
 	pack, e := Load(p, root)
 	if e != nil || len(pack.Rules) != 1 {
 		t.Fatalf("%#v %v", pack, e)
-	}
-}
-func TestManagementInitAndKindValidation(t *testing.T) {
-	r := NewRegistry()
-	if e := RegisterStock(r); e != nil {
-		t.Fatal(e)
-	}
-	root := t.TempDir()
-	p := filepath.Join(root, "rules.yaml")
-	var out, stderr bytes.Buffer
-	handled, code := Manage([]string{"init", "--output", p}, "unused", r, &out, &stderr)
-	if !handled || code != 0 {
-		t.Fatalf("%d %s", code, &stderr)
-	}
-	_, code = Manage([]string{"init", "--output", p}, "unused", r, &out, &stderr)
-	if code != 2 {
-		t.Fatal("overwrote config")
-	}
-	pack, e := Load(p, root)
-	if e != nil {
-		t.Fatal(e)
-	}
-	if _, e = r.Compile(pack); e != nil {
-		t.Fatal(e)
-	}
-	if e = r.ValidateKind(pack, "wrong-kind"); e == nil {
-		t.Fatal("accepted wrong kind")
 	}
 }

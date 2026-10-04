@@ -1,0 +1,85 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Utilize the API.
+
+      '
+    parameters:
+      scope: prose
+      dictionary:
+      - use
+      - the
+      - api
+    expected: fail
+  - name: accepted
+    input: 'Use the API.
+
+      '
+    parameters:
+      scope: prose
+      dictionary:
+      - use
+      - the
+      - api
+    expected: pass
+  formats:
+  - markdown
+  id: text.ste100.dictionary
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    anyOf:
+    - required:
+      - dictionary
+    properties:
+      dictionary:
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+      technical-terms:
+        items:
+          type: string
+        type: array
+    type: object
+  resultKind: assertion
+  summary: Rejects prose words outside the supplied approved vocabulary and complete technical terms.
+  targets:
+  - document
+  version: '2'
+defaults:
+  scope: prose
+recommendedSeverity: error
+presets: []
+documentation:
+  summary: Rejects prose words outside the supplied approved vocabulary and complete technical terms.
+  parameters:
+    dictionary: Exact approved word forms. List every permitted inflection explicitly.
+    scope: Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.
+    technical-terms: Complete approved technical phrases; individual words are not approved outside the
+      phrase.
+  example-options:
+    scope: prose
+    dictionary:
+    - use
+    - the
+    - api
+  notes: See [STE100 vocabulary and grammar](../ste100.md) for explicit inflections, alternatives, technical
+    phrases and semantic limitations.
+  example:
+    language: markdown
+    bad: 'Utilize the API.
+
+      '
+    good: 'Use the API.
+
+      '
+    explanation: '`Utilize` is absent from the configured approved vocabulary. Word forms must be listed
+      explicitly; alternatives suggest replacements but remain rejected.'
+  'on': document

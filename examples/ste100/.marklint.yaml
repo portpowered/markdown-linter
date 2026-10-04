@@ -1,6 +1,36 @@
-version: 1
-extends: [text:ste100]
-overrides:
-  - id: text.ste100.dictionary
+version: 2
+rules:
+  approved-vocabulary:
+    check: text.ste100.dictionary
     options:
-      dictionary-file: dictionary.yaml
+      dictionary:
+      - a
+      - and
+      - api
+      - check
+      - checks
+      - do
+      - gave
+      - give
+      - given
+      - gives
+      - the
+      - to
+      - use
+      - will
+      technical-terms:
+      - query shape
+  simple-grammar:
+    check: text.ste100.grammar
+    options:
+      max-sentence-words: 25
+sets:
+  ste:
+    rules:
+    - rule: approved-vocabulary
+      'on': document
+    - rule: simple-grammar
+      'on': document
+apply:
+- use:
+  - ste

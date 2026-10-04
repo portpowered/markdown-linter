@@ -1,0 +1,58 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Text <script>alert(1)</script>
+
+      '
+    parameters:
+      allow: []
+    expected: fail
+  - name: accepted
+    input: 'Text `alert(1)`
+
+      '
+    parameters:
+      allow: []
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.html-policy
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+    type: object
+  resultKind: assertion
+  summary: Reports raw HTML tags outside the configured tag allowlist.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Reports raw HTML tags outside the configured tag allowlist.
+  parameters:
+    allow: HTML tag names permitted in raw HTML; empty rejects all tags.
+  example-options:
+    allow: []
+  example:
+    language: markdown
+    bad: 'Text <script>alert(1)</script>
+
+      '
+    good: 'Text `alert(1)`
+
+      '
+    explanation: The configured HTML allow list is empty. Raw script tags fail the style policy.
+  'on': document

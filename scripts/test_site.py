@@ -28,7 +28,8 @@ class DocumentationSite(unittest.TestCase):
         self.assertNotIn("```json", page)
         import re
         configuration = yaml.safe_load(re.search(r"```yaml\n(.*?)\n```", page, re.S)[1])
-        self.assertEqual(configuration["rules"][0]["options"], ref["example-options"])
+        self.assertEqual(configuration["version"], 2)
+        self.assertEqual(configuration["rules"]["example.rule"]["options"], ref["example-options"])
         for rules, refs in [([rule, rule], {rule["id"]: ref}), ([rule], {}), ([rule], {rule["id"]: dict(ref, summary="")}),
                             ([rule], {rule["id"]: dict(ref, parameters={})}), ([rule], {rule["id"]: dict(ref, **{"example-options": []})})]:
             with self.assertRaises(ValueError):
@@ -52,6 +53,16 @@ class DocumentationSite(unittest.TestCase):
             self.assertIn("github.com/portpowered/fixture/blob/main/examples", (root / ".site-docs/library.md").read_text())
             self.assertTrue((root / ".site-docs/rules/text.fixture.md").exists())
             self.assertEqual(yaml.safe_load((root / "mkdocs.generated.yml").read_text())["site_url"], "https://portpowered.github.io/fixture/")
+
+    def test_v2_reference_does_not_offer_secondary_policy_files(self):
+        rule, ref = self.fixture()
+        rule["options"] = {"dictionary": "[]string", "dictionary-file": "string"}
+        ref["parameters"] = {"dictionary": "Approved forms.", "dictionary-file": "Legacy file."}
+        ref["example-options"] = {"dictionary": ["safe"], "dictionary-file": "legacy.yaml"}
+        page = builder.rule_page(rule, ref)
+        self.assertNotIn("dictionary-file", page)
+        self.assertNotIn("legacy.yaml", page)
+        self.assertIn("dictionary:", page)
 
     def test_named_rule_families_are_nested_without_duplicate_pages(self):
         config = yaml.safe_load((builder.ROOT / "docs/site.yaml").read_text(encoding="utf-8"))

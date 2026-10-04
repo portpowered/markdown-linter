@@ -1,0 +1,61 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '[Guide](missing.md)
+
+      '
+    parameters:
+      allow-directories: false
+    expected: fail
+  - name: accepted
+    input: '[Guide](https://example.test/guide)
+
+      '
+    parameters:
+      allow-directories: false
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.local-links
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow-directories: {}
+    type: object
+  resultKind: assertion
+  summary: Checks local link destinations and anchors, with document-root boundaries and an optional directory
+    allowance.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow-directories: null
+recommendedSeverity: error
+presets:
+- markdown:core
+- markdown:recommended
+- portos
+documentation:
+  summary: Checks local link destinations and anchors, with document-root boundaries and an optional directory
+    allowance.
+  parameters:
+    allow-directories: Allow directory destinations in local links; false by default.
+  example-options:
+    allow-directories: false
+  example:
+    language: markdown
+    bad: '[Guide](missing.md)
+
+      '
+    good: '[Guide](https://example.test/guide)
+
+      '
+    explanation: The local target does not exist within the document root. External destinations are excluded
+      from this offline check.
+  'on': document

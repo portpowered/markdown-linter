@@ -1,0 +1,95 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Utilize the API.
+
+      '
+    parameters:
+      allow: []
+      dictionary:
+      - use
+      - the
+      - api
+      language: en-US
+      scope: prose
+    expected: fail
+  - name: accepted
+    input: 'Use the API.
+
+      '
+    parameters:
+      allow: []
+      dictionary:
+      - use
+      - the
+      - api
+      language: en-US
+      scope: prose
+    expected: pass
+  formats:
+  - markdown
+  id: text.spelling
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      dictionary:
+        items:
+          type: string
+        type: array
+      language:
+        type: string
+      scope:
+        type: string
+    required:
+    - language
+    - dictionary
+    type: object
+  resultKind: assertion
+  summary: Rejects words outside the supplied offline dictionary and explicit allowlist for the declared
+    language.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  dictionary: []
+  language: ''
+  scope: ''
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Rejects words outside the supplied offline dictionary and explicit allowlist for the declared
+    language.
+  parameters:
+    allow: Explicit exceptions, compared without case sensitivity where the check operates on prose.
+    dictionary: Exact approved word forms. List every permitted inflection explicitly.
+    language: Nonempty language label for the supplied spelling vocabulary; does not download a dictionary.
+    scope: Prose by default; heading restricts findings to headings. Code and URL destinations are excluded.
+  example-options:
+    allow: []
+    dictionary:
+    - use
+    - the
+    - api
+    language: en-US
+    scope: prose
+  example:
+    language: markdown
+    bad: 'Utilize the API.
+
+      '
+    good: 'Use the API.
+
+      '
+    explanation: The supplied offline dictionary approves use, the and api. It does not approve `utilize`.
+  'on': document

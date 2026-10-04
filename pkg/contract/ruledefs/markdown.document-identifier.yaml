@@ -1,0 +1,94 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '---
+
+      id: wrong
+
+      ---
+
+      # Guide
+
+      '
+    parameters:
+      identifiers:
+      - field: id
+        required: true
+        pattern: ^DOC-[0-9]+$
+        unique: true
+    expected: fail
+  - name: accepted
+    input: '---
+
+      id: DOC-12
+
+      ---
+
+      # Guide
+
+      '
+    parameters:
+      identifiers:
+      - field: id
+        required: true
+        pattern: ^DOC-[0-9]+$
+        unique: true
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.document-identifier
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      identifiers: {}
+    type: object
+  resultKind: assertion
+  summary: Checks configured frontmatter identifier fields for presence, format, uniqueness and optional
+    filename agreement.
+  targets:
+  - document
+  version: '2'
+defaults:
+  identifiers: null
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Checks configured frontmatter identifier fields for presence, format, uniqueness and optional
+    filename agreement.
+  parameters:
+    identifiers: 'Nonempty list of identifier specifications. Fields: field (required), name, paths, required,
+      pattern, format-label, unique, match-filename.'
+  example-options:
+    identifiers:
+    - field: id
+      required: true
+      pattern: ^DOC-[0-9]+$
+      unique: true
+  example:
+    language: markdown
+    bad: '---
+
+      id: wrong
+
+      ---
+
+      # Guide
+
+      '
+    good: '---
+
+      id: DOC-12
+
+      ---
+
+      # Guide
+
+      '
+    explanation: The configured identifier pattern requires DOC- followed by digits.
+  'on': document

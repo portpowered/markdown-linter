@@ -1,9 +1,6 @@
 title: Marklint
 description: Configurable lint rules, customer configuration and Go library usage.
 repository: portpowered/markdown-linter
-command: marklint
-kinds:
-- markdown
 rule-groups:
   text:
   - title: STE100
@@ -11,6 +8,7 @@ rule-groups:
   - title: Strunk and White
     prefix: text.strunk-white.
 guides:
+- Single-file policy: single-file-policy.md
 - STE100: ste100.md
 - Strunk and White: strunk-white.md
 - Maintaining this site: website.md

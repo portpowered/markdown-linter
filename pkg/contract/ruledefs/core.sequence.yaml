@@ -1,0 +1,130 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '# Title
+
+
+      ## Data
+
+
+      | Name |
+
+      | --- |
+
+      | value |
+
+
+      The data follows.
+
+      '
+    parameters:
+      sequence:
+      - paragraph
+      - table
+    expected: fail
+  - name: accepted
+    input: '# Title
+
+
+      ## Data
+
+
+      The data follows.
+
+
+      | Name |
+
+      | --- |
+
+      | value |
+
+      '
+    parameters:
+      sequence:
+      - paragraph
+      - table
+    expected: pass
+  formats:
+  - markdown
+  - mdx
+  id: core.sequence
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    oneOf:
+    - required:
+      - sequence
+    - required:
+      - allow
+    properties:
+      allow:
+        items:
+          minLength: 1
+          type: string
+        minItems: 1
+        type: array
+      sequence:
+        items:
+          minLength: 1
+          type: string
+        minItems: 1
+        type: array
+    type: object
+  resultKind: assertion
+  summary: Checks the direct block order or allowed block kinds in a section.
+  targets:
+  - section
+  version: '2'
+defaults: {}
+recommendedSeverity: error
+presets: []
+documentation:
+  summary: Checks the direct block order or allowed block kinds in a section.
+  parameters:
+    sequence: Exact ordered block kinds; duplicate kinds are permitted.
+    allow: Allowed direct block kinds without an ordering requirement.
+  example-options:
+    sequence:
+    - paragraph
+    - table
+  'on': each section
+  example:
+    language: markdown
+    bad: '# Title
+
+
+      ## Data
+
+
+      | Name |
+
+      | --- |
+
+      | value |
+
+
+      The data follows.
+
+      '
+    good: '# Title
+
+
+      ## Data
+
+
+      The data follows.
+
+
+      | Name |
+
+      | --- |
+
+      | value |
+
+      '
+    explanation: The direct table precedes the paragraph.

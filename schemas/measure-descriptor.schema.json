@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "capabilities": {
+      "items": {
+        "enum": [
+          "structure",
+          "text",
+          "words",
+          "sentences",
+          "graphemes",
+          "syllables",
+          "morphology",
+          "syntax",
+          "provider"
+        ]
+      },
+      "type": "array"
+    },
+    "execution": {
+      "enum": [
+        "local",
+        "remote"
+      ]
+    },
+    "fixtures": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "expected": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "const": "known"
+                  },
+                  "values": {
+                    "items": {
+                      "type": "number"
+                    },
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "status",
+                  "values"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "status": {
+                    "enum": [
+                      "unknown",
+                      "invalid"
+                    ]
+                  }
+                },
+                "required": [
+                  "status"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "input": {
+            "type": "string"
+          },
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "parameters": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "name",
+          "input",
+          "parameters",
+          "expected"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "formats": {
+      "items": {
+        "enum": [
+          "markdown",
+          "mdx"
+        ]
+      },
+      "type": "array"
+    },
+    "granularity": {
+      "enum": [
+        "target",
+        "window"
+      ]
+    },
+    "id": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "languages": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "parametersSchema": {
+      "type": "object"
+    },
+    "range": {
+      "items": {
+        "type": "number"
+      },
+      "maxItems": 2,
+      "minItems": 2,
+      "type": "array"
+    },
+    "sentenceAttribution": {
+      "type": "boolean"
+    },
+    "summary": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "targets": {
+      "items": {
+        "minLength": 1,
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "unit": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "valueType": {
+      "enum": [
+        "integer",
+        "number"
+      ]
+    },
+    "version": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "views": {
+      "items": {
+        "enum": [
+          "auto",
+          "prose",
+          "visible",
+          "source",
+          "code",
+          "language",
+          "cell"
+        ]
+      },
+      "type": "array"
+    }
+  },
+  "required": [
+    "capabilities",
+    "execution",
+    "fixtures",
+    "formats",
+    "id",
+    "languages",
+    "parametersSchema",
+    "summary",
+    "targets",
+    "version",
+    "unit",
+    "valueType",
+    "granularity",
+    "views"
+  ],
+  "type": "object"
+}

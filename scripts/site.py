@@ -4,7 +4,6 @@ import json
 import yaml
 import re
 import shutil
-import subprocess
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -22,19 +21,23 @@ def table(value):
 
 
 def option_type(name, kind):
-    types = {"string": "string", "int": "integer", "bool": "boolean", "*bool": "boolean", "[]string": "list of strings", "map[string]string": "string mapping"}
+    types = {"string": "string", "int": "integer", "bool": "boolean", "*bool": "boolean", "[]string": "list of strings", "map[string]string": "string mapping", "integer": "integer", "boolean": "boolean", "array": "list", "object": "mapping", "number": "number"}
     structured = {"identifiers": "list of identifier objects", "types": "list of document group objects", "moves": "path mapping", "heading": "string", "level": "integer", "allow-directories": "boolean"}
     return types.get(kind, structured.get(name, "structured value; see behavior"))
 
 
 def rule_page(rule, reference):
     options = reference["example-options"]
-    config = {"version": 1, "rules": [{"id": rule["id"], "check": rule["id"], "severity": rule["recommendedSeverity"]}]}
+    config = {"version": 2, "rules": {"example.rule": {"check": rule["id"], "severity": rule["recommendedSeverity"]}},
+              "sets": {"example": {"rules": [{"rule": "example.rule", "on": reference.get("on", "document")}]}}, "apply": [{"use": ["example"]}]}
     if options:
-        config["rules"][0]["options"] = options
+        options = dict(options)
+        options.pop("dictionary-file", None)
+        config["rules"]["example.rule"]["options"] = options
     page = "---\n" + yaml.safe_dump({"title": rule["id"], "check": rule["id"]}, sort_keys=False) + "---\n\n"
     page += f"# {rule['id']}\n\n{reference['summary']}\n\n"
-    page += f"Input kind: **{rule['kind']}** · Suggested severity: **{rule['recommendedSeverity']}** · Automatic fix: **{'available' if rule['fixable'] else 'none'}**.\n\n"
+    page += f"Input kind: **{rule['kind']}**. Suggested severity: **{rule['recommendedSeverity']}**. Automatic fix: **{'available' if rule['fixable'] else 'none'}**.\n\n"
+    page += "[Download the options schema](../schemas/checks/" + rule["id"] + ".schema.json).\n\n"
     page += "## Configuration\n\nSave this YAML in your linter configuration file. "
     page += "This selects this check independently; compose a [rule pack](../rule-packs.md) to select related checks.\n\n"
     page += "```yaml\n" + yaml.safe_dump(config, sort_keys=False).rstrip() + "\n```\n\n"
@@ -49,9 +52,14 @@ def rule_page(rule, reference):
     if rule.get("options"):
         page += "| Name | Type | Default | Behavior |\n| --- | --- | --- | --- |\n"
         for name, kind in sorted(rule["options"].items()):
+            if name == "dictionary-file":
+                continue
             default = rule.get("defaults", {}).get(name)
             display = "Unset; see behavior" if default is None else "`" + table(yaml.safe_dump(default, default_flow_style=True, width=10000).strip().removesuffix("\n...")) + "`"
-            page += f"| `{name}` | {option_type(name, kind)} | {display} | {table(reference['parameters'][name])} |\n"
+            description = reference['parameters'][name]
+            if name == "dictionary":
+                description = "Exact approved word forms. List every permitted inflection explicitly."
+            page += f"| `{name}` | {option_type(name, kind)} | {display} | {table(description)} |\n"
     else:
         page += "This check has no parameters. Omit `options` or use an empty mapping.\n"
     page += "\n## Rule packs\n\n"
@@ -59,8 +67,14 @@ def rule_page(rule, reference):
         page += "Included in: " + ", ".join("`" + name + "`" for name in rule["presets"]) + ".\n"
     else:
         page += "Select this check explicitly in a custom pack.\n"
-    page += "\nRule-level `enabled`, `severity`, `include`, and `exclude` fields apply to every check. "
-    page += "Overrides replace the entire supplied options mapping. See [configuration and composition](../rule-packs.md) for scopes and reasoned exceptions.\n"
+    page += "\nRule severity controls reporting. Sets activate named rules. Apply entries select files. "
+    page += "Child rules patch inherited options. See [configuration and composition](../rule-packs.md) for scopes and reasoned exceptions.\n"
+    if rule.get("bundledRules"):
+        page += "\n## Bundled rules\n\nThese named rules configure this check.\n\n"
+        for bundled in rule["bundledRules"]:
+            page += "### `" + bundled["id"] + "`\n\n"
+            page += "Severity: `" + bundled["severity"] + "`. Included in: " + ", ".join("`" + preset + "`" for preset in bundled["presets"]) + ".\n\n"
+            page += "```yaml\n" + yaml.safe_dump({bundled["id"]: {"check": bundled["check"], "severity": bundled["severity"], "options": bundled["options"]}}, sort_keys=False).rstrip() + "\n```\n"
     if reference.get("notes"):
         page += "\n## Usage notes\n\n" + reference["notes"] + "\n"
     return page
@@ -72,7 +86,7 @@ def validate(catalog, references):
         raise ValueError("Rule descriptions must cover every catalog ID exactly once")
     for rule in catalog:
         reference = references[rule["id"]]
-        if not isinstance(reference, dict) or set(reference) - {"summary", "parameters", "example-options", "example", "notes"}:
+        if not isinstance(reference, dict) or set(reference) - {"summary", "parameters", "example-options", "example", "notes", "on"}:
             raise ValueError("Unknown rule reference fields: " + rule["id"])
         if not reference.get("summary", "").strip():
             raise ValueError("Missing rule summary: " + rule["id"])
@@ -100,6 +114,33 @@ def validate(catalog, references):
                     raise ValueError("API example must be valid YAML: " + rule["id"]) from error
                 if not isinstance(fragment, dict) or not fragment:
                     raise ValueError("API example must contain contract fields: " + rule["id"])
+
+
+def load_rule_definitions(root):
+    """Scan the same checked-in rule baseline that the Go runtime embeds."""
+    catalog, references = [], {}
+    paths = sorted((root / "pkg/contract/ruledefs").glob("*.yaml"))
+    if not paths:
+        raise ValueError("No canonical rule definitions found")
+    for path in paths:
+        definition = yaml.safe_load(path.read_text(encoding="utf-8"))
+        expected = {"descriptor", "defaults", "recommendedSeverity", "presets", "documentation"}
+        if not isinstance(definition, dict) or not expected.issubset(definition) or set(definition) - expected - {"bundledRules"}:
+            raise ValueError("Invalid rule definition fields: " + str(path))
+        descriptor = definition["descriptor"]
+        identifier = descriptor["id"]
+        if path.stem != identifier or identifier in references:
+            raise ValueError("Rule definition filename must match its unique ID: " + str(path))
+        schema = descriptor["parametersSchema"]
+        catalog.append({"id": identifier, "kind": "markdown", "category": identifier.split(".")[0],
+                        "recommendedSeverity": definition["recommendedSeverity"],
+                        "fixable": descriptor["fix"] == "safe-edits",
+                        "options": {name: value.get("type", "structured") for name, value in schema.get("properties", {}).items()},
+                        "defaults": definition["defaults"], "presets": definition["presets"],
+                        **({"bundledRules": definition["bundledRules"]} if definition.get("bundledRules") else {})})
+        references[identifier] = definition["documentation"]
+    validate(catalog, references)
+    return catalog, references
 
 
 def rule_navigation(catalog, config):
@@ -135,10 +176,12 @@ def generate(root, catalog, references, config):
     for source in (root / "docs").glob("*.md"):
         content = source.read_text(encoding="utf-8")
         # Repository examples and source references remain browsable on GitHub.
-        content = re.sub(r"\]\(\.\./((?:examples|pkg|rulepack|scripts)/[^)]+)\)", lambda m: "](https://github.com/" + repo + "/blob/main/" + m[1] + ")", content)
+        content = re.sub(r"\]\(\.\./((?:examples|pkg|rulepack|scripts|schemas)/[^)]+)\)", lambda m: "](https://github.com/" + repo + "/blob/main/" + m[1] + ")", content)
         write(output / source.name, content)
     for source in list((root / "docs").glob("*.json")) + list((root / "docs").glob("*.yaml")):
         shutil.copyfile(source, output / source.name)
+    if (root / "schemas").exists():
+        shutil.copytree(root / "schemas", output / "schemas")
     for source in (root / "docs" / "stylesheets").glob("*.css"):
         write(output / "stylesheets" / source.name, source.read_text(encoding="utf-8"))
     write(output / "index.md", (root / "docs" / "home.md").read_text(encoding="utf-8"))
@@ -224,17 +267,12 @@ def main():
         check_html(ROOT / "site", "/" + config["repository"].split("/")[1] + "/")
         return
     config = yaml.safe_load((ROOT / "docs" / "site.yaml").read_text(encoding="utf-8"))
-    catalog = []
-    for kind in config["kinds"]:
-        command = ["go", "run", "./cmd/" + config["command"], "rules", "list", "--kind", kind, "--format", "json"]
-        catalog += json.loads(subprocess.check_output(command, cwd=ROOT))
-    catalog.sort(key=lambda rule: rule["id"])
+    catalog, references = load_rule_definitions(ROOT)
     path = ROOT / "docs" / "rule-catalog.json"
     if args.update:
         write(path, json.dumps(catalog, indent=2) + "\n")
     elif catalog != json.loads(path.read_text(encoding="utf-8")):
         raise ValueError("Rule catalog is stale; run make docs-update")
-    references = yaml.safe_load((ROOT / "docs" / "rule-reference.yaml").read_text(encoding="utf-8"))
     generate(ROOT, catalog, references, config)
 
 

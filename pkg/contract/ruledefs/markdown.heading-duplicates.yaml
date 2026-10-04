@@ -1,0 +1,73 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '# Guide
+
+
+      ## Setup
+
+
+      ## Setup
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '# Guide
+
+
+      ## Setup
+
+
+      ## Usage
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.heading-duplicates
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Reports duplicate sibling headings within the same heading hierarchy.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Reports duplicate sibling headings within the same heading hierarchy.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '# Guide
+
+
+      ## Setup
+
+
+      ## Setup
+
+      '
+    good: '# Guide
+
+
+      ## Setup
+
+
+      ## Usage
+
+      '
+    explanation: Sibling headings at the same level have duplicate normalized text.
+  'on': document

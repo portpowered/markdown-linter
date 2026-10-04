@@ -14,27 +14,20 @@ Our engineering decomposition contains ten independently configurable checks. Mu
 
 ## Activate and compose
 
-```sh
-marklint init --preset text:strunk-white --output .marklint.yaml
-marklint --root . --fail-on warning docs
-marklint rules describe text.strunk-white.passive-voice
-```
-
-To retain the normal Markdown checks, compose the packs:
+Create a version 2 policy and run `marklint --config .marklint.yaml --fail-on warning docs`.
 
 ```yaml
-version: 1
-extends: [markdown:recommended, text:strunk-white]
-overrides:
-  - id: text.strunk-white.qualifiers
-    options:
-      allow: [quite]
-      scope: prose
-  - id: text.strunk-white.passive-voice
-    include: [handbook/**]
+version: 2
+sets:
+  editorial:
+    use: ["markdown:recommended", "text:strunk-white"]
+apply:
+  - use: [editorial]
 ```
 
-`scope: prose` includes paragraphs and headings. `scope: heading` includes headings only. `allow` contains complete matched expressions, case insensitive, with whitespace normalized. Include/exclude patterns, severity overrides, reasoned suppressions, baselines, and `--only` use the existing rule-pack contract. A domain term can be allowed, or a rule can be disabled for a document family. No editorial pack is enabled by the default recommended pack.
+For custom exceptions, define a named rule with the desired check and options.
+Bind that rule in a set and route files through apply entries.
+The [configuration guide](single-file-policy.md) describes scopes and reasoned exceptions.
 
 ## Rule checklist and exact boundaries
 
@@ -85,20 +78,19 @@ The pack is English lexical guidance. Quotes, headings, mathematical terminology
 The ten check names are configured defaults of `text.matcher`. They use the same prose traversal, URL and code exclusions, match ranges, exceptions and messages. Override any matcher option to customize a named check. For a new policy, use `text.matcher` directly.
 
 ```yaml
-version: 1
+version: 2
 rules:
-  - id: editorial.familiar-words
+  editorial.familiar-words:
     check: text.matcher
     severity: warning
     options:
       banned-words: [utilize, aforementioned]
       message: Prefer a familiar word
-  - id: editorial.short-phrases
-    check: text.matcher
-    severity: warning
-    options:
-      banned-words: [in order to, at this point in time]
-      message: Consider a shorter expression
+sets:
+  editorial:
+    rules: [{rule: editorial.familiar-words, on: document}]
+apply:
+  - use: [editorial]
 ```
 
 Patterns use Go RE2 syntax. Literal banned words use word boundaries; phrases span emphasis and soft line breaks within one paragraph. Set `ignore-case: false` for case-sensitive policies. The matcher supports a reported capture group and balanced word pairs. These options support sentence openings and correlative conjunctions. Findings name the matched text. They require editorial review and have no automatic rewrite.

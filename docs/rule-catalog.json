@@ -1,363 +1,429 @@
 [
   {
+    "id": "core.limit",
+    "kind": "markdown",
+    "category": "core",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "max": "number",
+      "measure": "structured",
+      "min": "number",
+      "parameters": "object",
+      "view": "structured"
+    },
+    "defaults": {},
+    "presets": []
+  },
+  {
+    "id": "core.match",
+    "kind": "markdown",
+    "category": "core",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "anchor": "structured",
+      "case": "structured",
+      "expect": "structured",
+      "mode": "structured",
+      "pattern": "string",
+      "regex": "string",
+      "values": "array",
+      "view": "structured"
+    },
+    "defaults": {},
+    "presets": []
+  },
+  {
+    "id": "core.sequence",
+    "kind": "markdown",
+    "category": "core",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "allow": "array",
+      "sequence": "array"
+    },
+    "defaults": {},
+    "presets": []
+  },
+  {
+    "id": "markdown.blank-lines",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:style"
-    ],
-    "id": "markdown.blank-lines",
-    "title": "blank lines",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
+    "id": "markdown.doc-id-unique",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": true,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:maintenance"
-    ],
-    "id": "markdown.doc-id-unique",
-    "title": "doc id unique",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
+    "id": "markdown.document-identifier",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "identifiers": "structured"
+    },
     "defaults": {
       "identifiers": null
     },
+    "presets": []
+  },
+  {
+    "id": "markdown.document-structure",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [],
-    "id": "markdown.document-identifier",
-    "title": "document identifier",
-    "kind": "markdown",
     "options": {
-      "identifiers": "See rule-pack reference"
+      "types": "structured"
     },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
-  },
-  {
     "defaults": {
       "types": null
     },
-    "category": "markdown",
-    "recommendedSeverity": "warning",
-    "fixable": false,
-    "presets": [],
-    "id": "markdown.document-structure",
-    "title": "document structure",
-    "kind": "markdown",
-    "options": {
-      "types": "See rule-pack reference"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    "presets": []
   },
   {
+    "id": "markdown.fence-closed",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "error",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:core",
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.fence-closed",
-    "title": "fence closed",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
+    "id": "markdown.fence-language",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.fence-language",
-    "title": "fence language",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
+    "id": "markdown.final-newline",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": true,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:style"
-    ],
-    "id": "markdown.final-newline",
-    "title": "final newline",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
+    "id": "markdown.formatting",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "allow-hard-breaks": "boolean"
+    },
     "defaults": {
       "allow-hard-breaks": true
     },
-    "category": "markdown",
-    "recommendedSeverity": "warning",
-    "fixable": false,
-    "presets": [],
-    "id": "markdown.formatting",
-    "title": "formatting",
-    "kind": "markdown",
-    "options": {
-      "allow-hard-breaks": "*bool"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    "presets": []
   },
   {
+    "id": "markdown.frontmatter-valid",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:documentation"
-    ],
-    "id": "markdown.frontmatter-valid",
-    "title": "frontmatter valid",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
+    "id": "markdown.heading-duplicates",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [],
-    "id": "markdown.heading-duplicates",
-    "title": "heading duplicates",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    "options": {},
+    "defaults": {},
+    "presets": []
   },
   {
+    "id": "markdown.heading-order",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "error",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:core",
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.heading-order",
-    "title": "heading order",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
-    "defaults": {
-      "allow": []
-    },
-    "category": "markdown",
-    "recommendedSeverity": "warning",
-    "fixable": false,
-    "presets": [],
     "id": "markdown.html-policy",
-    "title": "html policy",
     "kind": "markdown",
-    "options": {
-      "allow": "[]string"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
-  },
-  {
-    "defaults": {
-      "allow": []
-    },
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
+    "options": {
+      "allow": "array"
+    },
+    "defaults": {
+      "allow": []
+    },
+    "presets": []
+  },
+  {
+    "id": "markdown.image-alt",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "allow": "array"
+    },
+    "defaults": {
+      "allow": []
+    },
     "presets": [
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.image-alt",
-    "title": "image alt",
-    "kind": "markdown",
-    "options": {
-      "allow": "[]string"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
+    "id": "markdown.line-length",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "max": "integer"
+    },
     "defaults": {
       "max": 120
     },
-    "category": "markdown",
-    "recommendedSeverity": "warning",
-    "fixable": false,
     "presets": [
       "markdown:style"
-    ],
-    "id": "markdown.line-length",
-    "title": "line length",
-    "kind": "markdown",
-    "options": {
-      "max": "int"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
-    "defaults": {
-      "moves": null
-    },
+    "id": "markdown.link-relocation",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": true,
+    "options": {
+      "moves": "structured"
+    },
+    "defaults": {
+      "moves": null
+    },
     "presets": [
       "markdown:maintenance"
-    ],
-    "id": "markdown.link-relocation",
-    "title": "link relocation",
-    "kind": "markdown",
-    "options": {
-      "moves": "See rule-pack reference"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
+    "id": "markdown.link-text",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.link-text",
-    "title": "link text",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
+    "id": "markdown.list-style",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "allow": "array",
+      "indent": "integer"
+    },
     "defaults": {
       "allow": [],
       "indent": 2
     },
-    "category": "markdown",
-    "recommendedSeverity": "warning",
-    "fixable": false,
     "presets": [
       "markdown:style"
-    ],
-    "id": "markdown.list-style",
-    "title": "list style",
-    "kind": "markdown",
-    "options": {
-      "allow": "[]string",
-      "indent": "int"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
+    "id": "markdown.local-links",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "allow-directories": "structured"
+    },
     "defaults": {
       "allow-directories": null
     },
-    "category": "markdown",
-    "recommendedSeverity": "error",
-    "fixable": false,
     "presets": [
       "markdown:core",
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.local-links",
-    "title": "local links",
-    "kind": "markdown",
-    "options": {
-      "allow-directories": "See rule-pack reference"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
-    "defaults": {
-      "style": "one-or-ordered"
-    },
+    "id": "markdown.ordered-list",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "markdown:style"
-    ],
-    "id": "markdown.ordered-list",
-    "title": "ordered list",
-    "kind": "markdown",
     "options": {
       "style": "string"
     },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    "defaults": {
+      "style": "one-or-ordered"
+    },
+    "presets": [
+      "markdown:style"
+    ]
   },
   {
+    "id": "markdown.reference-definitions",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "error",
     "fixable": false,
+    "options": {},
+    "defaults": {},
     "presets": [
       "markdown:core",
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.reference-definitions",
-    "title": "reference definitions",
-    "kind": "markdown",
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
+    "id": "markdown.required-heading",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "heading": "structured",
+      "level": "structured"
+    },
     "defaults": {
       "heading": null,
       "level": null
     },
+    "presets": []
+  },
+  {
+    "id": "markdown.single-title",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [],
-    "id": "markdown.required-heading",
-    "title": "required heading",
-    "kind": "markdown",
     "options": {
-      "heading": "See rule-pack reference",
-      "level": "See rule-pack reference"
+      "frontmatter-title": "boolean"
     },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
-  },
-  {
     "defaults": {
       "frontmatter-title": false
     },
-    "category": "markdown",
-    "recommendedSeverity": "warning",
-    "fixable": false,
     "presets": [
       "markdown:documentation"
-    ],
-    "id": "markdown.single-title",
-    "title": "single title",
-    "kind": "markdown",
-    "options": {
-      "frontmatter-title": "bool"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    ]
   },
   {
-    "defaults": {
-      "allow-hard-breaks": true
+    "id": "markdown.table-schema",
+    "kind": "markdown",
+    "category": "markdown",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "columns": "object",
+      "header": "array"
     },
+    "defaults": {},
+    "presets": []
+  },
+  {
+    "id": "markdown.trailing-whitespace",
+    "kind": "markdown",
     "category": "markdown",
     "recommendedSeverity": "warning",
     "fixable": true,
+    "options": {
+      "allow-hard-breaks": "boolean"
+    },
+    "defaults": {
+      "allow-hard-breaks": true
+    },
     "presets": [
       "markdown:recommended",
-      "portos-defaults"
-    ],
-    "id": "markdown.trailing-whitespace",
-    "title": "trailing whitespace",
-    "kind": "markdown",
-    "options": {
-      "allow-hard-breaks": "*bool"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+      "portos"
+    ]
   },
   {
+    "id": "mermaid.flowchart",
+    "kind": "markdown",
+    "category": "mermaid",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "accessible-description": "structured",
+      "accessible-title": "structured",
+      "direction": "structured",
+      "source-indent": "integer"
+    },
+    "defaults": {},
+    "presets": []
+  },
+  {
+    "id": "text.matcher",
+    "kind": "markdown",
+    "category": "text",
+    "recommendedSeverity": "warning",
+    "fixable": false,
+    "options": {
+      "allow": "array",
+      "banned-characters": "string",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
+      "message": "string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
+      "scope": "string"
+    },
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -369,114 +435,131 @@
       "patterns": [],
       "scope": "prose"
     },
+    "presets": [],
+    "bundledRules": [
+      {
+        "id": "portos.prose-dashes",
+        "check": "text.matcher",
+        "severity": "error",
+        "presets": [
+          "portos"
+        ],
+        "options": {
+          "patterns": [
+            "[-\\p{Pd}]"
+          ],
+          "message": "Avoid hyphens and dashes in prose"
+        }
+      },
+      {
+        "id": "portos.banned-phrases",
+        "check": "text.matcher",
+        "severity": "error",
+        "presets": [
+          "portos"
+        ],
+        "options": {
+          "patterns": [
+            "\\bload[\\s\\p{Pd}]+bearing\\b"
+          ],
+          "message": "Avoid this project-specific phrase"
+        }
+      }
+    ]
+  },
+  {
+    "id": "text.repeated-word",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "portos-defaults",
-      "portos:internal"
-    ],
-    "id": "text.matcher",
-    "title": "matcher",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
-      "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
-      "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "allow": "array",
       "scope": "string"
     },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
-  },
-  {
     "defaults": {
       "allow": [],
       "scope": ""
     },
+    "presets": [
+      "text:prose"
+    ]
+  },
+  {
+    "id": "text.spelling",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:prose"
-    ],
-    "id": "text.repeated-word",
-    "title": "repeated word",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
+      "dictionary": "array",
+      "language": "string",
       "scope": "string"
     },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
-  },
-  {
     "defaults": {
       "allow": [],
       "dictionary": [],
       "language": "",
       "scope": ""
     },
+    "presets": []
+  },
+  {
+    "id": "text.ste100.dictionary",
+    "kind": "markdown",
+    "category": "text",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "dictionary": "array",
+      "scope": "string",
+      "technical-terms": "array"
+    },
+    "defaults": {
+      "scope": "prose"
+    },
+    "presets": []
+  },
+  {
+    "id": "text.ste100.grammar",
+    "kind": "markdown",
+    "category": "text",
+    "recommendedSeverity": "error",
+    "fixable": false,
+    "options": {
+      "forbidden-patterns": "object",
+      "max-sentence-words": "integer",
+      "scope": "string"
+    },
+    "defaults": {
+      "max-sentence-words": 25,
+      "scope": "prose",
+      "forbidden-patterns": {
+        "contractions": "(?i)\\b(?:[a-z]+n['\u2019]t|(?:i|you|we|they|he|she|it)['\u2019](?:m|re|ve|ll|d|s))\\b"
+      }
+    },
+    "presets": [
+      "text:ste100"
+    ]
+  },
+  {
+    "id": "text.strunk-white.correlative-pairs",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [],
-    "id": "text.spelling",
-    "title": "spelling",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
-      "dictionary": "[]string",
-      "language": "string",
+      "allow": "array",
+      "banned-characters": "string",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
+      "message": "string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
-  },
-  {
-    "defaults": {
-      "scope": "prose"
-    },
-    "category": "text",
-    "recommendedSeverity": "error",
-    "fixable": false,
-    "presets": [
-      "text:ste100"
-    ],
-    "id": "text.ste100.dictionary",
-    "title": "STE100: dictionary",
-    "kind": "markdown",
-    "options": {
-      "dictionary": "[]string",
-      "dictionary-file": "string",
-      "scope": "string",
-      "technical-terms": "[]string"
-    },
-    "guidance": "See docs/ste100.md for supplied vocabulary, explicit forms, alternatives and grammar limitations."
-  },
-  {
-    "defaults": {
-      "max-sentence-words": 25,
-      "scope": "prose"
-    },
-    "category": "text",
-    "recommendedSeverity": "error",
-    "fixable": false,
-    "presets": [
-      "text:ste100"
-    ],
-    "id": "text.ste100.grammar",
-    "title": "STE100: grammar",
-    "kind": "markdown",
-    "options": {
-      "forbidden-patterns": "map[string]string",
-      "max-sentence-words": "int",
-      "scope": "string"
-    },
-    "guidance": "See docs/ste100.md for supplied vocabulary, explicit forms, alternatives and grammar limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -494,29 +577,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.exclamations",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.correlative-pairs",
-    "title": "Strunk and White: correlative pairs",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -530,29 +611,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.existential-openings",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.exclamations",
-    "title": "Strunk and White: exclamations",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -566,29 +645,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.fancy-words",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.existential-openings",
-    "title": "Strunk and White: existential openings",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -602,29 +679,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.needless-words",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.fancy-words",
-    "title": "Strunk and White: fancy words",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -638,29 +713,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.negative-phrases",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.needless-words",
-    "title": "Strunk and White: needless words",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -674,29 +747,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.passive-voice",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.negative-phrases",
-    "title": "Strunk and White: negative phrases",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -710,29 +781,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.qualifiers",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.passive-voice",
-    "title": "Strunk and White: passive voice",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -746,29 +815,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.redundant-pairs",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.qualifiers",
-    "title": "Strunk and White: qualifiers",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -782,29 +849,27 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.strunk-white.usage",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.redundant-pairs",
-    "title": "Strunk and White: redundant pairs",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
+      "allow": "array",
       "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
+      "banned-words": "array",
+      "capture-group": "integer",
+      "ignore-case": "boolean",
       "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
+      "paired-conjunctions": "object",
+      "patterns": "array",
       "scope": "string"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "banned-characters": "",
@@ -818,46 +883,26 @@
       ],
       "scope": "prose"
     },
+    "presets": [
+      "text:strunk-white"
+    ]
+  },
+  {
+    "id": "text.terminology",
+    "kind": "markdown",
     "category": "text",
     "recommendedSeverity": "warning",
     "fixable": false,
-    "presets": [
-      "text:strunk-white"
-    ],
-    "id": "text.strunk-white.usage",
-    "title": "Strunk and White: usage",
-    "kind": "markdown",
     "options": {
-      "allow": "[]string",
-      "banned-characters": "string",
-      "banned-words": "[]string",
-      "capture-group": "int",
-      "ignore-case": "bool",
-      "message": "string",
-      "paired-conjunctions": "map[string]string",
-      "patterns": "[]string",
-      "scope": "string"
+      "allow": "array",
+      "scope": "string",
+      "terms": "object"
     },
-    "guidance": "See docs/strunk-white.md for the finite patterns, examples, interactions, and editorial limitations."
-  },
-  {
     "defaults": {
       "allow": [],
       "scope": "",
       "terms": {}
     },
-    "category": "text",
-    "recommendedSeverity": "warning",
-    "fixable": false,
-    "presets": [],
-    "id": "text.terminology",
-    "title": "terminology",
-    "kind": "markdown",
-    "options": {
-      "allow": "[]string",
-      "scope": "string",
-      "terms": "map[string]string"
-    },
-    "guidance": "See docs/rule-packs.md and docs/linter-roadmap.md for activation, scope, examples, and exceptions."
+    "presets": []
   }
 ]

@@ -1,0 +1,100 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '| Name | Value |
+
+      | --- | --- |
+
+      | enabled | boolean |
+
+      '
+    parameters:
+      header:
+      - Name
+      - Type
+    expected: fail
+  - name: accepted
+    input: '| Name | Type |
+
+      | --- | --- |
+
+      | enabled | boolean |
+
+      '
+    parameters:
+      header:
+      - Name
+      - Type
+    expected: pass
+  formats:
+  - markdown
+  - mdx
+  id: markdown.table-schema
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      columns:
+        additionalProperties:
+          additionalProperties: false
+          properties:
+            rules:
+              items:
+                minLength: 1
+                type: string
+              minItems: 1
+              type: array
+            unique:
+              type: boolean
+          type: object
+        type: object
+      header:
+        items:
+          minLength: 1
+          type: string
+        minItems: 1
+        type: array
+        uniqueItems: true
+    required:
+    - header
+    type: object
+  resultKind: assertion
+  summary: Checks ordered table headers and named column policies.
+  targets:
+  - table
+  version: '2'
+defaults: {}
+recommendedSeverity: error
+presets: []
+documentation:
+  summary: Checks ordered table headers and named column policies.
+  parameters:
+    header: Required ordered visible labels after whitespace normalization.
+    columns: Named column policies with uniqueness and reusable cell rules.
+  example-options:
+    header:
+    - Name
+    - Type
+  'on': each table
+  example:
+    language: markdown
+    bad: '| Name | Value |
+
+      | --- | --- |
+
+      | enabled | boolean |
+
+      '
+    good: '| Name | Type |
+
+      | --- | --- |
+
+      | enabled | boolean |
+
+      '
+    explanation: The second header does not match the required label.

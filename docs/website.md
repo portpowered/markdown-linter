@@ -12,11 +12,11 @@ make docs
 python -m mkdocs serve --config-file mkdocs.generated.yml
 ```
 
-Dependencies are pinned in `docs/requirements.txt`. `make docs` verifies the catalog against the running CLI and generates customer pages. It builds with strict Markdown validation and checks local links and anchors. Generated `.site-docs`, `mkdocs.generated.yml` and `site` are ignored by Git.
+Dependencies are pinned in `docs/requirements.txt`. `make docs` verifies the catalog against canonical rule YAML and generates customer pages. It builds with strict Markdown validation and checks local links and anchors. Generated `.site-docs`, `mkdocs.generated.yml` and `site` are ignored by Git.
 
 ## Update a rule
 
-The registered factories remain the source of option types, defaults, input kind and pack membership. After changing those, run `make docs-update` to refresh `docs/rule-catalog.json`. Add or update `docs/rule-reference.yaml` with a reviewed behavior summary, parameter descriptions and example options. Every catalog check and every parameter must have an entry. The Go tests compile every reference configuration against the stock registry, so unsupported examples fail verification.
+The YAML files in `pkg/contract/ruledefs` define every check schema, default, target, fixture and documentation example. The runtime embeds these files. Edit the matching file when changing a check. Run `make rules-update` to refresh schema downloads, then `make docs-update` to refresh the catalog and pages. Every parameter requires a reviewed description. Tests validate the baseline against the installed checks.
 
 Keep CLI onboarding in `getting-started.md` and embedding instructions in `library.md`. Existing composition, STE100, editorial and API-standard guides are published alongside individual rule pages. Source and example links point to the repository; local schema and catalog downloads ship with the site.
 
@@ -32,7 +32,7 @@ Embedded YAML is canonical LF text. After editing packs, run `python scripts/pac
 
 ## Rule page format
 
-Each rule reference uses `docs/rule-reference.yaml`. The [metadata schema](rule-reference.schema.yaml) defines the required shape. CI additionally compares rule IDs and parameter names with the live registry. Unknown fields, missing explanations and identical failing and corrected examples fail the site build.
+Each rule reference uses its canonical YAML definition. The [metadata schema](../schemas/rule-definition.schema.json) defines the required shape. CI compares every descriptor and options schema with the runtime. It rejects missing, changed and obsolete generated schema files. Unknown fields, missing explanations and identical failing and corrected examples fail the site build.
 
 Every page has a summary, YAML configuration, violation explanation, corrected example, parameters and pack membership. API examples are focused fragments; declarations outside the illustrated contract need the normal surrounding document. Markdown examples preserve source text, including significant trailing spaces and final newlines in the metadata.
 

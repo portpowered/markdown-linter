@@ -1,0 +1,745 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "blockquotes"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "blocks"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "bytes"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "codeblocks"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "columns"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "graphemes"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "headings"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "level"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "lines"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "lists"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "max-heading-level"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "paragraphs"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "provider.score"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "aggregation": {
+                "enum": [
+                  "target",
+                  "each-window"
+                ]
+              },
+              "context": {
+                "enum": [
+                  "target",
+                  "paragraph"
+                ]
+              },
+              "measure": {
+                "minLength": 1,
+                "type": "string"
+              },
+              "provider": {
+                "minLength": 1,
+                "type": "string"
+              }
+            },
+            "required": [
+              "provider",
+              "measure"
+            ],
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "readability.flesch-kincaid-grade"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "min-sentences": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "min-words": {
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "readability.flesch-reading-ease"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "type": "number"
+          },
+          "min": {
+            "type": "number"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {
+              "min-sentences": {
+                "minimum": 1,
+                "type": "integer"
+              },
+              "min-words": {
+                "minimum": 1,
+                "type": "integer"
+              }
+            },
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "rows"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "sections"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "sentences"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "source-lines"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "subsections"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "tables"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "measure": {
+            "const": "words"
+          }
+        },
+        "required": [
+          "measure"
+        ]
+      },
+      "then": {
+        "properties": {
+          "max": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "min": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "parameters": {
+            "additionalProperties": false,
+            "properties": {},
+            "type": "object"
+          }
+        }
+      }
+    }
+  ],
+  "anyOf": [
+    {
+      "required": [
+        "min"
+      ]
+    },
+    {
+      "required": [
+        "max"
+      ]
+    }
+  ],
+  "properties": {
+    "max": {
+      "type": "number"
+    },
+    "measure": {
+      "enum": [
+        "blockquotes",
+        "blocks",
+        "bytes",
+        "codeblocks",
+        "columns",
+        "graphemes",
+        "headings",
+        "level",
+        "lines",
+        "lists",
+        "max-heading-level",
+        "paragraphs",
+        "provider.score",
+        "readability.flesch-kincaid-grade",
+        "readability.flesch-reading-ease",
+        "rows",
+        "sections",
+        "sentences",
+        "source-lines",
+        "subsections",
+        "tables",
+        "words"
+      ]
+    },
+    "min": {
+      "type": "number"
+    },
+    "parameters": {
+      "type": "object"
+    },
+    "view": {
+      "enum": [
+        "auto",
+        "prose",
+        "visible",
+        "source",
+        "code",
+        "language",
+        "cell"
+      ]
+    }
+  },
+  "required": [
+    "measure"
+  ],
+  "type": "object"
+}

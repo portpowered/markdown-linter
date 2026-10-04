@@ -9,7 +9,7 @@ COVERAGE_MIN ?= 95
 .PHONY: default verify build test coverage coverage-check lint fmt fmt-check vet tools-test deps deps-tidy clean
 
 default: verify
-verify: pack-check fmt-check build vet lint coverage tools-test module-check smoke docs docs-lint coverage-publish
+verify: rules-check pack-check fmt-check build vet lint coverage tools-test module-check smoke docs docs-lint repository-lint contract-check coverage-publish
 build:
 	$(GO) build ./...
 test:
@@ -39,17 +39,17 @@ clean:
 pack-check:
 	$(PYTHON) scripts/packs.py
 module-check:
-	$(GO) mod tidy
-	git diff --exit-code -- go.mod go.sum
+	$(PYTHON) scripts/quality.py module-check --go "$(GO)"
 smoke:
 	$(GO) run ./cmd/marklint --version
-	$(GO) run ./cmd/marklint --rules examples/rules.yaml examples/docs
-	$(GO) run ./examples/custom --rules examples/custom/rules.yaml examples/docs
+	$(GO) run ./cmd/marklint --config examples/rules.yaml examples/docs
+	$(GO) run ./examples/custom --config examples/custom/rules.yaml examples/docs
 
 .PHONY: docs docs-update docs-deps
 docs-deps:
 	$(PYTHON) -m pip install -r docs/requirements.txt
 docs-update:
+	$(PYTHON) scripts/rules.py --write
 	$(PYTHON) scripts/site.py --update
 docs:
 	$(PYTHON) scripts/site.py
@@ -62,4 +62,21 @@ coverage-publish: coverage docs
 
 .PHONY: docs-lint
 docs-lint: docs
-	$(GO) run ./cmd/marklint --rules docs/lint.yaml --root . --fail-on warning .site-docs README.md
+	$(GO) run ./cmd/marklint --config docs/lint.yaml --root . --fail-on warning .site-docs README.md
+
+.PHONY: runtime-deps repository-lint contract-check
+runtime-deps:
+	npm ci --prefix runtime --ignore-scripts --no-audit --no-fund
+repository-lint:
+	$(GO) run ./cmd/marklint --config .marklint.yaml --root . .
+contract-check:
+	$(GO) run ./cmd/marklint config validate --config examples/v2/.marklint.yaml
+	$(GO) run ./cmd/marklint --config examples/v2/.marklint.yaml --root examples/v2 examples/v2/docs
+
+.PHONY: rules-check
+rules-check:
+	$(PYTHON) scripts/rules.py
+
+.PHONY: rules-update
+rules-update:
+	$(PYTHON) scripts/rules.py --write

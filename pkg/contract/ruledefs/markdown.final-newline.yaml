@@ -1,0 +1,46 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: safe-edits
+  fixtures:
+  - name: violation
+    input: Text
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: 'Text
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.final-newline
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Requires exactly one final newline and provides a safe fix.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: warning
+presets:
+- markdown:style
+documentation:
+  summary: Requires exactly one final newline and provides a safe fix.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: Text
+    good: 'Text
+
+      '
+    explanation: The file must end with exactly one newline. The first example has no final newline.
+  'on': document

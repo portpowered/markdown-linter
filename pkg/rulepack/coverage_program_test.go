@@ -2,10 +2,8 @@ package rulepack
 
 import (
 	"context"
-	"encoding/json"
 	"github.com/portpowered/markdown-linter/pkg/interfaces"
 	"gopkg.in/yaml.v3"
-	"os"
 	"path/filepath"
 	"testing"
 )
@@ -56,36 +54,5 @@ func TestProgramSortsFindingsAndRejectsInvalidSurface(t *testing.T) {
 	p = &Program{rules: []compiledRule{{spec: Rule{ID: "cancel"}, analyzer: contractAnalyzer{cancel: cancel}}}}
 	if _, err := p.Run(ctx, root, docs); err != context.Canceled {
 		t.Fatalf("cancelled=%v", err)
-	}
-}
-func TestBaselineMissingSourcesAndInfoSARIF(t *testing.T) {
-	root := t.TempDir()
-	missing := interfaces.Diagnostic{Path: filepath.Join(root, "absent.md"), RuleID: "rule", Severity: interfaces.SeverityInfo}
-	if err := WriteBaseline(filepath.Join(root, "baseline.json"), root, []interfaces.Diagnostic{missing}, false); err == nil {
-		t.Fatal("missing evidence accepted")
-	}
-	baseline := filepath.Join(root, "empty.json")
-	if err := os.WriteFile(baseline, []byte(`{"version":1,"findings":[]}`), 0600); err != nil {
-		t.Fatal(err)
-	}
-	if _, _, err := ApplyBaseline(baseline, root, []interfaces.Diagnostic{missing}); err == nil {
-		t.Fatal("missing evidence applied")
-	}
-	outside := missing
-	outside.Path = filepath.Join(t.TempDir(), "outside.md")
-	if _, err := fingerprint(root, outside); err == nil {
-		t.Fatal("outside evidence accepted")
-	}
-	sarif, err := json.Marshal(SARIF([]interfaces.Diagnostic{missing}))
-	if err != nil {
-		t.Fatal(err)
-	}
-	var parsed map[string]any
-	if err := json.Unmarshal(sarif, &parsed); err != nil {
-		t.Fatal(err)
-	}
-	results := parsed["runs"].([]any)[0].(map[string]any)["results"].([]any)
-	if results[0].(map[string]any)["level"] != "note" {
-		t.Fatalf("%s", sarif)
 	}
 }

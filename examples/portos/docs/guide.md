@@ -5,5 +5,5 @@ Use clear prose and descriptive headings. Code samples and URL targets retain th
 ## Code examples
 
 ```sh
-marklint --rules examples/portos/rules.yaml examples/portos/docs
+marklint --config examples/portos/rules.yaml examples/portos/docs
 ```

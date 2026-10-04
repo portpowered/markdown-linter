@@ -12,13 +12,27 @@ jobs:
     env:
       GOWORK: 'off'
       GOPRIVATE: ''
+      GOTOOLCHAIN: local
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
       - uses: actions/setup-go@40f1582b2485089dde7abd97c1529aa768e1baff
         with:
-          go-version-file: go.mod
-      - run: go test -race ./... -timeout 120s
-      - run: go vet ./...
+          go-version: stable
+      - uses: golangci/golangci-lint-action@1e7e51e771db61008b38414a730f564565cf7c20
+        with:
+          version: v2.14.0
+          install-only: true
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: docs/requirements.txt
+      - run: make docs-deps
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '24'
+      - run: npm ci --prefix runtime --ignore-scripts --no-audit --no-fund
+      - run: make verify
       - name: Build archives and verify public command
         env:
           VERSION: ${{ github.ref_name }}
@@ -26,12 +40,10 @@ jobs:
           python3 scripts/package.py "$VERSION"
           tar -xzf "dist/marklint_${VERSION}_linux_amd64.tar.gz" -C "$RUNNER_TEMP"
           "$RUNNER_TEMP/marklint" --version
-          "$RUNNER_TEMP/marklint" --rules examples/rules.yaml examples/docs
-          cd "$(mktemp -d)"
-          GOPROXY=https://proxy.golang.org,direct GOBIN="$PWD/bin" go install "github.com/portpowered/markdown-linter/cmd/marklint@$VERSION"
-          ./bin/marklint --version
+          "$RUNNER_TEMP/marklint" --config examples/rules.yaml examples/docs
+          "$RUNNER_TEMP/marklint" --config examples/v2/.marklint.yaml --root examples/v2 examples/v2/docs
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ github.ref_name }}
-        run: gh release create "$VERSION" dist/* --verify-tag --generate-notes
+        run: gh release create "$VERSION" "dist/marklint_${VERSION}_"* dist/checksums.txt --verify-tag --generate-notes

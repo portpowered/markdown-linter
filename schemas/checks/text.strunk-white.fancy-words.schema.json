@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "allow": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "banned-characters": {
+      "type": "string"
+    },
+    "banned-words": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "capture-group": {
+      "type": "integer"
+    },
+    "ignore-case": {
+      "type": "boolean"
+    },
+    "message": {
+      "type": "string"
+    },
+    "paired-conjunctions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "type": "object"
+    },
+    "patterns": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "scope": {
+      "type": "string"
+    }
+  },
+  "type": "object"
+}

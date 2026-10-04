@@ -1,0 +1,70 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '# Guide
+
+      '
+    parameters:
+      heading: Purpose
+      level: 2
+    expected: fail
+  - name: accepted
+    input: '# Guide
+
+
+      ## Purpose
+
+      '
+    parameters:
+      heading: Purpose
+      level: 2
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.required-heading
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties:
+      heading: {}
+      level: {}
+    required:
+    - heading
+    - level
+    type: object
+  resultKind: assertion
+  summary: Requires a heading with exactly the configured text and level in every selected document.
+  targets:
+  - document
+  version: '2'
+defaults:
+  heading: null
+  level: null
+recommendedSeverity: warning
+presets: []
+documentation:
+  summary: Requires a heading with exactly the configured text and level in every selected document.
+  parameters:
+    heading: Exact text of the required heading; must be nonempty.
+    level: Required heading level from 1 through 6.
+  example-options:
+    heading: Purpose
+    level: 2
+  example:
+    language: markdown
+    bad: '# Guide
+
+      '
+    good: '# Guide
+
+
+      ## Purpose
+
+      '
+    explanation: The configured level-two Purpose heading is missing.
+  'on': document

@@ -1,0 +1,449 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "additionalProperties": false,
+  "properties": {
+    "complete": {
+      "type": "boolean"
+    },
+    "diagnostics": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "actual": {},
+          "attribution": {
+            "enum": [
+              "exact",
+              "region",
+              "insertion"
+            ]
+          },
+          "checkId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "code": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "expected": {},
+          "location": {
+            "anyOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "end": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "column": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "line": {
+                        "minimum": 1,
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "line",
+                      "column"
+                    ],
+                    "type": "object"
+                  },
+                  "endOffset": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "pointer": {
+                    "type": "string"
+                  },
+                  "start": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "column": {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      "line": {
+                        "minimum": 1,
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "line",
+                      "column"
+                    ],
+                    "type": "object"
+                  },
+                  "startOffset": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "templateLine": {
+                    "minimum": 0,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "path",
+                  "startOffset",
+                  "endOffset",
+                  "start",
+                  "end"
+                ],
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "measurements": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "inputs": {
+                  "type": "object"
+                },
+                "max": {},
+                "min": {},
+                "name": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "sample": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "unit": {
+                  "minLength": 1,
+                  "type": "string"
+                },
+                "value": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "name",
+                "value",
+                "unit",
+                "inputs",
+                "sample"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "message": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "provenance": {
+            "type": "object"
+          },
+          "related": {
+            "items": {
+              "additionalProperties": false,
+              "properties": {
+                "location": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "end": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "column": {
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "line": {
+                          "minimum": 1,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "line",
+                        "column"
+                      ],
+                      "type": "object"
+                    },
+                    "endOffset": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "pointer": {
+                      "type": "string"
+                    },
+                    "start": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "column": {
+                          "minimum": 1,
+                          "type": "integer"
+                        },
+                        "line": {
+                          "minimum": 1,
+                          "type": "integer"
+                        }
+                      },
+                      "required": [
+                        "line",
+                        "column"
+                      ],
+                      "type": "object"
+                    },
+                    "startOffset": {
+                      "minimum": 0,
+                      "type": "integer"
+                    },
+                    "templateLine": {
+                      "minimum": 0,
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "path",
+                    "startOffset",
+                    "endOffset",
+                    "start",
+                    "end"
+                  ],
+                  "type": "object"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "role": {
+                  "minLength": 1,
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "location",
+                "message"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "remediation": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "result": {
+            "enum": [
+              "fail",
+              "unknown",
+              "error"
+            ]
+          },
+          "ruleId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          },
+          "target": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "required": [
+          "code",
+          "ruleId",
+          "checkId",
+          "severity",
+          "result",
+          "message",
+          "target",
+          "attribution",
+          "location",
+          "related",
+          "expected",
+          "actual",
+          "measurements",
+          "provenance",
+          "remediation"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "exitCode": {
+      "enum": [
+        0,
+        1,
+        2
+      ]
+    },
+    "failOn": {
+      "enum": [
+        "error",
+        "warning",
+        "info"
+      ]
+    },
+    "inputs": {
+      "items": {
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "enum": [
+              "markdown",
+              "mdx"
+            ]
+          },
+          "language": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "path": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "profile": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sets": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "source": {
+            "enum": [
+              "file",
+              "stdin"
+            ]
+          },
+          "syntaxOnly": {
+            "type": "boolean"
+          },
+          "templates": {
+            "items": {
+              "minLength": 1,
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "path",
+          "source",
+          "format",
+          "language",
+          "profile",
+          "sets",
+          "templates",
+          "syntaxOnly"
+        ],
+        "type": "object"
+      },
+      "type": "array"
+    },
+    "schemaVersion": {
+      "const": 2
+    },
+    "status": {
+      "enum": [
+        "pass",
+        "fail",
+        "error"
+      ]
+    },
+    "summary": {
+      "additionalProperties": false,
+      "properties": {
+        "errors": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "evaluatedTargets": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "failedTargets": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "files": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "info": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "suppressed": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "unknownTargets": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "warnings": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "zeroSelectionBindings": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "errors",
+        "evaluatedTargets",
+        "failedTargets",
+        "files",
+        "info",
+        "suppressed",
+        "unknownTargets",
+        "warnings",
+        "zeroSelectionBindings"
+      ],
+      "type": "object"
+    },
+    "tool": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "marklint"
+        },
+        "version": {
+          "minLength": 1,
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "version"
+      ],
+      "type": "object"
+    }
+  },
+  "required": [
+    "schemaVersion",
+    "tool",
+    "status",
+    "failOn",
+    "complete",
+    "exitCode",
+    "inputs",
+    "summary",
+    "diagnostics"
+  ],
+  "type": "object"
+}

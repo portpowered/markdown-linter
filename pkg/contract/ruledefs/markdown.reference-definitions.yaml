@@ -1,0 +1,60 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: '[Guide][missing]
+
+      '
+    parameters: {}
+    expected: fail
+  - name: accepted
+    input: '[Guide][api]
+
+
+      [api]: https://example.test
+
+      '
+    parameters: {}
+    expected: pass
+  formats:
+  - markdown
+  id: markdown.reference-definitions
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    properties: {}
+    type: object
+  resultKind: assertion
+  summary: Reports duplicate reference-link definitions and missing definitions for explicit reference
+    uses.
+  targets:
+  - document
+  version: '2'
+defaults: {}
+recommendedSeverity: error
+presets:
+- markdown:core
+- markdown:recommended
+- portos
+documentation:
+  summary: Reports duplicate reference-link definitions and missing definitions for explicit reference
+    uses.
+  parameters: {}
+  example-options: {}
+  example:
+    language: markdown
+    bad: '[Guide][missing]
+
+      '
+    good: '[Guide][api]
+
+
+      [api]: https://example.test
+
+      '
+    explanation: The reference label has no definition.
+  'on': document

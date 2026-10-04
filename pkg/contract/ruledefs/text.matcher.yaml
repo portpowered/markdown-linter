@@ -1,0 +1,143 @@
+descriptor:
+  capabilities:
+  - structure
+  execution: local
+  fix: none
+  fixtures:
+  - name: violation
+    input: 'Utilize the API in order to test.
+
+      '
+    parameters:
+      banned-words:
+      - utilize
+      - in order to
+      message: Use a shorter, familiar expression
+    expected: fail
+  - name: accepted
+    input: 'Use the API to test.
+
+      '
+    parameters:
+      banned-words:
+      - utilize
+      - in order to
+      message: Use a shorter, familiar expression
+    expected: pass
+  formats:
+  - markdown
+  id: text.matcher
+  languages:
+  - '*'
+  parametersSchema:
+    additionalProperties: false
+    anyOf:
+    - properties:
+        patterns:
+          minItems: 1
+      required:
+      - patterns
+    - properties:
+        banned-words:
+          minItems: 1
+      required:
+      - banned-words
+    - properties:
+        banned-characters:
+          minLength: 1
+      required:
+      - banned-characters
+    properties:
+      allow:
+        items:
+          type: string
+        type: array
+      banned-characters:
+        type: string
+      banned-words:
+        items:
+          type: string
+        type: array
+      capture-group:
+        type: integer
+      ignore-case:
+        type: boolean
+      message:
+        type: string
+      paired-conjunctions:
+        additionalProperties:
+          type: string
+        type: object
+      patterns:
+        items:
+          type: string
+        type: array
+      scope:
+        type: string
+    type: object
+  resultKind: assertion
+  summary: Reports configurable prohibited words, phrases, characters or regular expression matches in
+    prose.
+  targets:
+  - document
+  version: '2'
+defaults:
+  allow: []
+  banned-characters: ''
+  banned-words: []
+  capture-group: 0
+  ignore-case: true
+  message: review prohibited text
+  paired-conjunctions: {}
+  patterns: []
+  scope: prose
+recommendedSeverity: warning
+presets: []
+bundledRules:
+- id: portos.prose-dashes
+  check: text.matcher
+  severity: error
+  presets: [portos]
+  options:
+    patterns: ['[-\p{Pd}]']
+    message: Avoid hyphens and dashes in prose
+- id: portos.banned-phrases
+  check: text.matcher
+  severity: error
+  presets: [portos]
+  options:
+    patterns: ['\bload[\s\p{Pd}]+bearing\b']
+    message: Avoid this project-specific phrase
+documentation:
+  summary: Reports configurable prohibited words, phrases, characters or regular expression matches in
+    prose.
+  parameters:
+    patterns: List of Go RE2 patterns to report; patterns cannot match empty text.
+    banned-words: Literal whole words or phrases to report. Spaces match soft line breaks and emphasis.
+    banned-characters: Literal characters to report individually. Use patterns for Unicode character classes.
+    ignore-case: Case-insensitive matching by default; false preserves case.
+    allow: Exact matched phrases to accept, compared without case sensitivity.
+    scope: prose covers headings and paragraphs; heading checks headings only. Code and URLs are excluded.
+    message: Explanation to show with the matched text.
+    capture-group: Report this capture group instead of the whole match; zero reports the whole match.
+      The group must exist in every pattern.
+    paired-conjunctions: Skip a match beginning with a key when its paired word occurs inside that match;
+      used for both/and, either/or, neither/nor.
+  example-options:
+    banned-words:
+    - utilize
+    - in order to
+    message: Use a shorter, familiar expression
+  notes: Portos bans are configured instances of this check. Strunk and White checks supply named defaults
+    to the same matcher; all matcher options can be overridden. No automatic rewrite is applied.
+  example:
+    language: markdown
+    bad: 'Utilize the API in order to test.
+
+      '
+    good: 'Use the API to test.
+
+      '
+    explanation: The configured banned words include `utilize` and the phrase `in order to`. Both matches
+      produce findings.
+  'on': document

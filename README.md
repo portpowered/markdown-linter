@@ -16,43 +16,61 @@ From a source checkout with Go 1.24 or newer:
 
 ```sh
 go build -o marklint ./cmd/marklint
-./marklint --rules ./examples/rules.yaml ./examples/docs
+./marklint --config ./examples/rules.yaml ./examples/docs
 ./marklint --version
 ```
 
-The command requires files or directories. Directories are searched recursively for Markdown. `--root` defaults to the working directory and bounds inputs, local links, and relocation targets, including symlink targets. External URLs are ignored; no network checks or executable downloads occur when loading a pack.
+With no paths, the version-2 command scans the current directory. `--root` bounds inputs and local links, including symlink targets. External URLs are ignored by local-link checks.
 
-Without `--rules`, the default is `markdown:recommended`. At the selected root, `.marklint.yaml` is discovered automatically. An explicit pack runs its resolved configured rules, including named/local sets from `extends`. `--only id,other-id` filters that pack after the whole configuration has been validated.
+Without configuration, the default is `markdown:recommended`. At the selected root, `.marklint.yaml` is discovered automatically. Use `--config` to select an explicit version-2 policy. Version-1 configuration is rejected.
+
+## Single-file policy
+
+Version 2 embeds rules, matcher patterns, templates, sets, and path routing in one YAML file.
+Shared evaluators check word budgets, sentence patterns, table columns, block order, and Mermaid flowcharts.
+See the [single-file guide](docs/single-file-policy.md) and [complete configuration](examples/v2/.marklint.yaml).
+
+```sh
+make runtime-deps
+./marklint --config examples/v2/.marklint.yaml --root examples/v2 examples/v2/docs
+./marklint --config .marklint.yaml --json .
+```
+
+MDX and Mermaid use pinned static parsers that require Node 24.
+The repository policy checks README and Markdown sources as part of CI.
+The documentation policy also checks the generated site.
 
 ## Install a release
 
-Install the versioned Go command with `go install github.com/portpowered/markdown-linter/cmd/marklint@v0.1.0`, or download your platform archive and `checksums.txt` from the repository releases. Verify the archive against its SHA-256 checksum, unpack it, and put `marklint` (`marklint.exe` on Windows) on your PATH. Archives cover Linux, macOS, and Windows on amd64 and arm64. CI executes tests on hosted Linux, macOS, and Windows; cross-built architectures receive build verification.
+Build this checkout with `go build ./cmd/marklint` for the version 2 contract. Release archives include the parser runtime and schemas. Verify an archive against its SHA-256 checksum, unpack it, and put `marklint` (`marklint.exe` on Windows) on your PATH. Archives cover Linux, macOS, and Windows on amd64 and arm64. CI executes tests on hosted Linux, macOS, and Windows; cross-built architectures receive build verification.
 
 Go-installed commands report `dev` unless built with version linker flags; release archives embed their tag. Remove the installed executable to uninstall. No service or background process is installed.
 
 ## Customer rules
 
 ```yaml
-version: 1
+version: 2
 rules:
-  - id: handbook.purpose
+  handbook.purpose:
     check: markdown.required-heading
-    severity: error
-    include: ["handbook/**"]
-    options:
-      heading: Purpose
-      level: 2
+    options: {heading: Purpose, level: 2}
+sets:
+  handbook:
+    rules: [{rule: handbook.purpose, on: document}]
+apply:
+  - use: ["markdown:recommended"]
+  - {files: [handbook/**], use: [handbook]}
 ```
 
 YAML assigns rule IDs, selects registered checks, supplies options, and controls scope and severity. New logic uses the public Go analyzer and factory API. Stock checks use the same registry without privileged engine access. See [rule packs](docs/rule-packs.md) and the [custom command example](examples/custom/main.go).
 
 ## Diagnostics and fixes
 
-Text output uses `file:line: rule-id: message`. `--format json` emits an array of diagnostics with source locations, configured identity/severity, and optional suggested fixes. Exit codes are 0 for success (including warnings and information), 1 for error findings, and 2 for configuration or execution failure.
+Text output includes the path, line, column, severity, rule, and check. `--json` and `--format json` emit a version-2 result envelope. Exit codes are 0 for success, 1 for policy findings, and 2 for operational failure.
 
-Linting is read-only. `--fix-check` previews rule-provided fixes; `--fix` applies accepted safe edits. The planner rejects invalid ranges and overlapping edits. Fix modes use the same selected pack as linting. Activate `markdown:maintenance` explicitly for relocation and duplicate `doc-id` repair. After applying edits, rerun ordinary lint: successful application reports exit 0 even when other findings require manual review. File changes between analysis and application are outside the command's concurrency contract; do not edit inputs concurrently.
+Linting is read-only. `--fix-check` previews rule-provided fixes; `--fix` applies accepted safe edits. The planner rejects invalid ranges and overlapping edits. Fix modes use the same selected pack as linting. Select `markdown:maintenance` explicitly for relocation and duplicate `doc-id` repair. After applying edits, the command reruns lint and returns the remaining finding status. File changes between analysis and application are outside the command's concurrency contract; do not edit inputs concurrently.
 
-Relocation accepts repeated `--move old=new` arguments or a `--move-map` file containing a JSON mapping or `old=new` lines. A custom pack must include `markdown.link-relocation` to accept these arguments. Ambiguous destinations and missing anchors remain manual-review findings.
+Relocation uses the moves option on a configured `markdown.link-relocation` rule. Ambiguous destinations and missing anchors remain manual-review findings.
 
 ## Go packages
 
@@ -78,9 +96,9 @@ The opt-in [Strunk and White ruleset](docs/strunk-white.md) adds ten editorial c
 
 ## Compose Portos policy
 
-Use `init --preset portos-defaults` to activate general recommendations plus internal Portos policy in one version 1 configuration. `rules list`, `presets list`, and `config explain` make rule activation and overrides inspectable. See the rule-pack reference for baselines, SARIF, the warning failure threshold, and breaking default/configuration changes.
+Use `portos` in a set to activate general recommendations and internal Portos policy. `rules list`, `sets list`, and `config explain` show capabilities and effective policy. See the rule-pack reference for routing, SARIF, failure thresholds, and configuration changes.
 
-This checkout includes the expanded rules and composition UX. Pin a release containing these changes when deploying to CI. Existing v0.1.0 installation examples refer to the earlier released baseline.
+Pin a release containing the version 2 contract when deploying to CI.
 
 ## Development checks
 
