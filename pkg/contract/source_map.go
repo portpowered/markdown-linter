@@ -8,6 +8,22 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
+// Only matching evidence needs byte maps. The comparison string has the same
+// normalization and folding contract, without allocating two offset arrays.
+func comparisonText(source string, normalize, fold bool) string {
+	if normalize && !utf8.ValidString(source) {
+		text, _, _ := comparisonUnit(Unit{Text: source}, normalize, fold)
+		return text
+	}
+	if normalize {
+		source = normalized(source)
+	}
+	if fold {
+		source = folded(source)
+	}
+	return source
+}
+
 // comparisonUnit carries both ends of a normalized scalar back to original bytes.
 // Case expansion, NFC composition, whitespace collapse and formatting splits keep
 // source evidence separate from the normalized comparison string.

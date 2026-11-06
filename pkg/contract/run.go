@@ -392,21 +392,31 @@ func (e *execution) evaluate(id string, r Rule, t *Target, scope string, related
 			view = "visible"
 		}
 		mode := str(o, "mode", "")
+		fold := str(o, "case", "sensitive") == "fold"
+		values := slices.Clone(list(o["values"]))
+		wordValues := map[string]bool{}
+		for i, value := range values {
+			if mode == "word" || (view != "source" && view != "code") {
+				value = normalized(value)
+			}
+			if fold {
+				value = folded(value)
+			}
+			values[i] = value
+			if mode == "word" {
+				wordValues[value] = true
+			}
+		}
 		matched := false
 		var matchUnit Unit
 		var matchStarts, matchEnds []int
 		start, end := 0, 0
 		for _, u := range e.document.units(t, view, scope) {
-			s, starts, ends := comparisonUnit(u, view != "source" && view != "code", str(o, "case", "sensitive") == "fold")
+			normalize := view != "source" && view != "code"
+			s := comparisonText(u.Text, normalize, fold)
 			switch mode {
 			case "equals", "contains":
-				for _, v := range list(o["values"]) {
-					if view != "source" && view != "code" {
-						v = normalized(v)
-					}
-					if str(o, "case", "sensitive") == "fold" {
-						v = folded(v)
-					}
+				for _, v := range values {
 					index := strings.Index(s, v)
 					if mode == "equals" && s != v {
 						index = -1
@@ -422,16 +432,9 @@ func (e *execution) evaluate(id string, r Rule, t *Target, scope string, related
 				for s != "" {
 					var w string
 					w, s, state = uniseg.FirstWordInString(s, state)
-					for _, v := range list(o["values"]) {
-						v = normalized(v)
-						if str(o, "case", "sensitive") == "fold" {
-							v = folded(v)
-						}
-						if w == v {
-							matched = true
-							start, end = pos, pos+len(w)
-							break
-						}
+					if wordValues[w] {
+						matched = true
+						start, end = pos, pos+len(w)
 					}
 					pos += len(w)
 					if matched {
@@ -467,7 +470,7 @@ func (e *execution) evaluate(id string, r Rule, t *Target, scope string, related
 			}
 			if matched {
 				matchUnit = u
-				matchStarts, matchEnds = starts, ends
+				_, matchStarts, matchEnds = comparisonUnit(u, normalize, fold)
 				break
 			}
 		}
