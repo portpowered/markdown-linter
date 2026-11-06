@@ -9,7 +9,7 @@ COVERAGE_MIN ?= 95
 .PHONY: default verify build test coverage coverage-check lint fmt fmt-check vet tools-test deps deps-tidy clean
 
 default: verify
-verify: rules-check pack-check fmt-check build vet lint coverage tools-test module-check smoke docs docs-lint repository-lint contract-check coverage-publish
+verify: rules-check pack-check fmt-check build vet lint coverage tools-test runtime-test module-check smoke docs docs-lint repository-lint contract-check coverage-publish
 build:
 	$(GO) build ./...
 test:
@@ -64,7 +64,9 @@ coverage-publish: coverage docs
 docs-lint: docs
 	$(GO) run ./cmd/marklint --config docs/lint.yaml --root . --fail-on warning .site-docs README.md
 
-.PHONY: runtime-deps repository-lint contract-check
+.PHONY: runtime-deps runtime-test repository-lint contract-check
+runtime-test:
+	node --test runtime/analyze.test.mjs
 runtime-deps:
 	npm ci --prefix runtime --ignore-scripts --no-audit --no-fund
 repository-lint:

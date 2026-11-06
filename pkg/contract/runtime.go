@@ -72,6 +72,11 @@ func parseRuntime(ctx context.Context, mode, source string) (parserResult, error
 	if err != nil {
 		return parserResult{}, err
 	}
+	if session, ok := ctx.Value(runtimeSessionKey{}).(*runtimeSession); ok && mode == "mdx" {
+		if result, handled, err := session.request(ctx, p, payload); handled {
+			return result, err
+		}
+	}
 	cmd := exec.CommandContext(ctx, "node", p)
 	cmd.Stdin = bytes.NewReader(payload)
 	var stderr bytes.Buffer

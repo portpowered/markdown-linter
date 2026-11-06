@@ -33,6 +33,8 @@ func Run(ctx context.Context, args []string, in io.Reader, out, errOut io.Writer
 
 // RunWithCapabilities exposes operator-installed measures and provider profiles to a custom command.
 func RunWithCapabilities(ctx context.Context, args []string, in io.Reader, out, errOut io.Writer, registry *rulepack.Registry, capabilities *Capabilities, version string) int {
+	ctx, closeRuntime := parserRuntimeContext(ctx)
+	defer closeRuntime()
 	if capabilities == nil {
 		capabilities = NewCapabilities()
 	}
