@@ -22,7 +22,14 @@ var measures = map[string]string{
 }
 
 func normalized(s string) string { return strings.Join(strings.Fields(norm.NFC.String(s)), " ") }
-func folded(s string) string     { return cases.Fold().String(s) }
+func folded(s string) string {
+	for i := 0; i < len(s); i++ {
+		if s[i] >= utf8.RuneSelf {
+			return cases.Fold().String(s)
+		}
+	}
+	return strings.ToLower(s)
+}
 func words(s string) []string {
 	out := []string{}
 	state := -1
