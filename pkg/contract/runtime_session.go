@@ -168,6 +168,9 @@ func (s *runtimeSession) stop() {
 func (s *runtimeSession) close() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	if s.closed {
+		return
+	}
 	s.stop()
 	s.closed = true
 }

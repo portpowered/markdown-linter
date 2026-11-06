@@ -21,10 +21,10 @@ Tests should cover findings, locations, malformed options, deterministic output,
 
 Application integration belongs in each consumer. Test fixtures may express particular customer conventions, but production packages must receive those conventions through public configuration.
 
-## Parser lifetime
+## Parser process
 
-The stock CLI owns one lazy Node MDX parser worker per invocation. Each document is parsed anew; only runtime imports are reused. The worker uses newline-delimited JSON, observes the existing per-request deadline and is terminated and reaped when its owner exits or a transport fails. Mermaid retains a separate process per request because its parser has mutable global state.
+The CLI uses one Node process for MDX in each run. It reads each document and uses the same parser code. Each request has the same time limit as before. The CLI stops the process after the run or if a request fails. Mermaid uses a separate process for each request.
 
-Installed runtimes opt into this protocol with `marklintMdxStream: 1` in their package manifest and implement `analyze.mjs --stream-mdx`. Custom runtimes without that declaration retain the original single-request stdin protocol. Direct library calls outside a CLI invocation also retain process isolation. MDX imports, expressions and components remain syntax data and are never evaluated.
+The runtime package must declare `marklintMdxStream: 1` and support `analyze.mjs --stream-mdx`. Other runtime packages use the original request format. Direct library requests use a separate process. MDX code is data and does not execute.
 
-Run `node --test runtime/analyze.test.mjs` after installing the frozen runtime dependencies to verify isolated/stream parity, Unicode positions, malformed input and non-execution of MDX code.
+Run `make runtime-deps` and `node --test runtime/analyze.test.mjs` to check parser results, source positions, invalid input and MDX code.
