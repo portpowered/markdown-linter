@@ -41,7 +41,11 @@ func TestMDXSessionMatchesIsolatedAndStopsWorker(t *testing.T) {
 	command := ctx.Value(runtimeSessionKey{}).(*runtimeSession).command
 	closeRuntime()
 	closeRuntime()
-	if command.ProcessState == nil || ctx.Value(runtimeSessionKey{}).(*runtimeSession).command != nil {
+	session := ctx.Value(runtimeSessionKey{}).(*runtimeSession)
+	session.mu.Lock()
+	stopped := session.command == nil
+	session.mu.Unlock()
+	if command.ProcessState == nil || !stopped {
 		t.Fatal("worker was not reaped when its owner closed")
 	}
 	if _, err := parseRuntime(ctx, "mdx", "Text."); err == nil {
