@@ -81,7 +81,7 @@ func (p *Program) Run(ctx context.Context, root string, docs []*Document, report
 				continue
 			}
 		}
-		q, err := p.Policy(d.Path)
+		q, err := p.policy(d.Path, d.Format)
 		if err != nil {
 			report.Error("config.routing", err.Error(), location(d.Path, d.Source, 0, 0))
 			continue

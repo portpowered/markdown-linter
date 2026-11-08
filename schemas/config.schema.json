@@ -21,6 +21,17 @@
             "minItems": 1,
             "type": "array"
           },
+          "formats": {
+            "items": {
+              "enum": [
+                "markdown",
+                "mdx"
+              ]
+            },
+            "minItems": 1,
+            "type": "array",
+            "uniqueItems": true
+          },
           "language": {
             "minLength": 1,
             "type": "string"
