@@ -62,7 +62,11 @@ func ConfigSchemaWithCapabilities(registry *rulepack.Registry, capabilities *Cap
 	branches = append(branches, closed(map[string]any{"extends": name, "options": map[string]string{"type": "object"}, "severity": enum("error", "warning", "info"), "on-unknown": enum("fail", "report"), "description": map[string]string{"type": "string"}}, "extends"))
 	binding := closed(map[string]any{"rule": name, "on": map[string]any{"type": "string", "pattern": "^(document|each (heading|section|paragraph|sentence|table|codeblock|source-line))$"}, "scope": enum("direct", "subtree")}, "rule", "on")
 	sets := closed(map[string]any{"description": map[string]string{"type": "string"}, "use": texts, "rules": array(binding), "templates": array(name)})
-	apply := closed(map[string]any{"files": map[string]any{"type": "array", "items": text, "minItems": 1}, "exclude": texts, "use": texts, "language": text, "profile": text}, "use")
+	formats := map[string]any{
+		"type": "array", "minItems": 1, "uniqueItems": true,
+		"items": map[string]any{"enum": []string{"markdown", "mdx"}},
+	}
+	apply := closed(map[string]any{"files": map[string]any{"type": "array", "items": text, "minItems": 1}, "exclude": texts, "formats": formats, "use": texts, "language": text, "profile": text}, "use")
 	suppression := closed(map[string]any{"rule": text, "path": text, "reason": map[string]any{"type": "string", "pattern": `\S`}, "line": map[string]any{"type": "integer", "minimum": 0}}, "rule", "path", "reason")
 	root := closed(map[string]any{"version": map[string]any{"const": 2}, "language": text, "profile": text, "components": map[string]any{"type": "object", "additionalProperties": enum("inline", "block", "opaque")}, "rules": map[string]any{"type": "object", "propertyNames": name, "additionalProperties": map[string]any{"oneOf": branches}}, "templates": map[string]any{"type": "object", "propertyNames": name, "additionalProperties": text}, "sets": map[string]any{"type": "object", "propertyNames": name, "additionalProperties": sets}, "apply": array(apply), "exclude": texts, "suppressions": array(suppression)}, "version", "apply")
 	root["$schema"] = "https://json-schema.org/draft/2020-12/schema"

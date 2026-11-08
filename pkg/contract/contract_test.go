@@ -245,6 +245,33 @@ apply: [{use: [guides]}]
 		t.Fatal(err)
 	}
 }
+func TestPolicyRoutesFormatsTogetherWithPaths(t *testing.T) {
+	p := compile(t, `version: 2
+sets:
+  prose: {use: [markdown:recommended]}
+apply:
+  - {use: []}
+  - {files: [docs/**], exclude: [docs/examples/**], formats: [markdown], use: [prose]}
+`)
+	for file, want := range map[string]bool{
+		"docs/deep/guide.md":       true,
+		"docs/deep/guide.Markdown": true,
+		"docs/deep/guide.MDX":      false,
+		"docs/examples/guide.md":   false,
+		"guide.md":                 false,
+	} {
+		policy, err := p.Policy(file)
+		if err != nil || has(policy.Sets, "prose") != want {
+			t.Fatalf("%s: sets %v, error %v, want prose %t", file, policy.Sets, err, want)
+		}
+	}
+	for _, formats := range []string{"[]", "[unknown]", "[mdx, mdx]"} {
+		if _, err := Decode([]byte("version: 2\napply: [{formats: "+formats+", use: []}]\n"), "policy.yaml", registry(t)); err == nil {
+			t.Errorf("accepted invalid formats %s", formats)
+		}
+	}
+}
+
 func TestRoutingAndComposition(t *testing.T) {
 	p := compile(t, `version: 2
 rules:

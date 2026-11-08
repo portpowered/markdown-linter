@@ -39,6 +39,7 @@ type Set struct {
 type Apply struct {
 	Files    []string `yaml:"files,omitempty"`
 	Exclude  []string `yaml:"exclude,omitempty"`
+	Formats  []string `yaml:"formats,omitempty"`
 	Use      []string `yaml:"use"`
 	Language string   `yaml:"language,omitempty"`
 	Profile  string   `yaml:"profile,omitempty"`
@@ -517,11 +518,23 @@ func (p *Program) expand(ids []string) ([]string, []Binding, []string, error) {
 	return sets, bindings, templates, nil
 }
 func (p *Program) Policy(file string) (Policy, error) {
+	return p.policy(file, documentFormat(file))
+}
+
+func documentFormat(file string) string {
+	if strings.EqualFold(path.Ext(file), ".mdx") {
+		return "mdx"
+	}
+	return "markdown"
+}
+
+func (p *Program) policy(file, format string) (Policy, error) {
 	q := Policy{Language: p.Config.Language, Profile: p.Config.Profile, Sets: []string{}, Templates: []string{}, Bindings: []Binding{}, Origins: map[string][]string{}}
 	matched := len(p.Config.Apply) == 0
 	explicitL, explicitP := "", ""
 	for i, a := range p.Config.Apply {
-		if (a.Files != nil && !Matches(a.Files, file)) || Matches(a.Exclude, file) {
+		if (a.Files != nil && !Matches(a.Files, file)) || Matches(a.Exclude, file) ||
+			(len(a.Formats) > 0 && !has(a.Formats, format)) {
 			continue
 		}
 		matched = true

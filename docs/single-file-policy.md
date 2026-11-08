@@ -49,6 +49,9 @@ apply:
 Definitions run only through bindings or template references.
 Inheritance replaces supplied option fields and preserves other fields.
 Multiple matching apply entries contribute independently.
+An entry may restrict its inputs with `formats: [markdown]` or `formats: [mdx]`.
+The format filter combines with the entry's path selectors.
+The parser selects MDX for the `.mdx` extension regardless of letter case.
 Cycles, unknown fields, duplicate keys, aliases, and contradictory bounds fail validation.
 An unmatched input fails routing unless apply is empty.
 An empty apply array requests syntax checks only.

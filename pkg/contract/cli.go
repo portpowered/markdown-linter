@@ -398,7 +398,7 @@ func RunWithCapabilities(ctx context.Context, args []string, in io.Reader, out, 
 		}
 		var d *Document
 		var err error
-		if strings.EqualFold(filepath.Ext(path), ".mdx") {
+		if documentFormat(path) == "mdx" {
 			d, err = ParseMDX(ctx, path, source, kind, p.Config.Components)
 		} else {
 			d = Parse(path, source, kind)
